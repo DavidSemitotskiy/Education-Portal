@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Portal.Domain.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace Portal.Domain.Models
 {
-    public class ArticleMaterial
+    public class ArticleMaterial : Material
     {
+        public DateTime DatePublication { get; set; }
+
+        public string? Resource { get; set; }
     }
 }
