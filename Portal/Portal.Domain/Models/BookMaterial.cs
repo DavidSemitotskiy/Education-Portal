@@ -9,12 +9,12 @@ namespace Portal.Domain.Models
 {
     public class BookMaterial : Material
     {
-        public List<string>? Authors { get; set; }
+        public List<string> Authors { get; set; }
 
         public int CountPages { get; set; }
 
-        public string? Format { get; set; }
+        public string Format { get; set; }
 
-        public string? YearPublication { get; set; }
+        public string YearPublication { get; set; }
     }
 }
