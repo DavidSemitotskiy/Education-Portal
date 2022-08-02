@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Portal.Application
 {
-    internal class UserManager : IUserManager
+    internal class CourseManager : ICourseManager
     {
     }
 }
