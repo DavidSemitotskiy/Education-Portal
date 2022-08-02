@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Portal.Domain.Models
 {
-    public class UserSkill
+    public class UserSkill : Skill
     {
+        public int Level { get; set; }
     }
 }
