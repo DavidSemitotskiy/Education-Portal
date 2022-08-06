@@ -11,7 +11,7 @@ namespace Portal.Application.Interfaces
 {
     public interface IUserManager
     {
-        User? CurrentUser { get; set; }
+        static User? CurrentUser { get; set; }
 
         IUserRepository UserRepository { get; set; }
 

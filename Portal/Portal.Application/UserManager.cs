@@ -19,8 +19,6 @@ namespace Portal.Application
 
         public IUserRepository UserRepository { get; set; }
 
-        public User? CurrentUser { get; set; }
-
         public void Register(UserRegisterDTO userRegister)
         {
             if (userRegister == null)
@@ -51,7 +49,7 @@ namespace Portal.Application
             };
 
             UserRepository.Add(user);
-            CurrentUser = user;
+            IUserManager.CurrentUser = user;
         }
 
         public void LogIn(UserLoginDTO userLogin)
@@ -69,17 +67,17 @@ namespace Portal.Application
                 throw new Exception("User isn't registered");
             }
 
-            CurrentUser = logInUser;
+            IUserManager.CurrentUser = logInUser;
         }
 
         public void LogOff()
         {
-            if (CurrentUser == null)
+            if (IUserManager.CurrentUser == null)
             {
                 throw new ArgumentException("User isn't authorized");
             }
 
-            CurrentUser = null;
+            IUserManager.CurrentUser = null;
         }
     }
 }
