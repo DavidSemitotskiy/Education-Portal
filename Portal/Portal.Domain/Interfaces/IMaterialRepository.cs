@@ -14,8 +14,6 @@ namespace Portal.Domain.Interfaces
 
         void Delete(Material material);
 
-        void Update(Material material);
-
         void SaveChanges();
     }
 }
