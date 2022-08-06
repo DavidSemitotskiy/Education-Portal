@@ -15,8 +15,6 @@ namespace Portal.Domain.Interfaces
 
         void Delete(Course course);
 
-        void Update(Course course);
-
         bool Exists(string name, string description);
 
         void SaveChanges();
