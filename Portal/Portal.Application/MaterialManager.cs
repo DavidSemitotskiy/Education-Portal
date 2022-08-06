@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Portal.Application
 {
-    internal class MaterialManager : IMaterialManager
+    public class MaterialManager : IMaterialManager
     {
         public MaterialManager(IMaterialRepository materialRepository)
         {

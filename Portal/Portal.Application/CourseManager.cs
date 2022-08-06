@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Portal.Application
 {
-    internal class CourseManager : ICourseManager
+    public class CourseManager : ICourseManager
     {
         public CourseManager(ICourseRepository courseRepository)
         {

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Portal.Infrastructure
 {
-    internal class UserRepository : IUserRepository
+    public class UserRepository : IUserRepository
     {
         private static UserRepository _repository = new UserRepository();
 

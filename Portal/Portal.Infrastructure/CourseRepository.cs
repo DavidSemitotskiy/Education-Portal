@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Portal.Infrastructure
 {
-    internal class CourseRepository : ICourseRepository
+    public class CourseRepository : ICourseRepository
     {
         private static CourseRepository _repository = new CourseRepository();
 

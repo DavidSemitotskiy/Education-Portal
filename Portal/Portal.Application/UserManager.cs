@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Portal.Application
 {
-    internal class UserManager : IUserManager
+    public class UserManager : IUserManager
     {
         public UserManager(IUserRepository userRepository)
         {

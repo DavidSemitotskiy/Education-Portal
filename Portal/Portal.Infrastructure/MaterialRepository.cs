@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Portal.Infrastructure
 {
-    internal class MaterialRepository : IMaterialRepository
+    public class MaterialRepository : IMaterialRepository
     {
         private static MaterialRepository _repository = new MaterialRepository();
 
