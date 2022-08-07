@@ -10,7 +10,7 @@ namespace Portal.Domain.Models
 
         public override string ToString()
         {
-            return $"Resource: {Resource} - ({DatePublication.ToString("d")}";
+            return $"Resource: {Resource} - ({DatePublication.ToString("d")})";
         }
     }
 }
