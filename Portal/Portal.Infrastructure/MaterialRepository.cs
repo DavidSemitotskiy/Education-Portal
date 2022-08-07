@@ -45,6 +45,11 @@ namespace Portal.Infrastructure
             }
         }
 
+        public bool Exists(Material material)
+        {
+            return Materials.Any(m => m.Equals(material));
+        }
+
         /// <summary>
         /// Add new Material in the end of file(you don't need to use SaveChanges())
         /// </summary>
