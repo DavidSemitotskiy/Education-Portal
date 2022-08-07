@@ -19,6 +19,16 @@ namespace Portal.Application
 
         public void AddMaterial(Material material)
         {
+            if (material == null)
+            {
+                throw new ArgumentNullException("Course can't be null");
+            }
+
+            if (MaterialRepository.Exists(material))
+            {
+                throw new ArgumentException("This material already exists");
+            }
+
             MaterialRepository.Add(material);
             //MaterialRepository.SaveChanges();
         }
