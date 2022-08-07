@@ -12,5 +12,20 @@ namespace Portal.Domain.Models
         {
             return $"Duration - {Duration} : Quality - {Quality}";
         }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is VideoMaterial other)
+            {
+                return GetHashCode() == other.GetHashCode();
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return Duration.GetHashCode() + Quality.GetHashCode();
+        }
     }
 }
