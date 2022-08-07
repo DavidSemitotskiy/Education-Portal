@@ -37,7 +37,7 @@ namespace Portal.Application
 
         public IEnumerable<Course> GetAvailableCourses(User user)
         {
-            return CourseRepository.GetAllCourses().Where(course => course.AccessLevel <= user.AccessLevel);
+            return CourseRepository.Courses.Where(course => course.AccessLevel <= user.AccessLevel);
         }
 
         public IEnumerable<Course> GetSubscribedCourses(User user)
@@ -47,7 +47,7 @@ namespace Portal.Application
 
         public IEnumerable<Course> GetOwnCourses(User user)
         {
-            return CourseRepository.GetAllCourses().Where(course => course.Owner.IdUser == user.IdUser);
+            return CourseRepository.Courses.Where(course => course.Owner.IdUser == user.IdUser);
         }
     }
 }
