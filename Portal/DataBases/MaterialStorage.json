@@ -1,0 +1,3 @@
+{"$type":"Portal.Domain.Models.ArticleMaterial, Portal.Domain","datePublication":"2022-08-07T00:00:00","resource":"https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.tolist?view=net-6.0","idMaterial":"aa0fdc30-9a12-4684-b5fb-f12b7f73e191"}
+{"$type":"Portal.Domain.Models.VideoMaterial, Portal.Domain","duration":23,"quality":"720p","idMaterial":"ed74f2eb-ccb1-4001-a931-dc0ab7d3fe09"}
+{"$type":"Portal.Domain.Models.VideoMaterial, Portal.Domain","duration":76,"quality":"1440p60","idMaterial":"32d3b5a5-6cf8-4231-b393-ec97167213cf"}

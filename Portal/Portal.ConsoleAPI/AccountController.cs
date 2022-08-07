@@ -14,6 +14,14 @@ namespace Portal.ConsoleAPI
 
         public void LogIn()
         {
+            if (IUserManager.CurrentUser != null)
+            {
+                Console.WriteLine("User is authorized");
+                Console.ReadLine();
+                Console.Clear();
+                return;
+            }
+
             Console.Write("Input email: ");
             string email = Console.ReadLine();
             Console.Write("Input password: ");
