@@ -33,7 +33,27 @@ namespace Portal.ConsoleAPI
                 return;
             }
 
-            course.Materials[index - 1] = CreatOwnMaterial();
+            while (true)
+            {
+                Console.WriteLine("1)Create own material");
+                Console.WriteLine("2)Choose existed material");
+                Console.Write("Choose the operation by its number: ");
+                string pick = Console.ReadLine();
+                switch (pick)
+                {
+                    case "1":
+                        course.Materials[index - 1] = CreatOwnMaterial();
+                        return;
+                    case "2":
+                        course.Materials[index - 1] = ChooseExistedMaterial();
+                        return;
+                    default:
+                        Console.WriteLine("Incorrect number of operation");
+                        Console.ReadLine();
+                        Console.Clear();
+                        continue;
+                }
+            }
         }
 
         public Material CreatOwnMaterial()
@@ -80,7 +100,9 @@ namespace Portal.ConsoleAPI
                     continue;
                 }
 
+                Console.Write("Input format: ");
                 string format = Console.ReadLine();
+                Console.Write("Input publication date: ");
                 bool resultParingDate = DateTime.TryParse(Console.ReadLine(), out DateTime datePublication);
                 if (!resultParingDate)
                 {
@@ -118,6 +140,7 @@ namespace Portal.ConsoleAPI
                     continue;
                 }
 
+                Console.Write("Input quality: ");
                 string quality = Console.ReadLine();
                 VideoMaterial material = new VideoMaterial
                 {
@@ -134,7 +157,9 @@ namespace Portal.ConsoleAPI
         {
             while (true)
             {
+                Console.Write("Input source: ");
                 string resource = Console.ReadLine();
+                Console.Write("Input publication date: ");
                 bool resultParingDate = DateTime.TryParse(Console.ReadLine(), out DateTime datePublication);
                 if (!resultParingDate)
                 {
