@@ -6,6 +6,8 @@
 
         IEnumerable<Material> GetAllMaterials();
 
+        bool Exists(Material material);
+
         void Add(Material material);
 
         void Delete(Material material);
