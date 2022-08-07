@@ -18,5 +18,20 @@ namespace Portal.Domain.Models
         {
             return $"{Authors} - {Title}, {CountPages} ({DatePublication.ToString("d")}).{Format}";
         }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is BookMaterial other)
+            {
+                return GetHashCode() == other.GetHashCode();
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return Authors.GetHashCode() + Title.GetHashCode() + CountPages.GetHashCode() + Format.GetHashCode() + DatePublication.GetHashCode();
+        }
     }
 }
