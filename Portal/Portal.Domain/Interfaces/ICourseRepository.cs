@@ -4,6 +4,8 @@ namespace Portal.Domain.Interfaces
 {
     public interface ICourseRepository
     {
+        List<Course> Courses { get; set; }
+
         IEnumerable<Course> GetAllCourses();
 
         void Add(Course course);
