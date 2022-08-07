@@ -14,7 +14,7 @@ namespace Portal.Application
 
         public IEnumerable<Material> GetAllMaterials()
         {
-            return MaterialRepository.GetAllMaterials();
+            return MaterialRepository.Materials;
         }
 
         public void AddMaterial(Material material)
