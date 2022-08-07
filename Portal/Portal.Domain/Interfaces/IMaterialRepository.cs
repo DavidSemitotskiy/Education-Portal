@@ -2,6 +2,8 @@
 {
     public interface IMaterialRepository
     {
+        List<Material> Materials { get; set; }
+
         IEnumerable<Material> GetAllMaterials();
 
         void Add(Material material);
