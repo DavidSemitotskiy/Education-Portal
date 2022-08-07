@@ -22,7 +22,7 @@ namespace Portal.Infrastructure
 
         public IEnumerable<Material> GetAllMaterials()
         {
-            using (StreamReader file = new StreamReader(@"C:\Users\Lementry\OneDrive\Рабочий стол\test\portal\Portal\DB\MaterialStorage.json"))
+            using (StreamReader file = new StreamReader(@"..\..\..\..\DataBases\MaterialStorage.json"))
             {
                 Material deserializeMaterial = null;
                 string serializeObject = null;
@@ -52,7 +52,7 @@ namespace Portal.Infrastructure
         public void Add(Material material)
         {
             Materials.Add(material);
-            using (StreamWriter file = new StreamWriter(@"C:\Users\Lementry\OneDrive\Рабочий стол\test\portal\Portal\DB\MaterialStorage.json", true))
+            using (StreamWriter file = new StreamWriter(@"..\..\..\..\DataBases\MaterialStorage.json", true))
             {
                 string serializeMaterial = JsonConvert.SerializeObject(material, new JsonSerializerSettings()
                 {
@@ -79,7 +79,7 @@ namespace Portal.Infrastructure
         public void SaveChanges()
         {
             string serializeMaterial = null;
-            using (StreamWriter file = new StreamWriter(@"C:\Users\Lementry\OneDrive\Рабочий стол\test\portal\Portal\DB\CourseStorage.json"))
+            using (StreamWriter file = new StreamWriter(@"..\..\..\..\DataBases\MaterialStorage.json"))
             {
                 for (int i = 0; i < Materials.Count; i++)
                 {

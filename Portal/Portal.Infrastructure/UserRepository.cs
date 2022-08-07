@@ -24,7 +24,7 @@ namespace Portal.Infrastructure
 
         public IEnumerable<User> GetAllUsers()
         {
-            using (StreamReader file = new StreamReader(@"C:\Users\Lementry\OneDrive\Рабочий стол\test\portal\Portal\DB\UserStorage.json"))
+            using (StreamReader file = new StreamReader(@"..\..\..\..\DataBases\UserStorage.json"))
             {
                 User deserializeUser = null;
                 string serializeObject = null;
@@ -42,7 +42,7 @@ namespace Portal.Infrastructure
         public void Add(User user)
         {
             Users.Add(user);
-            using (StreamWriter file = new StreamWriter(@"C:\Users\Lementry\OneDrive\Рабочий стол\test\portal\Portal\DB\UserStorage.json", true))
+            using (StreamWriter file = new StreamWriter(@"..\..\..\..\DataBases\UserStorage.json", true))
             {
                 string serializeUser = JsonConvert.SerializeObject(user, new JsonSerializerSettings()
                 {

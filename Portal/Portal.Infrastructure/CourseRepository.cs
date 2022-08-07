@@ -23,7 +23,7 @@ namespace Portal.Infrastructure
 
         public IEnumerable<Course> GetAllCourses()
         {
-            using (StreamReader file = new StreamReader(@"C:\Users\Lementry\OneDrive\Рабочий стол\test\portal\Portal\DB\CourseStorage.json"))
+            using (StreamReader file = new StreamReader(@"..\..\..\..\DataBases\CourseStorage.json"))
             {
                 Course deserializeCourse = null;
                 string serializeObject = null;
@@ -53,7 +53,7 @@ namespace Portal.Infrastructure
         public void Add(Course course)
         {
             Courses.Add(course);
-            using (StreamWriter file = new StreamWriter(@"C:\Users\Lementry\OneDrive\Рабочий стол\test\portal\Portal\DB\CourseStorage.json", true))
+            using (StreamWriter file = new StreamWriter(@"..\..\..\..\DataBases\CourseStorage.json", true))
             {
                 string serializeCourse = JsonConvert.SerializeObject(course, new JsonSerializerSettings()
                 {
@@ -86,7 +86,7 @@ namespace Portal.Infrastructure
         public void SaveChanges()
         {
             string serializeCourse = null;
-            using (StreamWriter file = new StreamWriter(@"C:\Users\Lementry\OneDrive\Рабочий стол\test\portal\Portal\DB\CourseStorage.json"))
+            using (StreamWriter file = new StreamWriter(@"..\..\..\..\DataBases\CourseStorage.json"))
             {
                 for (int i = 0; i < Courses.Count; i++)
                 {
