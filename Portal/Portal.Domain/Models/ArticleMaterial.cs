@@ -12,5 +12,20 @@ namespace Portal.Domain.Models
         {
             return $"Resource: {Resource} - ({DatePublication.ToString("d")})";
         }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is ArticleMaterial other)
+            {
+                return GetHashCode() == other.GetHashCode();
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return DatePublication.GetHashCode() + Resource.GetHashCode();
+        }
     }
 }
