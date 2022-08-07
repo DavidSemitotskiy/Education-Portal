@@ -18,6 +18,11 @@ namespace Portal.ConsoleAPI
 
         public void CreateCourse()
         {
+            if (IUserManager.CurrentUser == null)
+            {
+                throw new ArgumentNullException("User isn't authorized for this operation");
+            }
+
             string courseName = null;
             string courseDescription = null;
             int accessLevel = 0;
@@ -55,6 +60,8 @@ namespace Portal.ConsoleAPI
                     Console.Clear();
                     continue;
                 }
+
+                break;
             }
 
             Material material = null;
@@ -103,6 +110,11 @@ namespace Portal.ConsoleAPI
 
         public void SeeAvailableCourses()
         {
+            if (IUserManager.CurrentUser == null)
+            {
+                throw new ArgumentNullException("User isn't authorized for this operation");
+            }
+
             var availableCourses = CourseManager.GetAvailableCourses(IUserManager.CurrentUser).ToList();
             if (availableCourses.Count == 0)
             {
@@ -112,12 +124,17 @@ namespace Portal.ConsoleAPI
 
             foreach (var course in availableCourses)
             {
-                Console.Write($"{course.Name} - {course.Description} - {course.AccessLevel}");
+                Console.Write($"{course.Name} - {course.Description} - {course.AccessLevel}\n");
             }
         }
 
         public void DeleteCourse()
         {
+            if (IUserManager.CurrentUser == null)
+            {
+                throw new ArgumentNullException("User isn't authorized for this operation");
+            }
+
             var ownCourses = CourseManager.GetOwnCourses(IUserManager.CurrentUser).ToList();
             if (ownCourses.Count == 0)
             {
@@ -127,7 +144,7 @@ namespace Portal.ConsoleAPI
 
             for (int i = 0; i < ownCourses.Count; i++)
             {
-                Console.Write($"{i + 1}){ownCourses[i].Name} - {ownCourses[i].Description} - {ownCourses[i].AccessLevel}");
+                Console.Write($"{i + 1}){ownCourses[i].Name} - {ownCourses[i].Description} - {ownCourses[i].AccessLevel}\n");
             }
 
             Console.Write("Choose own course to delete by its number: ");
@@ -145,6 +162,11 @@ namespace Portal.ConsoleAPI
 
         public void Update()
         {
+            if (IUserManager.CurrentUser == null)
+            {
+                throw new ArgumentNullException("User isn't authorized for this operation");
+            }
+
             var ownCourses = CourseManager.GetOwnCourses(IUserManager.CurrentUser).ToList();
             if (ownCourses.Count == 0)
             {
@@ -154,7 +176,7 @@ namespace Portal.ConsoleAPI
 
             for (int i = 0; i < ownCourses.Count; i++)
             {
-                Console.Write($"{i + 1}){ownCourses[i].Name} - {ownCourses[i].Description} - {ownCourses[i].AccessLevel}");
+                Console.Write($"{i + 1}){ownCourses[i].Name} - {ownCourses[i].Description} - {ownCourses[i].AccessLevel}\n");
             }
 
             Console.Write("Choose own course to update by its number: ");
@@ -178,13 +200,18 @@ namespace Portal.ConsoleAPI
                 switch (choose)
                 {
                     case "1":
+                        Console.Write("Input new name: ");
                         courseUpdate.Name = Console.ReadLine();
+                        CourseManager.CourseRepository.SaveChanges();
                         return;
                     case "2":
+                        Console.Write("Input new description: ");
                         courseUpdate.Description = Console.ReadLine();
+                        CourseManager.CourseRepository.SaveChanges();
                         return;
                     case "3":
                         MaterialController.UpdateMaterial(courseUpdate);
+                        CourseManager.CourseRepository.SaveChanges();
                         return;
                     default:
                         Console.WriteLine("Incorrect number of operation");
