@@ -57,13 +57,13 @@ namespace Portal.Application
                 throw new ArgumentNullException("User can't be null");
             }
 
-            var taskExisting = Exists(userRegister);
             if (!userRegister.Password.Equals(userRegister.ConfirmPassword))
             {
                 throw new ArgumentException("Confirm password doesn't match to Password");
             }
 
-            if (await taskExisting)
+            var isUserExists = await Exists(userRegister);
+            if (isUserExists)
             {
                 throw new ArgumentException("User with the same name already exists");
             }
