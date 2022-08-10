@@ -1,16 +1,15 @@
-﻿using Portal.Domain.DTOs;
-using Portal.Domain.Models;
+﻿using Portal.Domain.Models;
 
 namespace Portal.Domain.Interfaces
 {
     public interface IUserRepository
     {
-        IEnumerable<User> GetAllUsers();
+        Task<IEnumerable<User>> GetAllUsers();
 
-        void Add(User user);
+        Task Add(User user);
 
-        bool Exists(string firstName, string lastName, string email);
+        Task Delete(User user);
 
-        User GetLogInUser(UserLoginDTO user);
+        Task Update(User user);
     }
 }

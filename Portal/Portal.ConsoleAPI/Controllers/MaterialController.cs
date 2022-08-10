@@ -1,8 +1,8 @@
 ﻿using Portal.Application.Interfaces;
-using Portal.Domain.Interfaces;
+using Portal.ConsoleAPI.Validation;
 using Portal.Domain.Models;
 
-namespace Portal.ConsoleAPI
+namespace Portal.ConsoleAPI.Conrollers
 {
     public class MaterialController
     {
@@ -13,7 +13,7 @@ namespace Portal.ConsoleAPI
 
         public IMaterialManager MaterialManager { get; set; }
 
-        public void UpdateMaterial(Course course)
+        public async Task UpdateMaterial(Course course)
         {
             if (course == null)
             {
@@ -42,10 +42,10 @@ namespace Portal.ConsoleAPI
                 switch (pick)
                 {
                     case "1":
-                        course.Materials[index - 1] = CreatOwnMaterial();
+                        course.Materials[index - 1] = await CreatOwnMaterial();
                         return;
                     case "2":
-                        course.Materials[index - 1] = ChooseExistedMaterial();
+                        course.Materials[index - 1] = await ChooseExistedMaterial();
                         return;
                     default:
                         Console.WriteLine("Incorrect number of operation");
@@ -56,7 +56,7 @@ namespace Portal.ConsoleAPI
             }
         }
 
-        public Material CreatOwnMaterial()
+        public async Task<Material> CreatOwnMaterial()
         {
             while (true)
             {
@@ -68,11 +68,11 @@ namespace Portal.ConsoleAPI
                 switch (pick)
                 {
                     case "1":
-                        return CreateBookMaterial();
+                        return await CreateBookMaterial();
                     case "2":
-                        return CreateVidoeMaterial();
+                        return await CreateVidoeMaterial();
                     case "3":
-                        return CreateArticleMaterial();
+                        return await CreateArticleMaterial();
                     default:
                         Console.WriteLine("Incorrect number of operation");
                         Console.ReadLine();
@@ -82,7 +82,7 @@ namespace Portal.ConsoleAPI
             }
         }
 
-        public Material CreateBookMaterial()
+        public async Task<Material> CreateBookMaterial()
         {
             while (true)
             {
@@ -114,19 +114,26 @@ namespace Portal.ConsoleAPI
 
                 BookMaterial material = new BookMaterial
                 {
-                    IdMaterial = Guid.NewGuid(),
+                    Id = Guid.NewGuid(),
                     Authors = authors,
                     Title = title,
                     CountPages = countPages,
                     Format = format
                 };
+                var errorMessages = await new ErrorMessages<BookMaterialValidator, BookMaterial>().Validate(material);
+                if (!errorMessages)
+                {
+                    Console.ReadLine();
+                    Console.Clear();
+                    continue;
+                }
 
-                MaterialManager.AddMaterial(material);
+                await MaterialManager.AddMaterial(material);
                 return material;
             }
         }
 
-        public Material CreateVidoeMaterial()
+        public async Task<Material> CreateVidoeMaterial()
         {
             while (true)
             {
@@ -144,16 +151,24 @@ namespace Portal.ConsoleAPI
                 string quality = Console.ReadLine();
                 VideoMaterial material = new VideoMaterial
                 {
-                    IdMaterial = Guid.NewGuid(),
+                    Id = Guid.NewGuid(),
                     Duration = duration,
                     Quality = quality
                 };
-                MaterialManager.AddMaterial(material);
+                var errorMessages = await new ErrorMessages<VideoMaterialValidator, VideoMaterial>().Validate(material);
+                if (!errorMessages)
+                {
+                    Console.ReadLine();
+                    Console.Clear();
+                    continue;
+                }
+
+                await MaterialManager.AddMaterial(material);
                 return material;
             }
         }
 
-        public Material CreateArticleMaterial()
+        public async Task<Material> CreateArticleMaterial()
         {
             while (true)
             {
@@ -171,22 +186,30 @@ namespace Portal.ConsoleAPI
 
                 ArticleMaterial material = new ArticleMaterial
                 {
-                    IdMaterial = Guid.NewGuid(),
+                    Id = Guid.NewGuid(),
                     Resource = resource,
                     DatePublication = datePublication
                 };
-                MaterialManager.AddMaterial(material);
+                var errorMessages = await new ErrorMessages<ArticleMaterialValidator, ArticleMaterial>().Validate(material);
+                if (!errorMessages)
+                {
+                    Console.ReadLine();
+                    Console.Clear();
+                    continue;
+                }
+
+                await MaterialManager.AddMaterial(material);
                 return material;
             }
         }
 
-        public Material ChooseExistedMaterial()
+        public async Task<Material> ChooseExistedMaterial()
         {
-            var allMaterials = MaterialManager.MaterialRepository.GetAllMaterials().ToList();
+            var allMaterials = (await MaterialManager.MaterialRepository.GetAllEntities()).ToList();
             if (allMaterials.Count == 0)
             {
                 Console.WriteLine("There aren't any materials");
-                return CreatOwnMaterial();
+                return await CreatOwnMaterial();
             }
 
             while (true)

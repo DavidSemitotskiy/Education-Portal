@@ -6,48 +6,54 @@ namespace Portal.Application
 {
     public class CourseManager : ICourseManager
     {
-        public CourseManager(ICourseRepository courseRepository)
+        public CourseManager(IEntityRepository<Course> repository)
         {
-            CourseRepository = courseRepository ?? throw new ArgumentNullException("Repository can't be null");
+            CourseRepository = repository ?? throw new ArgumentNullException("Repository can't be null");
         }
 
-        public ICourseRepository CourseRepository { get; set; }
+        public IEntityRepository<Course> CourseRepository { get; }
 
-        public void AddCourse(Course course)
+        public async Task<bool> Exists(string name, string description)
+        {
+            var allCourses = await CourseRepository.GetAllEntities();
+            return allCourses.Any(course => course.Name == name && course.Description == description);
+        }
+
+        public async Task<IEnumerable<Course>> GetAvailableCourses(User user)
+        {
+            var allCourses = await CourseRepository.GetAllEntities();
+            return allCourses.Where(course => course.AccessLevel <= user.AccessLevel);
+        }
+
+        public async Task<IEnumerable<Course>> GetOwnCourses(User user)
+        {
+            var allCourses = await CourseRepository.GetAllEntities();
+            return allCourses.Where(course => course.Owner.IdUser == user.IdUser);
+        }
+
+        public async Task AddCourse(Course course)
         {
             if (course == null)
             {
                 throw new ArgumentNullException("Course can't be null");
             }
 
-            if (CourseRepository.Exists(course.Name, course.Description))
+            if (await Exists(course.Name, course.Description))
             {
                 throw new ArgumentException("Course with this name and description already exists");
             }
 
-            CourseRepository.Add(course);
-            //CourseRepository.SaveChanges();
+            await CourseRepository.Add(course);
         }
 
-        public void DeleteCourse(Course course)
+        public async Task DeleteCourse(Course course)
         {
-            CourseRepository.Delete(course);
-            CourseRepository.SaveChanges();
+            await CourseRepository.Delete(course);
         }
 
-        public IEnumerable<Course> GetAvailableCourses(User user)
+        public async Task UpdateCourse(Course course)
         {
-            return CourseRepository.Courses.Where(course => course.AccessLevel <= user.AccessLevel);
-        }
-
-        public IEnumerable<Course> GetSubscribedCourses(User user)
-        {
-            return new List<Course>();
-        }
-
-        public IEnumerable<Course> GetOwnCourses(User user)
-        {
-            return CourseRepository.Courses.Where(course => course.Owner.IdUser == user.IdUser);
+            await CourseRepository.Update(course);
         }
     }
 }

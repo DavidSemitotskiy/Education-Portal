@@ -1,48 +1,45 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Portal.Domain.DTOs;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Portal.Infrastructure
 {
     public class UserRepository : IUserRepository
     {
-        private static UserRepository _repository = new UserRepository();
+        private readonly string _path;
 
-        private UserRepository()
+        public UserRepository(string path)
         {
-            Users = GetAllUsers().ToList();
+            _path = path ?? throw new ArgumentNullException("Path can't be null");
         }
 
-        public List<User> Users { get; set; }
-
-        public static UserRepository GetInstance()
+        public async Task<IEnumerable<User>> GetAllUsers()
         {
-            return _repository;
-        }
-
-        public IEnumerable<User> GetAllUsers()
-        {
-            using (StreamReader file = new StreamReader(@"..\..\..\..\DataBases\UserStorage.json"))
+            List<User> users = new List<User>();
+            using (StreamReader file = new StreamReader(_path))
             {
                 User deserializeUser = null;
                 string serializeObject = null;
                 while (file.Peek() != -1)
                 {
-                    serializeObject = file.ReadLine();
+                    serializeObject = await file.ReadLineAsync();
                     deserializeUser = JsonConvert.DeserializeObject<User>(serializeObject);
-                    yield return deserializeUser;
+                    users.Add(deserializeUser);
                 }
-
-                file.Close();
             }
+
+            return users;
         }
 
-        public void Add(User user)
+        public async Task Add(User user)
         {
-            Users.Add(user);
-            using (StreamWriter file = new StreamWriter(@"..\..\..\..\DataBases\UserStorage.json", true))
+            using (StreamWriter file = new StreamWriter(_path, true))
             {
                 string serializeUser = JsonConvert.SerializeObject(user, new JsonSerializerSettings()
                 {
@@ -52,32 +49,65 @@ namespace Portal.Infrastructure
                     }
                 });
 
-                file.WriteLine(serializeUser);
-                file.Close();
+                await file.WriteLineAsync(serializeUser);
             }
         }
 
-        public bool Exists(string firstName, string lastName, string email)
+        public async Task Delete(User user)
         {
-            return Users.Any(user => (user.FirstName == firstName && user.LastName == lastName) || user.Email == email);
-        }
-
-        public User GetLogInUser(UserLoginDTO userLogIn)
-        {
-            if (userLogIn == null)
+            var allUsers = (await GetAllUsers()).ToList();
+            var resultRemoving = allUsers.Remove(user);
+            if (!resultRemoving)
             {
-                throw new ArgumentNullException("LogIn User can't be null");
+                return;
             }
 
-            foreach (var user in Users)
+            await WriteUsersToFile(allUsers);
+        }
+
+        public async Task Update(User user)
+        {
+            if (user == null)
             {
-                if (user.Email == userLogIn.Email && user.Password == userLogIn.Password)
+                throw new ArgumentNullException("User can't be null");
+            }
+
+            var allUsers = (await GetAllUsers()).ToList();
+            bool resultUpdating = false;
+            for (int i = 0; i < allUsers.Count; i++)
+            {
+                if (allUsers[i].IdUser == user.IdUser)
                 {
-                    return user;
+                    allUsers[i] = user;
+                    resultUpdating = true;
                 }
             }
 
-            return null;
+            if (!resultUpdating)
+            {
+                return;
+            }
+
+            await WriteUsersToFile(allUsers);
+        }
+
+        private async Task WriteUsersToFile(List<User> users)
+        {
+            string serializeUser = null;
+            using (StreamWriter file = new StreamWriter(_path))
+            {
+                for (int i = 0; i < users.Count; i++)
+                {
+                    serializeUser = JsonConvert.SerializeObject(users[i], new JsonSerializerSettings()
+                    {
+                        ContractResolver = new DefaultContractResolver()
+                        {
+                            NamingStrategy = new CamelCaseNamingStrategy()
+                        },
+                    });
+                    await file.WriteLineAsync(serializeUser);
+                }
+            }
         }
     }
 }

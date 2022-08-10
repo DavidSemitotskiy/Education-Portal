@@ -1,6 +1,4 @@
-﻿using Portal.Domain.Interfaces;
-
-namespace Portal.Domain.Models
+﻿namespace Portal.Domain.Models
 {
     public class ArticleMaterial : Material
     {

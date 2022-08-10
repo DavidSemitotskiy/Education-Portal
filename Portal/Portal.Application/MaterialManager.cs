@@ -1,42 +1,52 @@
 ﻿using Portal.Application.Interfaces;
 using Portal.Domain.Interfaces;
+using Portal.Domain.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Portal.Application
 {
     public class MaterialManager : IMaterialManager
     {
-        public MaterialManager(IMaterialRepository materialRepository)
+        public MaterialManager(IEntityRepository<Material> repository)
         {
-            MaterialRepository = materialRepository ?? throw new ArgumentNullException("Repository can't be null");
+            MaterialRepository = repository ?? throw new ArgumentNullException("Repository can't be null");
         }
 
-        public IMaterialRepository MaterialRepository { get; set; }
+        public IEntityRepository<Material> MaterialRepository { get; }
 
-        public IEnumerable<Material> GetAllMaterials()
-        {
-            return MaterialRepository.Materials;
-        }
-
-        public void AddMaterial(Material material)
+        public async Task AddMaterial(Material material)
         {
             if (material == null)
             {
                 throw new ArgumentNullException("Course can't be null");
             }
 
-            if (MaterialRepository.Exists(material))
+            if (await Exists(material))
             {
                 throw new ArgumentException("This material already exists");
             }
 
-            MaterialRepository.Add(material);
-            //MaterialRepository.SaveChanges();
+            await MaterialRepository.Add(material);
         }
 
-        public void DeleteMaterial(Material material)
+        public async Task DeleteMaterial(Material material)
         {
-            MaterialRepository.Delete(material);
-            MaterialRepository.SaveChanges();
+            await MaterialRepository.Delete(material);
+        }
+
+        public async Task<bool> Exists(Material material)
+        {
+            var allMaterials = await MaterialRepository.GetAllEntities();
+            return allMaterials.Any(m => m.Equals(material));
+        }
+
+        public async Task UpdateMaterial(Material material)
+        {
+            await MaterialRepository.Update(material);
         }
     }
 }

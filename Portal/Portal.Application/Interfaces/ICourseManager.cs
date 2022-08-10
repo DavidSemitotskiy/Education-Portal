@@ -5,16 +5,18 @@ namespace Portal.Application.Interfaces
 {
     public interface ICourseManager
     {
-        ICourseRepository CourseRepository { get; set; }
+        IEntityRepository<Course> CourseRepository { get; }
 
-        void AddCourse(Course course);
+        Task AddCourse(Course course);
 
-        void DeleteCourse(Course course);
+        Task DeleteCourse(Course course);
 
-        IEnumerable<Course> GetAvailableCourses(User user);
+        Task UpdateCourse(Course course);
 
-        IEnumerable<Course> GetSubscribedCourses(User user);
+        Task<bool> Exists(string name, string description);
 
-        IEnumerable<Course> GetOwnCourses(User user);
+        Task<IEnumerable<Course>> GetAvailableCourses(User user);
+
+        Task<IEnumerable<Course>> GetOwnCourses(User user);
     }
 }

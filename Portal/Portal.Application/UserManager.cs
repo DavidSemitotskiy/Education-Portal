@@ -7,28 +7,65 @@ namespace Portal.Application
 {
     public class UserManager : IUserManager
     {
-        public UserManager(IUserRepository userRepository)
+        public UserManager(IUserRepository repository)
         {
-            UserRepository = userRepository ?? throw new ArgumentNullException("Repository can't be null");
+            UserRepository = repository ?? throw new ArgumentNullException("Repository can't be null");
         }
 
-        public IUserRepository UserRepository { get; set; }
+        public IUserRepository UserRepository { get; }
 
-        public void Register(UserRegisterDTO userRegister)
+        public async Task<bool> Exists(UserRegisterDTO userRegister)
+        {
+            var allUsers = await UserRepository.GetAllUsers();
+            return allUsers.Any(user => user.Email == userRegister.Email);
+        }
+
+        public async Task<User> GetLogInUser(UserLoginDTO userLogIn)
+        {
+            if (userLogIn == null)
+            {
+                throw new ArgumentNullException("User can't be null");
+            }
+
+            var taskAllUsers = UserRepository.GetAllUsers();
+            AccountService accountService = new AccountService();
+            string hashedPassword = accountService.GetHashPassword(userLogIn.Password);
+            var allUsers = await taskAllUsers;
+            return allUsers.FirstOrDefault(user => user.Email == userLogIn.Email && user.Password == hashedPassword);
+        }
+
+        public async Task LogIn(UserLoginDTO userLogin)
+        {
+            User logInUser = await GetLogInUser(userLogin);
+            if (logInUser == null)
+            {
+                throw new Exception("User isn't registered");
+            }
+
+            IUserManager.CurrentUser = logInUser;
+        }
+
+        public async Task LogOff()
+        {
+            IUserManager.CurrentUser = null;
+        }
+
+        public async Task Register(UserRegisterDTO userRegister)
         {
             if (userRegister == null)
             {
-                throw new ArgumentNullException("New User can't be null");
+                throw new ArgumentNullException("User can't be null");
             }
 
-            if (UserRepository.Exists(userRegister.FirstName, userRegister.LastName, userRegister.Email))
-            {
-                throw new ArgumentException("User with the same name already exists");
-            }
-
+            var taskExisting = Exists(userRegister);
             if (!userRegister.Password.Equals(userRegister.ConfirmPassword))
             {
                 throw new ArgumentException("Confirm password doesn't match to Password");
+            }
+
+            if (await taskExisting)
+            {
+                throw new ArgumentException("User with the same name already exists");
             }
 
             AccountService accountService = new AccountService();
@@ -42,37 +79,8 @@ namespace Portal.Application
                 AccessLevel = 0,
                 Skills = new List<UserSkill>()
             };
-
-            UserRepository.Add(user);
+            await UserRepository.Add(user);
             IUserManager.CurrentUser = user;
-        }
-
-        public void LogIn(UserLoginDTO userLogin)
-        {
-            if (userLogin == null)
-            {
-                throw new ArgumentNullException("New User can't be null");
-            }
-
-            AccountService accountService = new AccountService();
-            userLogin.Password = accountService.GetHashPassword(userLogin.Password);
-            User logInUser = UserRepository.GetLogInUser(userLogin);
-            if (logInUser == null)
-            {
-                throw new Exception("User isn't registered");
-            }
-
-            IUserManager.CurrentUser = logInUser;
-        }
-
-        public void LogOff()
-        {
-            if (IUserManager.CurrentUser == null)
-            {
-                throw new ArgumentException("User isn't authorized");
-            }
-
-            IUserManager.CurrentUser = null;
         }
     }
 }

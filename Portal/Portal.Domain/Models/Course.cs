@@ -1,11 +1,9 @@
-﻿using Portal.Domain.Interfaces;
+﻿using Portal.Domain.BaseModels;
 
 namespace Portal.Domain.Models
 {
-    public class Course
+    public class Course : Entity
     {
-        public Guid IdCourse { get; set; }
-
         public string Name { get; set; }
 
         public string Description { get; set; }
@@ -19,20 +17,5 @@ namespace Portal.Domain.Models
         public List<User> Subscribers { get; set; }
 
         public List<Skill> Skills { get; set; }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is Course other)
-            {
-                return GetHashCode() == other.GetHashCode();
-            }
-
-            return false;
-        }
-
-        public override int GetHashCode()
-        {
-            return IdCourse.GetHashCode() + Name.GetHashCode() + Description.GetHashCode();
-        }
     }
 }

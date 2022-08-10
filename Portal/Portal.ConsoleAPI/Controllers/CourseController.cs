@@ -1,8 +1,8 @@
 ﻿using Portal.Application.Interfaces;
-using Portal.Domain.Interfaces;
+using Portal.ConsoleAPI.Validation;
 using Portal.Domain.Models;
 
-namespace Portal.ConsoleAPI
+namespace Portal.ConsoleAPI.Conrollers
 {
     public class CourseController
     {
@@ -16,13 +16,8 @@ namespace Portal.ConsoleAPI
 
         public MaterialController MaterialController { get; set; }
 
-        public void CreateCourse()
+        public async Task CreateCourse()
         {
-            if (IUserManager.CurrentUser == null)
-            {
-                throw new ArgumentNullException("User isn't authorized for this operation");
-            }
-
             string courseName = null;
             string courseDescription = null;
             int accessLevel = 0;
@@ -61,61 +56,63 @@ namespace Portal.ConsoleAPI
                     continue;
                 }
 
-                break;
-            }
-
-            Material material = null;
-            List<Material> materials = new List<Material>();
-            for (int i = 0; i < countMaterials;)
-            {
-                Console.WriteLine("1)Create own material");
-                Console.WriteLine("2)Choose existed material");
-                Console.Write("Choose the operation by its number: ");
-                string pick = Console.ReadLine();
-                switch (pick)
+                Material material = null;
+                List<Material> materials = new List<Material>();
+                for (int i = 0; i < countMaterials;)
                 {
-                    case "1":
-                        material = MaterialController.CreatOwnMaterial();
-                        break;
-                    case "2":
-                        material = MaterialController.ChooseExistedMaterial();
-                        break;
-                    default:
-                        Console.WriteLine("Incorrect number of operation");
-                        Console.ReadLine();
-                        Console.Clear();
-                        continue;
+                    Console.WriteLine("1)Create own material");
+                    Console.WriteLine("2)Choose existed material");
+                    Console.Write("Choose the operation by its number: ");
+                    string pick = Console.ReadLine();
+                    switch (pick)
+                    {
+                        case "1":
+                            material = await MaterialController.CreatOwnMaterial();
+                            break;
+                        case "2":
+                            material = await MaterialController.ChooseExistedMaterial();
+                            break;
+                        default:
+                            Console.WriteLine("Incorrect number of operation");
+                            Console.ReadLine();
+                            Console.Clear();
+                            continue;
+                    }
+
+                    materials.Add(material);
+                    i++;
+                    Console.Write("Press Enter to continue!!!");
+                    Console.ReadLine();
+                    Console.Clear();
                 }
 
-                materials.Add(material);
-                i++;
-                Console.Write("Press Enter to continue!!!");
-                Console.ReadLine();
-                Console.Clear();
-            }
+                Course course = new Course
+                {
+                    Id = Guid.NewGuid(),
+                    Name = courseName,
+                    Description = courseDescription,
+                    AccessLevel = accessLevel,
+                    Skills = courseSkills,
+                    Owner = IUserManager.CurrentUser,
+                    Subscribers = new List<User>(),
+                    Materials = materials
+                };
+                var errorMessages = await new ErrorMessages<CourseValidator, Course>().Validate(course);
+                if (!errorMessages)
+                {
+                    Console.ReadLine();
+                    Console.Clear();
+                    continue;
+                }
 
-            Course course = new Course
-            {
-                IdCourse = Guid.NewGuid(),
-                Name = courseName,
-                Description = courseDescription,
-                AccessLevel = accessLevel,
-                Skills = courseSkills,
-                Owner = IUserManager.CurrentUser,
-                Subscribers = new List<User>(),
-                Materials = materials
-            };
-            CourseManager.AddCourse(course);
+                await CourseManager.AddCourse(course);
+                return;
+            }
         }
 
-        public void SeeAvailableCourses()
+        public async Task SeeAvailableCourses()
         {
-            if (IUserManager.CurrentUser == null)
-            {
-                throw new ArgumentNullException("User isn't authorized for this operation");
-            }
-
-            var availableCourses = CourseManager.GetAvailableCourses(IUserManager.CurrentUser).ToList();
+            var availableCourses = (await CourseManager.GetAvailableCourses(IUserManager.CurrentUser)).ToList();
             if (availableCourses.Count == 0)
             {
                 Console.WriteLine("There aren't any available course by your access level!!!");
@@ -128,14 +125,9 @@ namespace Portal.ConsoleAPI
             }
         }
 
-        public void DeleteCourse()
+        public async Task DeleteCourse()
         {
-            if (IUserManager.CurrentUser == null)
-            {
-                throw new ArgumentNullException("User isn't authorized for this operation");
-            }
-
-            var ownCourses = CourseManager.GetOwnCourses(IUserManager.CurrentUser).ToList();
+            var ownCourses = (await CourseManager.GetOwnCourses(IUserManager.CurrentUser)).ToList();
             if (ownCourses.Count == 0)
             {
                 Console.WriteLine("You don't have any courses to delete!!!");
@@ -157,17 +149,12 @@ namespace Portal.ConsoleAPI
                 return;
             }
 
-            CourseManager.DeleteCourse(ownCourses[index - 1]);
+            await CourseManager.DeleteCourse(ownCourses[index - 1]);
         }
 
-        public void Update()
+        public async Task Update()
         {
-            if (IUserManager.CurrentUser == null)
-            {
-                throw new ArgumentNullException("User isn't authorized for this operation");
-            }
-
-            var ownCourses = CourseManager.GetOwnCourses(IUserManager.CurrentUser).ToList();
+            var ownCourses = (await CourseManager.GetOwnCourses(IUserManager.CurrentUser)).ToList();
             if (ownCourses.Count == 0)
             {
                 Console.WriteLine("You don't have any courses to update!!!");
@@ -202,16 +189,16 @@ namespace Portal.ConsoleAPI
                     case "1":
                         Console.Write("Input new name: ");
                         courseUpdate.Name = Console.ReadLine();
-                        CourseManager.CourseRepository.SaveChanges();
+                        await CourseManager.CourseRepository.Update(courseUpdate);
                         return;
                     case "2":
                         Console.Write("Input new description: ");
                         courseUpdate.Description = Console.ReadLine();
-                        CourseManager.CourseRepository.SaveChanges();
+                        await CourseManager.CourseRepository.Update(courseUpdate);
                         return;
                     case "3":
-                        MaterialController.UpdateMaterial(courseUpdate);
-                        CourseManager.CourseRepository.SaveChanges();
+                        await MaterialController.UpdateMaterial(courseUpdate);
+                        await CourseManager.CourseRepository.Update(courseUpdate);
                         return;
                     default:
                         Console.WriteLine("Incorrect number of operation");

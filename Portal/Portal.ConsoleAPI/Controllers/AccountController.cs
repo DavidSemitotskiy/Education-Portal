@@ -1,7 +1,8 @@
 ﻿using Portal.Application.Interfaces;
+using Portal.ConsoleAPI.Validation;
 using Portal.Domain.DTOs;
 
-namespace Portal.ConsoleAPI
+namespace Portal.ConsoleAPI.Conrollers
 {
     public class AccountController
     {
@@ -10,18 +11,10 @@ namespace Portal.ConsoleAPI
             UserManager = userManager ?? throw new ArgumentNullException("Manager can't be null");
         }
 
-        public IUserManager UserManager { get; set; }
+        public IUserManager UserManager { get; }
 
-        public void LogIn()
+        public async Task LogIn()
         {
-            if (IUserManager.CurrentUser != null)
-            {
-                Console.WriteLine("User is authorized");
-                Console.ReadLine();
-                Console.Clear();
-                return;
-            }
-
             Console.Write("Input email: ");
             string email = Console.ReadLine();
             Console.Write("Input password: ");
@@ -31,10 +24,17 @@ namespace Portal.ConsoleAPI
                 Email = email,
                 Password = password
             };
-            UserManager.LogIn(user);
+
+            var errorMessages = new ErrorMessages<UserLoginDTOValidator, UserLoginDTO>();
+            if (!await errorMessages.Validate(user))
+            {
+                return;
+            }
+
+            await UserManager.LogIn(user);
         }
 
-        public void Register()
+        public async Task Register()
         {
             Console.Write("Input firstname: ");
             string firstName = Console.ReadLine();
@@ -54,12 +54,18 @@ namespace Portal.ConsoleAPI
                 Password = password,
                 ConfirmPassword = confirmPassword
             };
-            UserManager.Register(user);
+            var errorMessages = new ErrorMessages<UserRegisterDTOValidator, UserRegisterDTO>();
+            if (!await errorMessages.Validate(user))
+            {
+                return;
+            }
+
+            await UserManager.Register(user);
         }
 
-        public void LogOff()
+        public async Task LogOff()
         {
-            UserManager.LogOff();
+            await UserManager.LogOff();
         }
     }
 }

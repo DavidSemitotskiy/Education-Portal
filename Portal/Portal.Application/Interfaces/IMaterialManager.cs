@@ -1,13 +1,18 @@
 ﻿using Portal.Domain.Interfaces;
+using Portal.Domain.Models;
 
 namespace Portal.Application.Interfaces
 {
     public interface IMaterialManager
     {
-        IMaterialRepository MaterialRepository { get; set; }
+        IEntityRepository<Material> MaterialRepository { get; }
 
-        void AddMaterial(Material material);
+        Task AddMaterial(Material material);
 
-        void DeleteMaterial(Material material);
+        Task DeleteMaterial(Material material);
+
+        Task UpdateMaterial(Material material);
+
+        Task<bool> Exists(Material material);
     }
 }

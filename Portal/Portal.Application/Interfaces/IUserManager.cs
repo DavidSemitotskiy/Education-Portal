@@ -8,12 +8,16 @@ namespace Portal.Application.Interfaces
     {
         static User? CurrentUser { get; set; }
 
-        IUserRepository UserRepository { get; set; }
+        IUserRepository UserRepository { get; }
 
-        void LogIn(UserLoginDTO userLogin);
+        Task<User> GetLogInUser(UserLoginDTO userLogIn);
 
-        void Register(UserRegisterDTO userRegister);
+        Task<bool> Exists(UserRegisterDTO userRegister);
 
-        void LogOff();
+        Task LogIn(UserLoginDTO userLogin);
+
+        Task Register(UserRegisterDTO userRegister);
+
+        Task LogOff();
     }
 }
