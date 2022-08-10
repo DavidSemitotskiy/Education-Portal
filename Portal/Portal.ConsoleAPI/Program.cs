@@ -9,11 +9,17 @@ namespace Portal.ConsoleAPI
 {
     public class Program
     {
+        private const string _pathUserStorage = @"..\..\..\..\DataBases\UserStorage.json";
+
+        private const string _pathMaterialStorage = @"..\..\..\..\DataBases\MaterialStorage.json";
+
+        private const string _pathCourseStorage = @"..\..\..\..\DataBases\CourseStorage.json";
+
         public static async Task Main()
         {
-            var userRepository = new UserRepository(@"..\..\..\..\DataBases\UserStorage.json");
-            var materialRepository = new EntityFileRepository<Material>(@"..\..\..\..\DataBases\MaterialStorage.json");
-            var courseRepository = new EntityFileRepository<Course>(@"..\..\..\..\DataBases\CourseStorage.json");
+            var userRepository = new UserRepository(_pathUserStorage);
+            var materialRepository = new EntityFileRepository<Material>(_pathMaterialStorage);
+            var courseRepository = new EntityFileRepository<Course>(_pathCourseStorage);
             var userManager = new UserManager(userRepository);
             var materialManager = new MaterialManager(materialRepository);
             var courseManager = new CourseManager(courseRepository);
