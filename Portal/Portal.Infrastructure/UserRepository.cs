@@ -9,9 +9,18 @@ namespace Portal.Infrastructure
     {
         private readonly string _path;
 
+        private readonly JsonSerializerSettings _jsonSettings;
+
         public UserRepository(string path)
         {
             _path = path ?? throw new ArgumentNullException("Path can't be null");
+            _jsonSettings = new JsonSerializerSettings()
+            {
+                ContractResolver = new DefaultContractResolver()
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                }
+            };
         }
 
         public async Task<IEnumerable<User>> GetAllUsers()
@@ -36,14 +45,7 @@ namespace Portal.Infrastructure
         {
             using (StreamWriter file = new StreamWriter(_path, true))
             {
-                string serializeUser = JsonConvert.SerializeObject(user, new JsonSerializerSettings()
-                {
-                    ContractResolver = new DefaultContractResolver()
-                    {
-                        NamingStrategy = new CamelCaseNamingStrategy()
-                    }
-                });
-
+                string serializeUser = JsonConvert.SerializeObject(user, _jsonSettings);
                 await file.WriteLineAsync(serializeUser);
             }
         }
@@ -93,13 +95,7 @@ namespace Portal.Infrastructure
             {
                 for (int i = 0; i < users.Count; i++)
                 {
-                    serializeUser = JsonConvert.SerializeObject(users[i], new JsonSerializerSettings()
-                    {
-                        ContractResolver = new DefaultContractResolver()
-                        {
-                            NamingStrategy = new CamelCaseNamingStrategy()
-                        },
-                    });
+                    serializeUser = JsonConvert.SerializeObject(users[i], _jsonSettings);
                     await file.WriteLineAsync(serializeUser);
                 }
             }
