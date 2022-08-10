@@ -23,6 +23,7 @@ namespace Portal.ConsoleAPI.Conrollers
             int accessLevel = 0;
             List<Skill> courseSkills = null;
             int countMaterials = 0;
+            Course course = null;
             while (true)
             {
                 Console.Write("Input name of course: ");
@@ -56,37 +57,7 @@ namespace Portal.ConsoleAPI.Conrollers
                     continue;
                 }
 
-                Material material = null;
-                List<Material> materials = new List<Material>();
-                for (int i = 0; i < countMaterials;)
-                {
-                    Console.WriteLine("1)Create own material");
-                    Console.WriteLine("2)Choose existed material");
-                    Console.Write("Choose the operation by its number: ");
-                    string pick = Console.ReadLine();
-                    switch (pick)
-                    {
-                        case "1":
-                            material = await MaterialController.CreatOwnMaterial();
-                            break;
-                        case "2":
-                            material = await MaterialController.ChooseExistedMaterial();
-                            break;
-                        default:
-                            Console.WriteLine("Incorrect number of operation");
-                            Console.ReadLine();
-                            Console.Clear();
-                            continue;
-                    }
-
-                    materials.Add(material);
-                    i++;
-                    Console.Write("Press Enter to continue!!!");
-                    Console.ReadLine();
-                    Console.Clear();
-                }
-
-                Course course = new Course
+                course = new Course
                 {
                     Id = Guid.NewGuid(),
                     Name = courseName,
@@ -95,7 +66,7 @@ namespace Portal.ConsoleAPI.Conrollers
                     Skills = courseSkills,
                     Owner = IUserManager.CurrentUser,
                     Subscribers = new List<User>(),
-                    Materials = materials
+                    Materials = new List<Material>()
                 };
                 var errorMessages = await new ErrorMessages<CourseValidator, Course>().Validate(course);
                 if (!errorMessages)
@@ -105,9 +76,41 @@ namespace Portal.ConsoleAPI.Conrollers
                     continue;
                 }
 
-                await CourseManager.AddCourse(course);
-                return;
+                break;
             }
+
+            Material material = null;
+            List<Material> materials = new List<Material>();
+            for (int i = 0; i < countMaterials;)
+            {
+                Console.WriteLine("1)Create own material");
+                Console.WriteLine("2)Choose existed material");
+                Console.Write("Choose the operation by its number: ");
+                string pick = Console.ReadLine();
+                switch (pick)
+                {
+                    case "1":
+                        material = await MaterialController.CreatOwnMaterial();
+                        break;
+                    case "2":
+                        material = await MaterialController.ChooseExistedMaterial();
+                        break;
+                    default:
+                        Console.WriteLine("Incorrect number of operation");
+                        Console.ReadLine();
+                        Console.Clear();
+                        continue;
+                }
+
+                materials.Add(material);
+                i++;
+                Console.Write("Press Enter to continue!!!");
+                Console.ReadLine();
+                Console.Clear();
+            }
+
+            await CourseManager.AddCourse(course);
+            return;
         }
 
         public async Task SeeAvailableCourses()
