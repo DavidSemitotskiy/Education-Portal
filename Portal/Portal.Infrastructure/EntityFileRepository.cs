@@ -58,26 +58,15 @@ namespace Portal.Infrastructure
                 throw new ArgumentNullException("Entity can't be null");
             }
 
-            var allCourses = (await GetAllEntities()).ToList();
-            var indexDeleteEntity = 0;
-            var resultRemoving = false;
-            for (int i = 0; i < allCourses.Count; i++)
-            {
-                if (allCourses[i].Id == entity.Id)
-                {
-                    indexDeleteEntity = i;
-                    resultRemoving = true;
-                    break;
-                }
-            }
-
+            var allEntities = (await GetAllEntities()).ToList();
+            var entityToDelete = allEntities.FirstOrDefault(e => e.Id == entity.Id);
+            var resultRemoving = allEntities.Remove(entityToDelete);
             if (!resultRemoving)
             {
                 return;
             }
 
-            allCourses.RemoveAt(indexDeleteEntity);
-            await WriteEntitiesToFile(allCourses);
+            await WriteEntitiesToFile(allEntities);
         }
 
         public async Task Update(TEntity entity)

@@ -52,8 +52,14 @@ namespace Portal.Infrastructure
 
         public async Task Delete(User user)
         {
+            if (user == null)
+            {
+                throw new ArgumentNullException("User can't be null");
+            }
+
             var allUsers = (await GetAllUsers()).ToList();
-            var resultRemoving = allUsers.Remove(user);
+            var userToDelete = allUsers.FirstOrDefault(u => u.IdUser == user.IdUser);
+            var resultRemoving = allUsers.Remove(userToDelete);
             if (!resultRemoving)
             {
                 return;
@@ -77,6 +83,7 @@ namespace Portal.Infrastructure
                 {
                     allUsers[i] = user;
                     resultUpdating = true;
+                    break;
                 }
             }
 
