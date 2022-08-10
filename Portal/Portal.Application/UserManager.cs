@@ -28,8 +28,7 @@ namespace Portal.Application
             }
 
             var taskAllUsers = UserRepository.GetAllUsers();
-            var accountService = new AccountService();
-            var hashedPassword = accountService.GetHashPassword(userLogIn.Password);
+            var hashedPassword = AccountService.GetHashPassword(userLogIn.Password);
             var allUsers = await taskAllUsers;
             return allUsers.FirstOrDefault(user => user.Email == userLogIn.Email && user.Password == hashedPassword);
         }
@@ -68,13 +67,12 @@ namespace Portal.Application
                 throw new ArgumentException("User with the same name already exists");
             }
 
-            var accountService = new AccountService();
             var user = new User
             {
                 IdUser = Guid.NewGuid(),
                 FirstName = userRegister.FirstName,
                 LastName = userRegister.LastName,
-                Password = accountService.GetHashPassword(userRegister.Password),
+                Password = AccountService.GetHashPassword(userRegister.Password),
                 Email = userRegister.Email,
                 AccessLevel = 0,
                 Skills = new List<UserSkill>()
