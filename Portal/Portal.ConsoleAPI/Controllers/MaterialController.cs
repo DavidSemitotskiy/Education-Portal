@@ -118,7 +118,8 @@ namespace Portal.ConsoleAPI.Conrollers
                     Authors = authors,
                     Title = title,
                     CountPages = countPages,
-                    Format = format
+                    Format = format,
+                    DatePublication = datePublication
                 };
                 var errorMessages = await new ErrorMessages<BookMaterialValidator, BookMaterial>().Validate(material);
                 if (!errorMessages)

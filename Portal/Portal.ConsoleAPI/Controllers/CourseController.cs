@@ -109,6 +109,7 @@ namespace Portal.ConsoleAPI.Conrollers
                 Console.Clear();
             }
 
+            course.Materials = materials;
             await CourseManager.AddCourse(course);
             return;
         }
