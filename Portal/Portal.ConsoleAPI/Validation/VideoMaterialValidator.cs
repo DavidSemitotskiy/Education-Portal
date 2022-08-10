@@ -8,7 +8,7 @@ namespace Portal.ConsoleAPI.Validation
         public VideoMaterialValidator()
         {
             RuleFor(material => material.Duration).Must(duration => duration > 0);
-            RuleFor(material => material.Quality).NotNull().NotEmpty();
+            RuleFor(material => material.Quality).NotEmpty();
         }
     }
 }

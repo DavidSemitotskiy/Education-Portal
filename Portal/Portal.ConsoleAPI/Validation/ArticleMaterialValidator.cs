@@ -7,7 +7,7 @@ namespace Portal.ConsoleAPI.Validation
     {
         public ArticleMaterialValidator()
         {
-            RuleFor(material => material.Resource).NotNull().NotEmpty();
+            RuleFor(material => material.Resource).NotEmpty();
         }
     }
 }

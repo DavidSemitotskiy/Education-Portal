@@ -7,10 +7,10 @@ namespace Portal.ConsoleAPI.Validation
     {
         public UserRegisterDTOValidator()
         {
-            RuleFor(user => user.FirstName).NotNull().NotEmpty();
-            RuleFor(user => user.LastName).NotNull().NotEmpty();
-            RuleFor(user => user.Password).NotNull().NotEmpty();
-            RuleFor(user => user.ConfirmPassword).NotNull().NotEmpty();
+            RuleFor(user => user.FirstName).NotEmpty();
+            RuleFor(user => user.LastName).NotEmpty();
+            RuleFor(user => user.Password).NotEmpty();
+            RuleFor(user => user.ConfirmPassword).NotEmpty();
             RuleFor(user => user.Email).EmailAddress();
         }
     }
