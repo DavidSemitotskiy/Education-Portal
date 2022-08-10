@@ -28,15 +28,15 @@ namespace Portal.Application
             }
 
             var taskAllUsers = UserRepository.GetAllUsers();
-            AccountService accountService = new AccountService();
-            string hashedPassword = accountService.GetHashPassword(userLogIn.Password);
+            var accountService = new AccountService();
+            var hashedPassword = accountService.GetHashPassword(userLogIn.Password);
             var allUsers = await taskAllUsers;
             return allUsers.FirstOrDefault(user => user.Email == userLogIn.Email && user.Password == hashedPassword);
         }
 
         public async Task LogIn(UserLoginDTO userLogin)
         {
-            User logInUser = await GetLogInUser(userLogin);
+            var logInUser = await GetLogInUser(userLogin);
             if (logInUser == null)
             {
                 throw new Exception("User isn't registered");
@@ -68,8 +68,8 @@ namespace Portal.Application
                 throw new ArgumentException("User with the same name already exists");
             }
 
-            AccountService accountService = new AccountService();
-            User user = new User
+            var accountService = new AccountService();
+            var user = new User
             {
                 IdUser = Guid.NewGuid(),
                 FirstName = userRegister.FirstName,

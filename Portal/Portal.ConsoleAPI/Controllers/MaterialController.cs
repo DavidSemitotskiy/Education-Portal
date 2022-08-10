@@ -26,7 +26,7 @@ namespace Portal.ConsoleAPI.Conrollers
             }
 
             Console.Write("Choose the material to update by its number: ");
-            bool resultParing = int.TryParse(Console.ReadLine(), out int index);
+            var resultParing = int.TryParse(Console.ReadLine(), out int index);
             if (!resultParing || index - 1 >= course.Materials.Count)
             {
                 Console.WriteLine("Incorrect number of material");
@@ -38,7 +38,7 @@ namespace Portal.ConsoleAPI.Conrollers
                 Console.WriteLine("1)Create own material");
                 Console.WriteLine("2)Choose existed material");
                 Console.Write("Choose the operation by its number: ");
-                string pick = Console.ReadLine();
+                var pick = Console.ReadLine();
                 switch (pick)
                 {
                     case "1":
@@ -64,7 +64,7 @@ namespace Portal.ConsoleAPI.Conrollers
                 Console.WriteLine("2)Create VidoeMaterial");
                 Console.WriteLine("3)Create ArticleMaterial");
                 Console.Write("Choose the operation by its number: ");
-                string pick = Console.ReadLine();
+                var pick = Console.ReadLine();
                 switch (pick)
                 {
                     case "1":
@@ -87,11 +87,11 @@ namespace Portal.ConsoleAPI.Conrollers
             while (true)
             {
                 Console.Write("Input authors: ");
-                string authors = Console.ReadLine();
+                var authors = Console.ReadLine();
                 Console.Write("Input title: ");
-                string title = Console.ReadLine();
+                var title = Console.ReadLine();
                 Console.Write("Input count pages: ");
-                bool resultParing = int.TryParse(Console.ReadLine(), out int countPages);
+                var resultParing = int.TryParse(Console.ReadLine(), out int countPages);
                 if (!resultParing || countPages <= 0)
                 {
                     Console.WriteLine("Incorrect count pages");
@@ -101,9 +101,9 @@ namespace Portal.ConsoleAPI.Conrollers
                 }
 
                 Console.Write("Input format: ");
-                string format = Console.ReadLine();
+                var format = Console.ReadLine();
                 Console.Write("Input publication date: ");
-                bool resultParingDate = DateTime.TryParse(Console.ReadLine(), out DateTime datePublication);
+                var resultParingDate = DateTime.TryParse(Console.ReadLine(), out DateTime datePublication);
                 if (!resultParingDate)
                 {
                     Console.WriteLine("Incorrect date");
@@ -112,7 +112,7 @@ namespace Portal.ConsoleAPI.Conrollers
                     continue;
                 }
 
-                BookMaterial material = new BookMaterial
+                var material = new BookMaterial
                 {
                     Id = Guid.NewGuid(),
                     Authors = authors,
@@ -139,7 +139,7 @@ namespace Portal.ConsoleAPI.Conrollers
             while (true)
             {
                 Console.Write("Input duration: ");
-                bool resultParing = long.TryParse(Console.ReadLine(), out long duration);
+                var resultParing = long.TryParse(Console.ReadLine(), out long duration);
                 if (!resultParing || duration < 0)
                 {
                     Console.WriteLine("Incorrect duration");
@@ -149,8 +149,8 @@ namespace Portal.ConsoleAPI.Conrollers
                 }
 
                 Console.Write("Input quality: ");
-                string quality = Console.ReadLine();
-                VideoMaterial material = new VideoMaterial
+                var quality = Console.ReadLine();
+                var material = new VideoMaterial
                 {
                     Id = Guid.NewGuid(),
                     Duration = duration,
@@ -174,9 +174,9 @@ namespace Portal.ConsoleAPI.Conrollers
             while (true)
             {
                 Console.Write("Input source: ");
-                string resource = Console.ReadLine();
+                var resource = Console.ReadLine();
                 Console.Write("Input publication date: ");
-                bool resultParingDate = DateTime.TryParse(Console.ReadLine(), out DateTime datePublication);
+                var resultParingDate = DateTime.TryParse(Console.ReadLine(), out DateTime datePublication);
                 if (!resultParingDate)
                 {
                     Console.WriteLine("Incorrect date");
@@ -185,7 +185,7 @@ namespace Portal.ConsoleAPI.Conrollers
                     continue;
                 }
 
-                ArticleMaterial material = new ArticleMaterial
+                var material = new ArticleMaterial
                 {
                     Id = Guid.NewGuid(),
                     Resource = resource,
@@ -221,7 +221,7 @@ namespace Portal.ConsoleAPI.Conrollers
                 }
 
                 Console.Write("Choose one by its number: ");
-                bool resultParing = int.TryParse(Console.ReadLine(), out int index);
+                var resultParing = int.TryParse(Console.ReadLine(), out int index);
                 if (!resultParing || index - 1 >= allMaterials.Count)
                 {
                     Console.WriteLine("Incorrect number of existed material");

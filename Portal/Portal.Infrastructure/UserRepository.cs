@@ -25,7 +25,7 @@ namespace Portal.Infrastructure
 
         public async Task<IEnumerable<User>> GetAllUsers()
         {
-            List<User> users = new List<User>();
+            var users = new List<User>();
             using (StreamReader file = new StreamReader(_path))
             {
                 User deserializeUser = null;
@@ -45,7 +45,7 @@ namespace Portal.Infrastructure
         {
             using (StreamWriter file = new StreamWriter(_path, true))
             {
-                string serializeUser = JsonConvert.SerializeObject(user, _jsonSettings);
+                var serializeUser = JsonConvert.SerializeObject(user, _jsonSettings);
                 await file.WriteLineAsync(serializeUser);
             }
         }
@@ -70,7 +70,7 @@ namespace Portal.Infrastructure
             }
 
             var allUsers = (await GetAllUsers()).ToList();
-            bool resultUpdating = false;
+            var resultUpdating = false;
             for (int i = 0; i < allUsers.Count; i++)
             {
                 if (allUsers[i].IdUser == user.IdUser)

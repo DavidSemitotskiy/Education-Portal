@@ -20,9 +20,9 @@ namespace Portal.ConsoleAPI.Conrollers
         {
             string courseName = null;
             string courseDescription = null;
-            int accessLevel = 0;
+            var accessLevel = 0;
             List<Skill> courseSkills = null;
-            int countMaterials = 0;
+            var countMaterials = 0;
             Course course = null;
             while (true)
             {
@@ -31,7 +31,7 @@ namespace Portal.ConsoleAPI.Conrollers
                 Console.Write("Input description of course: ");
                 courseDescription = Console.ReadLine();
                 Console.Write("Input access level:");
-                bool resultParing = int.TryParse(Console.ReadLine(), out accessLevel);
+                var resultParing = int.TryParse(Console.ReadLine(), out accessLevel);
                 if (!resultParing || accessLevel < 0)
                 {
                     Console.WriteLine("Incorrect access level");
@@ -41,14 +41,14 @@ namespace Portal.ConsoleAPI.Conrollers
                 }
 
                 Console.Write("Input skills of course: ");
-                string skills = Console.ReadLine();
+                var skills = Console.ReadLine();
                 var listSkills = skills.Split(',');
                 courseSkills = listSkills.Select(strSkill => new Skill
                 {
                     Experience = strSkill
                 }).ToList();
                 Console.Write("Input count materials: ");
-                bool resultCountParsing = int.TryParse(Console.ReadLine(), out countMaterials);
+                var resultCountParsing = int.TryParse(Console.ReadLine(), out countMaterials);
                 if (!resultCountParsing || countMaterials <= 0)
                 {
                     Console.WriteLine("Incorrect count!!");
@@ -80,13 +80,13 @@ namespace Portal.ConsoleAPI.Conrollers
             }
 
             Material material = null;
-            List<Material> materials = new List<Material>();
+            var materials = new List<Material>();
             for (int i = 0; i < countMaterials;)
             {
                 Console.WriteLine("1)Create own material");
                 Console.WriteLine("2)Choose existed material");
                 Console.Write("Choose the operation by its number: ");
-                string pick = Console.ReadLine();
+                var pick = Console.ReadLine();
                 switch (pick)
                 {
                     case "1":
@@ -144,7 +144,7 @@ namespace Portal.ConsoleAPI.Conrollers
             }
 
             Console.Write("Choose own course to delete by its number: ");
-            bool resultParsing = int.TryParse(Console.ReadLine(), out int index);
+            var resultParsing = int.TryParse(Console.ReadLine(), out int index);
             if (!resultParsing || index - 1 >= ownCourses.Count)
             {
                 Console.WriteLine("Incorrect number of material");
@@ -171,7 +171,7 @@ namespace Portal.ConsoleAPI.Conrollers
             }
 
             Console.Write("Choose own course to update by its number: ");
-            bool resultParsing = int.TryParse(Console.ReadLine(), out int index);
+            var resultParsing = int.TryParse(Console.ReadLine(), out int index);
             if (!resultParsing || index - 1 >= ownCourses.Count)
             {
                 Console.WriteLine("Incorrect number of material");
@@ -187,7 +187,7 @@ namespace Portal.ConsoleAPI.Conrollers
                 Console.WriteLine("2)Update description");
                 Console.WriteLine("3)Update material");
                 Console.Write("Choose the operation by its number: ");
-                string choose = Console.ReadLine();
+                var choose = Console.ReadLine();
                 switch (choose)
                 {
                     case "1":

@@ -16,10 +16,10 @@ namespace Portal.ConsoleAPI.Conrollers
         public async Task LogIn()
         {
             Console.Write("Input email: ");
-            string email = Console.ReadLine();
+            var email = Console.ReadLine();
             Console.Write("Input password: ");
-            string password = Console.ReadLine();
-            UserLoginDTO user = new UserLoginDTO
+            var password = Console.ReadLine();
+            var user = new UserLoginDTO
             {
                 Email = email,
                 Password = password
@@ -37,16 +37,16 @@ namespace Portal.ConsoleAPI.Conrollers
         public async Task Register()
         {
             Console.Write("Input firstname: ");
-            string firstName = Console.ReadLine();
+            var firstName = Console.ReadLine();
             Console.Write("Input lastname: ");
-            string lastName = Console.ReadLine();
+            var lastName = Console.ReadLine();
             Console.Write("Input email: ");
-            string email = Console.ReadLine();
+            var email = Console.ReadLine();
             Console.Write("Input password: ");
-            string password = Console.ReadLine();
+            var password = Console.ReadLine();
             Console.Write("Confirm password: ");
-            string confirmPassword = Console.ReadLine();
-            UserRegisterDTO user = new UserRegisterDTO
+            var confirmPassword = Console.ReadLine();
+            var user = new UserRegisterDTO
             {
                 FirstName = firstName,
                 LastName = lastName,

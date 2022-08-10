@@ -11,15 +11,15 @@ namespace Portal.ConsoleAPI
     {
         public static async Task Main()
         {
-            IUserRepository userRepository = new UserRepository(@"..\..\..\..\DataBases\UserStorage.json");
-            IEntityRepository<Material> materialRepository = new EntityFileRepository<Material>(@"..\..\..\..\DataBases\MaterialStorage.json");
-            IEntityRepository<Course> courseRepository = new EntityFileRepository<Course>(@"..\..\..\..\DataBases\CourseStorage.json");
-            IUserManager userManager = new UserManager(userRepository);
-            IMaterialManager materialManager = new MaterialManager(materialRepository);
-            ICourseManager courseManager = new CourseManager(courseRepository);
-            AccountController accountController = new AccountController(userManager);
-            MaterialController materialController = new MaterialController(materialManager);
-            CourseController courseController = new CourseController(courseManager, materialController);
+            var userRepository = new UserRepository(@"..\..\..\..\DataBases\UserStorage.json");
+            var materialRepository = new EntityFileRepository<Material>(@"..\..\..\..\DataBases\MaterialStorage.json");
+            var courseRepository = new EntityFileRepository<Course>(@"..\..\..\..\DataBases\CourseStorage.json");
+            var userManager = new UserManager(userRepository);
+            var materialManager = new MaterialManager(materialRepository);
+            var courseManager = new CourseManager(courseRepository);
+            var accountController = new AccountController(userManager);
+            var materialController = new MaterialController(materialManager);
+            var courseController = new CourseController(courseManager, materialController);
             while (true)
             {
                 Console.WriteLine(IUserManager.CurrentUser == null ? "User isn't authorized" : $"Hello {IUserManager.CurrentUser.FirstName} {IUserManager.CurrentUser.LastName}");
@@ -48,7 +48,7 @@ namespace Portal.ConsoleAPI
                     Console.WriteLine("3)Delete course");
                     Console.WriteLine("4)Update course");
                     Console.WriteLine("5)See available courses");
-                    int offset = 2;
+                    var offset = 2;
                     Console.Write("Choose the operation by its number: ");
                     var pick = (Operations)(int.Parse(Console.ReadLine()) + offset);
                     switch (pick)

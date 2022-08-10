@@ -26,7 +26,7 @@ namespace Portal.Infrastructure
 
         public async Task<IEnumerable<TEntity>> GetAllEntities()
         {
-            List<TEntity> entities = new List<TEntity>();
+            var entities = new List<TEntity>();
             using (StreamReader file = new StreamReader(_path))
             {
                 TEntity deserializeEntity = null;
@@ -46,7 +46,7 @@ namespace Portal.Infrastructure
         {
             using (StreamWriter file = new StreamWriter(_path, true))
             {
-                string serializeEntity = JsonConvert.SerializeObject(entity, _jsonSettings);
+                var serializeEntity = JsonConvert.SerializeObject(entity, _jsonSettings);
                 await file.WriteLineAsync(serializeEntity);
             }
         }
@@ -59,8 +59,8 @@ namespace Portal.Infrastructure
             }
 
             var allCourses = (await GetAllEntities()).ToList();
-            int indexDeleteEntity = 0;
-            bool resultRemoving = false;
+            var indexDeleteEntity = 0;
+            var resultRemoving = false;
             for (int i = 0; i < allCourses.Count; i++)
             {
                 if (allCourses[i].Id == entity.Id)
@@ -88,7 +88,7 @@ namespace Portal.Infrastructure
             }
 
             var allEntities = (await GetAllEntities()).ToList();
-            bool resultUpdating = false;
+            var resultUpdating = false;
             for (int i = 0; i < allEntities.Count; i++)
             {
                 if (allEntities[i].Id == entity.Id)
