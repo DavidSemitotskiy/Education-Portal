@@ -9,9 +9,19 @@ namespace Portal.Infrastructure
     {
         private readonly string _path;
 
+        private readonly JsonSerializerSettings _jsonSettings;
+
         public EntityFileRepository(string path)
         {
             _path = path ?? throw new ArgumentNullException("Path can't be null");
+            _jsonSettings = new JsonSerializerSettings()
+            {
+                ContractResolver = new DefaultContractResolver()
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                },
+                TypeNameHandling = TypeNameHandling.All
+            };
         }
 
         public async Task<IEnumerable<TEntity>> GetAllEntities()
@@ -24,15 +34,7 @@ namespace Portal.Infrastructure
                 while (file.Peek() != -1)
                 {
                     serializeObject = await file.ReadLineAsync();
-                    deserializeEntity = JsonConvert.DeserializeObject<TEntity>(serializeObject, new JsonSerializerSettings()
-                    {
-                        ContractResolver = new DefaultContractResolver()
-                        {
-                            NamingStrategy = new CamelCaseNamingStrategy()
-                        },
-                        TypeNameHandling = TypeNameHandling.All
-                    });
-
+                    deserializeEntity = JsonConvert.DeserializeObject<TEntity>(serializeObject, _jsonSettings);
                     entities.Add(deserializeEntity);
                 }
             }
@@ -44,15 +46,7 @@ namespace Portal.Infrastructure
         {
             using (StreamWriter file = new StreamWriter(_path, true))
             {
-                string serializeEntity = JsonConvert.SerializeObject(entity, new JsonSerializerSettings()
-                {
-                    ContractResolver = new DefaultContractResolver()
-                    {
-                        NamingStrategy = new CamelCaseNamingStrategy()
-                    },
-                    TypeNameHandling = TypeNameHandling.All
-                });
-
+                string serializeEntity = JsonConvert.SerializeObject(entity, _jsonSettings);
                 await file.WriteLineAsync(serializeEntity);
             }
         }
@@ -120,14 +114,7 @@ namespace Portal.Infrastructure
             {
                 for (int i = 0; i < entities.Count; i++)
                 {
-                    serializeEntity = JsonConvert.SerializeObject(entities[i], new JsonSerializerSettings()
-                    {
-                        ContractResolver = new DefaultContractResolver()
-                        {
-                            NamingStrategy = new CamelCaseNamingStrategy()
-                        },
-                        TypeNameHandling = TypeNameHandling.Auto
-                    });
+                    serializeEntity = JsonConvert.SerializeObject(entities[i], _jsonSettings);
                     await file.WriteLineAsync(serializeEntity);
                 }
             }
