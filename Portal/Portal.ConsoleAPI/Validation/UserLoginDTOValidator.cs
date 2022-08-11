@@ -7,7 +7,7 @@ namespace Portal.ConsoleAPI.Validation
     {
         public UserLoginDTOValidator()
         {
-            RuleFor(user => user.Email).EmailAddress();
+            RuleFor(user => user.Email).NotNull().EmailAddress();
             RuleFor(user => user.Password).NotEmpty();
         }
     }

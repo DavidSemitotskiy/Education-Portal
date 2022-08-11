@@ -8,7 +8,7 @@ namespace Portal.ConsoleAPI.Validation
         public VideoMaterialValidator()
         {
             RuleFor(material => material.Duration).Must(duration => duration > 0);
-            RuleFor(material => material.Quality).NotEmpty();
+            RuleFor(material => material.Quality).Cascade(CascadeMode.StopOnFirstFailure).NotEmpty().Matches("^(?:144p|240p|360p|720p60|1080p60|1440p60)$");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Portal.Domain.DTOs;
+using System.Text.RegularExpressions;
 
 namespace Portal.ConsoleAPI.Validation
 {
@@ -7,12 +8,14 @@ namespace Portal.ConsoleAPI.Validation
     {
         public UserRegisterDTOValidator()
         {
-            RuleFor(user => user.FirstName).NotEmpty();
-            RuleFor(user => user.LastName).NotEmpty();
-            RuleFor(user => user.Password).NotEmpty();
+            RuleFor(user => user.FirstName).Cascade(CascadeMode.StopOnFirstFailure).NotEmpty().Length(1, 20);
+            RuleFor(user => user.LastName).Cascade(CascadeMode.StopOnFirstFailure).NotEmpty().Length(1, 20);
+            RuleFor(user => user.Password).Cascade(CascadeMode.StopOnFirstFailure).NotEmpty().MinimumLength(6)
+                .Matches(@"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{6,}");
             RuleFor(user => user).Must(user => user.Password == user.ConfirmPassword)
-                .When(user => !string.IsNullOrEmpty(user.Password)).WithMessage("Confirm password must equal Password.");
-            RuleFor(user => user.Email).EmailAddress();
+                .When(user => !string.IsNullOrEmpty(user.Password) && Regex.IsMatch(user.Password, @"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{6,}"))
+                .WithMessage("Confirm password must equal Password.");
+            RuleFor(user => user.Email).Cascade(CascadeMode.StopOnFirstFailure).NotNull().EmailAddress();
         }
     }
 }

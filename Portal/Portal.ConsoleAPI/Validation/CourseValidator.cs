@@ -7,8 +7,8 @@ namespace Portal.ConsoleAPI.Validation
     {
         public CourseValidator()
         {
-            RuleFor(course => course.Name).NotEmpty();
-            RuleFor(course => course.Description).NotEmpty();
+            RuleFor(course => course.Name).Cascade(CascadeMode.StopOnFirstFailure).NotEmpty().Length(5, 100);
+            RuleFor(course => course.Description).Cascade(CascadeMode.StopOnFirstFailure).NotEmpty().Length(5, 100);
             RuleFor(course => course.Owner).NotNull();
             RuleFor(course => course.AccessLevel).Must(access => access >= 0);
             RuleFor(course => course.Materials).NotNull();

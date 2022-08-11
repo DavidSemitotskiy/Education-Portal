@@ -7,7 +7,8 @@ namespace Portal.ConsoleAPI.Validation
     {
         public ArticleMaterialValidator()
         {
-            RuleFor(material => material.Resource).NotEmpty().Must(resource => resource.StartsWith("https://"));
+            RuleFor(material => material.Resource).Cascade(CascadeMode.StopOnFirstFailure).NotEmpty().
+                Must(resource => resource.StartsWith("https://")).WithMessage("Resource must start with https://").MinimumLength(15);
         }
     }
 }
