@@ -56,11 +56,6 @@ namespace Portal.Application
                 throw new ArgumentNullException("User can't be null");
             }
 
-            if (!userRegister.Password.Equals(userRegister.ConfirmPassword))
-            {
-                throw new ArgumentException("Confirm password doesn't match to Password");
-            }
-
             var isUserExists = await Exists(userRegister);
             if (isUserExists)
             {
