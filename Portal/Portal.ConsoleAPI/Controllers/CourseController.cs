@@ -21,7 +21,7 @@ namespace Portal.ConsoleAPI.Conrollers
             string courseName = null;
             string courseDescription = null;
             var accessLevel = 0;
-            List<Skill> courseSkills = null;
+            List<CourseSkill> courseSkills = null;
             var countMaterials = 0;
             Course course = null;
             while (true)
@@ -43,7 +43,7 @@ namespace Portal.ConsoleAPI.Conrollers
                 Console.Write("Input skills of course: ");
                 var skills = Console.ReadLine();
                 var listSkills = skills.Split(',');
-                courseSkills = listSkills.Select(strSkill => new Skill
+                courseSkills = listSkills.Select(strSkill => new CourseSkill
                 {
                     Experience = strSkill
                 }).ToList();
@@ -59,13 +59,11 @@ namespace Portal.ConsoleAPI.Conrollers
 
                 course = new Course
                 {
-                    Id = Guid.NewGuid(),
                     Name = courseName,
                     Description = courseDescription,
                     AccessLevel = accessLevel,
                     Skills = courseSkills,
                     Owner = IUserManager.CurrentUser,
-                    Subscribers = new List<User>(),
                     Materials = new List<Material>()
                 };
                 var errorMessages = await new ErrorMessages<CourseValidator, Course>().Validate(course);

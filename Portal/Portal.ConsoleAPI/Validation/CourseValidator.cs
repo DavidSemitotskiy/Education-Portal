@@ -12,7 +12,6 @@ namespace Portal.ConsoleAPI.Validation
             RuleFor(course => course.Owner).NotNull();
             RuleFor(course => course.AccessLevel).Must(access => access >= 0);
             RuleFor(course => course.Materials).NotNull();
-            RuleFor(course => course.Subscribers).NotNull();
             RuleFor(course => course.Skills).NotNull();
         }
     }

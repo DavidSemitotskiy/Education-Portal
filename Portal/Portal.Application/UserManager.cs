@@ -41,6 +41,8 @@ namespace Portal.Application
                 throw new Exception("User isn't registered");
             }
 
+            logInUser.Skills = logInUser.Skills ?? new List<UserSkill>();
+            logInUser.OwnCourses = logInUser.OwnCourses ?? new List<Course>();
             IUserManager.CurrentUser = logInUser;
         }
 
@@ -64,7 +66,6 @@ namespace Portal.Application
 
             var user = new User
             {
-                IdUser = Guid.NewGuid(),
                 FirstName = userRegister.FirstName,
                 LastName = userRegister.LastName,
                 Password = AccountService.GetHashPassword(userRegister.Password),

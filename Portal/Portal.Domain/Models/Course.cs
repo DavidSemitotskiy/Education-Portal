@@ -12,10 +12,8 @@ namespace Portal.Domain.Models
 
         public int AccessLevel { get; set; }
 
-        public List<Material>? Materials { get; set; }
+        public List<Material> Materials { get; set; }
 
-        public List<User> Subscribers { get; set; }
-
-        public List<Skill> Skills { get; set; }
+        public List<CourseSkill> Skills { get; set; }
     }
 }
