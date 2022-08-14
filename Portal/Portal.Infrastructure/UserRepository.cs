@@ -58,7 +58,7 @@ namespace Portal.Infrastructure
             }
 
             var allUsers = (await GetAllUsers()).ToList();
-            var userToDelete = allUsers.FirstOrDefault(u => u.IdUser == user.IdUser);
+            var userToDelete = allUsers.FirstOrDefault(u => u.UserId == user.UserId);
             var resultRemoving = allUsers.Remove(userToDelete);
             if (!resultRemoving)
             {
@@ -79,7 +79,7 @@ namespace Portal.Infrastructure
             var resultUpdating = false;
             for (int i = 0; i < allUsers.Count; i++)
             {
-                if (allUsers[i].IdUser == user.IdUser)
+                if (allUsers[i].UserId == user.UserId)
                 {
                     allUsers[i] = user;
                     resultUpdating = true;
