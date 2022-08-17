@@ -1,0 +1,4 @@
+{"$type":"Portal.Domain.Models.BookMaterial, Portal.Domain","authors":"jdajwdjaj","title":"kkkdkakwd","countPages":243,"format":"pdf","datePublication":"2022-08-10T00:00:00","id":"5c296465-084a-425c-9fe2-9c1f0511f12e"}
+{"$type":"Portal.Domain.Models.VideoMaterial, Portal.Domain","duration":43,"quality":"720p","id":"8d1d34bb-8bae-48ad-8726-620a644b025e"}
+{"$type":"Portal.Domain.Models.ArticleMaterial, Portal.Domain","datePublication":"2022-08-10T00:00:00","resource":"https://docs.microsoft.com/ru-ru/sql/relational-databases/tables/copy-columns-from-one-table-to-another-database-engine?view=sql-server-ver16","id":"341d6047-00c2-4805-af41-d84e4de25597"}
+{"$type":"Portal.Domain.Models.ArticleMaterial, Portal.Domain","datePublication":"2022-08-10T00:00:00","resource":"https://docs.microsoft.com/en-us/sql/t-sql/statements/drop-table-transact-sql?view=sql-server-ver16","id":"516c6ead-86b8-4d9f-ad83-888ccdbe0afa"}
