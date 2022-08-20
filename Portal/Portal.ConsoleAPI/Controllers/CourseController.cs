@@ -45,6 +45,7 @@ namespace Portal.ConsoleAPI.Conrollers
                 var listSkills = skills.Split(',');
                 courseSkills = listSkills.Select(strSkill => new CourseSkill
                 {
+                    Id = Guid.NewGuid(),
                     Experience = strSkill
                 }).ToList();
                 Console.Write("Input count materials: ");
@@ -59,6 +60,7 @@ namespace Portal.ConsoleAPI.Conrollers
 
                 course = new Course
                 {
+                    Id = Guid.NewGuid(),
                     Name = courseName,
                     Description = courseDescription,
                     AccessLevel = accessLevel,

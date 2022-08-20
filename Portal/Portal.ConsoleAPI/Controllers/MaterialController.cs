@@ -114,6 +114,7 @@ namespace Portal.ConsoleAPI.Conrollers
 
                 var material = new BookMaterial
                 {
+                    Id = Guid.NewGuid(),
                     Authors = authors,
                     Title = title,
                     CountPages = countPages,
@@ -152,6 +153,7 @@ namespace Portal.ConsoleAPI.Conrollers
                 var quality = Console.ReadLine();
                 var material = new VideoMaterial
                 {
+                    Id = Guid.NewGuid(),
                     Duration = duration,
                     Quality = quality
                 };
@@ -187,6 +189,7 @@ namespace Portal.ConsoleAPI.Conrollers
 
                 var material = new ArticleMaterial
                 {
+                    Id = Guid.NewGuid(),
                     Resource = resource,
                     DatePublication = datePublication
                 };

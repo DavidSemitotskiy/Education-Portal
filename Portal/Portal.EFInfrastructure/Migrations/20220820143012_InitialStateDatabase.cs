@@ -11,15 +11,14 @@ namespace Portal.EFInfrastructure.Migrations
         {
             if (migrationBuilder == null)
             {
-                throw new Exception();
+                throw new ArgumentNullException();
             }
 
             migrationBuilder.CreateTable(
                 name: "CourseSkills",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Experience = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -31,8 +30,7 @@ namespace Portal.EFInfrastructure.Migrations
                 name: "Materials",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ArticleMaterial_DatePublication = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Resource = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -53,8 +51,7 @@ namespace Portal.EFInfrastructure.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -70,11 +67,10 @@ namespace Portal.EFInfrastructure.Migrations
                 name: "Courses",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OwnerUserId = table.Column<int>(type: "int", nullable: false),
+                    OwnerUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AccessLevel = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -92,10 +88,9 @@ namespace Portal.EFInfrastructure.Migrations
                 name: "UserSkills",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Level = table.Column<int>(type: "int", nullable: false),
-                    OwnerUserId = table.Column<int>(type: "int", nullable: false),
+                    OwnerUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Experience = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -113,8 +108,8 @@ namespace Portal.EFInfrastructure.Migrations
                 name: "CourseCourseSkill",
                 columns: table => new
                 {
-                    CoursesId = table.Column<int>(type: "int", nullable: false),
-                    SkillsId = table.Column<int>(type: "int", nullable: false)
+                    CoursesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SkillsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -137,8 +132,8 @@ namespace Portal.EFInfrastructure.Migrations
                 name: "CourseMaterial",
                 columns: table => new
                 {
-                    CoursesId = table.Column<int>(type: "int", nullable: false),
-                    MaterialsId = table.Column<int>(type: "int", nullable: false)
+                    CoursesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MaterialsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -182,7 +177,7 @@ namespace Portal.EFInfrastructure.Migrations
         {
             if (migrationBuilder == null)
             {
-                throw new Exception();
+                throw new ArgumentNullException();
             }
 
             migrationBuilder.DropTable(

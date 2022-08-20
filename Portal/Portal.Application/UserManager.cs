@@ -66,6 +66,7 @@ namespace Portal.Application
 
             var user = new User
             {
+                UserId = Guid.NewGuid(),
                 FirstName = userRegister.FirstName,
                 LastName = userRegister.LastName,
                 Password = AccountService.GetHashPassword(userRegister.Password),

@@ -24,11 +24,11 @@ namespace Portal.EFInfrastructure.Migrations
 
             modelBuilder.Entity("CourseCourseSkill", b =>
                 {
-                    b.Property<int>("CoursesId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CoursesId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("SkillsId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SkillsId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("CoursesId", "SkillsId");
 
@@ -39,11 +39,11 @@ namespace Portal.EFInfrastructure.Migrations
 
             modelBuilder.Entity("CourseMaterial", b =>
                 {
-                    b.Property<int>("CoursesId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CoursesId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("MaterialsId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MaterialsId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("CoursesId", "MaterialsId");
 
@@ -54,11 +54,9 @@ namespace Portal.EFInfrastructure.Migrations
 
             modelBuilder.Entity("Portal.Domain.Models.Course", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AccessLevel")
                         .HasColumnType("int");
@@ -71,8 +69,8 @@ namespace Portal.EFInfrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OwnerUserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("OwnerUserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -83,11 +81,9 @@ namespace Portal.EFInfrastructure.Migrations
 
             modelBuilder.Entity("Portal.Domain.Models.CourseSkill", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Experience")
                         .HasColumnType("nvarchar(max)");
@@ -99,11 +95,9 @@ namespace Portal.EFInfrastructure.Migrations
 
             modelBuilder.Entity("Portal.Domain.Models.Material", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
@@ -118,11 +112,9 @@ namespace Portal.EFInfrastructure.Migrations
 
             modelBuilder.Entity("Portal.Domain.Models.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AccessLevel")
                         .HasColumnType("int");
@@ -150,11 +142,9 @@ namespace Portal.EFInfrastructure.Migrations
 
             modelBuilder.Entity("Portal.Domain.Models.UserSkill", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Experience")
                         .HasColumnType("nvarchar(max)");
@@ -162,8 +152,8 @@ namespace Portal.EFInfrastructure.Migrations
                     b.Property<int>("Level")
                         .HasColumnType("int");
 
-                    b.Property<int>("OwnerUserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("OwnerUserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
