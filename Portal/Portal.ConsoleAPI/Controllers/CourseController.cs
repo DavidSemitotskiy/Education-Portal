@@ -109,6 +109,7 @@ namespace Portal.ConsoleAPI.Conrollers
 
             course.Materials = materials;
             await CourseManager.AddCourse(course);
+            await CourseManager.CourseRepository.SaveChanges();
             return;
         }
 
@@ -152,6 +153,7 @@ namespace Portal.ConsoleAPI.Conrollers
             }
 
             await CourseManager.DeleteCourse(ownCourses[index - 1]);
+            await CourseManager.CourseRepository.SaveChanges();
         }
 
         public async Task Update()
@@ -191,16 +193,19 @@ namespace Portal.ConsoleAPI.Conrollers
                     case "1":
                         Console.Write("Input new name: ");
                         courseUpdate.Name = Console.ReadLine();
-                        await CourseManager.CourseRepository.Update(courseUpdate);
+                        await CourseManager.UpdateCourse(courseUpdate);
+                        await CourseManager.CourseRepository.SaveChanges();
                         return;
                     case "2":
                         Console.Write("Input new description: ");
                         courseUpdate.Description = Console.ReadLine();
-                        await CourseManager.CourseRepository.Update(courseUpdate);
+                        await CourseManager.UpdateCourse(courseUpdate);
+                        await CourseManager.CourseRepository.SaveChanges();
                         return;
                     case "3":
                         await MaterialController.UpdateMaterial(courseUpdate);
-                        await CourseManager.CourseRepository.Update(courseUpdate);
+                        await CourseManager.UpdateCourse(courseUpdate);
+                        await CourseManager.CourseRepository.SaveChanges();
                         return;
                     default:
                         Console.WriteLine("Incorrect number of operation");

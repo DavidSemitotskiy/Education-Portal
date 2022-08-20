@@ -16,7 +16,6 @@ namespace Portal.EFInfrastructure.Repositories
         public async Task Add(User user)
         {
             await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(User user)
@@ -25,7 +24,6 @@ namespace Portal.EFInfrastructure.Repositories
             if (userToDelete != null)
             {
                 _context.Users.Remove(userToDelete);
-                await _context.SaveChangesAsync();
             }
         }
 
@@ -42,8 +40,12 @@ namespace Portal.EFInfrastructure.Repositories
             {
                 userToUpdate = user;
                 _context.Users.Update(userToUpdate);
-                await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task SaveChanges()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }

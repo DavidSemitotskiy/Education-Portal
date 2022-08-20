@@ -95,6 +95,11 @@ namespace Portal.Infrastructure
             await WriteUsersToFile(allUsers);
         }
 
+        public async Task SaveChanges()
+        {
+            await Task.Delay(0);
+        }
+
         private async Task WriteUsersToFile(List<User> users)
         {
             string serializeUser = null;

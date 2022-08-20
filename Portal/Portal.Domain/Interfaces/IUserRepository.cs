@@ -11,5 +11,7 @@ namespace Portal.Domain.Interfaces
         Task Delete(User user);
 
         Task Update(User user);
+
+        Task SaveChanges();
     }
 }

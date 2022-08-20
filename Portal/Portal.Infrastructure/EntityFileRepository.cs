@@ -96,6 +96,11 @@ namespace Portal.Infrastructure
             await WriteEntitiesToFile(allEntities);
         }
 
+        public async Task SaveChanges()
+        {
+            await Task.Delay(0);
+        }
+
         private async Task WriteEntitiesToFile(List<TEntity> entities)
         {
             string serializeEntity = null;

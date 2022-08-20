@@ -129,6 +129,7 @@ namespace Portal.ConsoleAPI.Conrollers
                 }
 
                 await MaterialManager.AddMaterial(material);
+                await MaterialManager.MaterialRepository.SaveChanges();
                 return material;
             }
         }
@@ -163,6 +164,7 @@ namespace Portal.ConsoleAPI.Conrollers
                 }
 
                 await MaterialManager.AddMaterial(material);
+                await MaterialManager.MaterialRepository.SaveChanges();
                 return material;
             }
         }
@@ -197,6 +199,7 @@ namespace Portal.ConsoleAPI.Conrollers
                 }
 
                 await MaterialManager.AddMaterial(material);
+                await MaterialManager.MaterialRepository.SaveChanges();
                 return material;
             }
         }

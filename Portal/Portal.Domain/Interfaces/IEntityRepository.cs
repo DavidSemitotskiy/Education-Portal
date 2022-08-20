@@ -11,5 +11,7 @@ namespace Portal.Domain.Interfaces
         Task Delete(TEntity entity);
 
         Task Update(TEntity entity);
+
+        Task SaveChanges();
     }
 }
