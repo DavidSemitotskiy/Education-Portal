@@ -27,10 +27,9 @@ namespace Portal.EFInfrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<User>> GetAllUsers()
+        public Task<List<User>> GetAllUsers()
         {
-            var allUsers = await _context.Users.ToListAsync();
-            return allUsers;
+            return _context.Users.ToListAsync();
         }
 
         public async Task Update(User user)

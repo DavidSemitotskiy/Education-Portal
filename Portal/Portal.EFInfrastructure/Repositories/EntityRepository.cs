@@ -30,10 +30,9 @@ namespace Portal.EFInfrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllEntities()
+        public Task<List<TEntity>> GetAllEntities()
         {
-            var allEntities = await Entities.ToListAsync();
-            return allEntities;
+            return Entities.ToListAsync();
         }
 
         public async Task Update(TEntity entity)

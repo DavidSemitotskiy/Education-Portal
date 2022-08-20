@@ -23,7 +23,7 @@ namespace Portal.Infrastructure
             };
         }
 
-        public async Task<IEnumerable<User>> GetAllUsers()
+        public async Task<List<User>> GetAllUsers()
         {
             var users = new List<User>();
             using (StreamReader file = new StreamReader(_path))

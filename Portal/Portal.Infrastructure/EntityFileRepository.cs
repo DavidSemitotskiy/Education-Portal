@@ -24,7 +24,7 @@ namespace Portal.Infrastructure
             };
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllEntities()
+        public async Task<List<TEntity>> GetAllEntities()
         {
             var entities = new List<TEntity>();
             using (StreamReader file = new StreamReader(_path))
