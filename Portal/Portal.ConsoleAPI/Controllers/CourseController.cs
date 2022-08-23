@@ -195,26 +195,24 @@ namespace Portal.ConsoleAPI.Conrollers
                     case "1":
                         Console.Write("Input new name: ");
                         courseUpdate.Name = Console.ReadLine();
-                        await CourseManager.UpdateCourse(courseUpdate);
-                        await CourseManager.CourseRepository.SaveChanges();
-                        return;
+                        break;
                     case "2":
                         Console.Write("Input new description: ");
                         courseUpdate.Description = Console.ReadLine();
-                        await CourseManager.UpdateCourse(courseUpdate);
-                        await CourseManager.CourseRepository.SaveChanges();
-                        return;
+                        break;
                     case "3":
                         await MaterialController.UpdateMaterial(courseUpdate);
-                        await CourseManager.UpdateCourse(courseUpdate);
-                        await CourseManager.CourseRepository.SaveChanges();
-                        return;
+                        break;
                     default:
                         Console.WriteLine("Incorrect number of operation");
                         Console.ReadLine();
                         Console.Clear();
-                        break;
+                        continue;
                 }
+
+                await CourseManager.UpdateCourse(courseUpdate);
+                await CourseManager.CourseRepository.SaveChanges();
+                return;
             }
         }
     }
