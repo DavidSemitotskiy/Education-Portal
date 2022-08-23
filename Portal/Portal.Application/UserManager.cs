@@ -27,9 +27,8 @@ namespace Portal.Application
                 throw new ArgumentNullException("User can't be null");
             }
 
-            var taskAllUsers = UserRepository.GetAllUsers();
+            var allUsers = await UserRepository.GetAllUsers();
             var hashedPassword = AccountService.GetHashPassword(userLogIn.Password);
-            var allUsers = await taskAllUsers;
             return allUsers.FirstOrDefault(user => user.Email == userLogIn.Email && user.Password == hashedPassword);
         }
 
