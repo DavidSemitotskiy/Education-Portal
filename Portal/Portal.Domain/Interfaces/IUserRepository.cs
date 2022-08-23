@@ -12,6 +12,6 @@ namespace Portal.Domain.Interfaces
 
         Task Update(User user);
 
-        Task SaveChanges();
+        Task<int> SaveChanges();
     }
 }

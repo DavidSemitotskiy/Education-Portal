@@ -42,9 +42,9 @@ namespace Portal.EFInfrastructure.Repositories
             }
         }
 
-        public async Task SaveChanges()
+        public Task<int> SaveChanges()
         {
-            await _context.SaveChangesAsync();
+            return _context.SaveChangesAsync();
         }
     }
 }
