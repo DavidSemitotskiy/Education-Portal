@@ -79,37 +79,7 @@ namespace Portal.ConsoleAPI.Conrollers
                 break;
             }
 
-            Material material = null;
-            var materials = new List<Material>();
-            for (int i = 0; i < countMaterials;)
-            {
-                Console.WriteLine("1)Create own material");
-                Console.WriteLine("2)Choose existed material");
-                Console.Write("Choose the operation by its number: ");
-                var pick = Console.ReadLine();
-                switch (pick)
-                {
-                    case "1":
-                        material = await MaterialController.CreatOwnMaterial();
-                        break;
-                    case "2":
-                        material = await MaterialController.ChooseExistedMaterial();
-                        break;
-                    default:
-                        Console.WriteLine("Incorrect number of operation");
-                        Console.ReadLine();
-                        Console.Clear();
-                        continue;
-                }
-
-                materials.Add(material);
-                i++;
-                Console.Write("Press Enter to continue!!!");
-                Console.ReadLine();
-                Console.Clear();
-            }
-
-            course.Materials = materials;
+            course.Materials = await MaterialController.FillMaterialsForCourse(countMaterials);
             await CourseManager.AddCourse(course);
             await CourseManager.CourseRepository.SaveChanges();
             return;

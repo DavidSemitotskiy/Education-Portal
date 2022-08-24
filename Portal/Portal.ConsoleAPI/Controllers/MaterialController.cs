@@ -13,6 +13,45 @@ namespace Portal.ConsoleAPI.Conrollers
 
         public IMaterialManager MaterialManager { get; set; }
 
+        public Task<Material> CreateOrChooseExistedMaterial()
+        {
+            while (true)
+            {
+                Console.WriteLine("1)Create material");
+                Console.WriteLine("2)Choose existed material");
+                Console.Write("Choose the operation by its number: ");
+                var pick = Console.ReadLine();
+                switch (pick)
+                {
+                    case "1":
+                        return CreatOwnMaterial();
+                    case "2":
+                        return ChooseExistedMaterial();
+                }
+
+                Console.WriteLine("Incorrect number of operation");
+                Console.ReadLine();
+                Console.Clear();
+            }
+        }
+
+        public async Task<List<Material>> FillMaterialsForCourse(int countMaterials)
+        {
+            Material material = null;
+            var materials = new List<Material>();
+            for (int i = 0; i < countMaterials;)
+            {
+                material = await CreateOrChooseExistedMaterial();
+                materials.Add(material);
+                i++;
+                Console.Write("Press Enter to continue!!!");
+                Console.ReadLine();
+                Console.Clear();
+            }
+
+            return materials;
+        }
+
         public async Task UpdateMaterial(Course course)
         {
             if (course == null)
@@ -33,27 +72,7 @@ namespace Portal.ConsoleAPI.Conrollers
                 return;
             }
 
-            while (true)
-            {
-                Console.WriteLine("1)Create own material");
-                Console.WriteLine("2)Choose existed material");
-                Console.Write("Choose the operation by its number: ");
-                var pick = Console.ReadLine();
-                switch (pick)
-                {
-                    case "1":
-                        course.Materials[index - 1] = await CreatOwnMaterial();
-                        return;
-                    case "2":
-                        course.Materials[index - 1] = await ChooseExistedMaterial();
-                        return;
-                    default:
-                        Console.WriteLine("Incorrect number of operation");
-                        Console.ReadLine();
-                        Console.Clear();
-                        continue;
-                }
-            }
+            course.Materials[index - 1] = await CreateOrChooseExistedMaterial();
         }
 
         public Task<Material> CreatOwnMaterial()
