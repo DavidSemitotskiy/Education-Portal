@@ -46,14 +46,14 @@ namespace Portal.Application
             await CourseRepository.Add(course);
         }
 
-        public async Task DeleteCourse(Course course)
+        public Task DeleteCourse(Course course)
         {
-            await CourseRepository.Delete(course);
+            return CourseRepository.Delete(course);
         }
 
-        public async Task UpdateCourse(Course course)
+        public Task UpdateCourse(Course course)
         {
-            await CourseRepository.Update(course);
+            return CourseRepository.Update(course);
         }
     }
 }

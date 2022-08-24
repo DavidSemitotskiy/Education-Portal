@@ -33,9 +33,9 @@ namespace Portal.Application
             await MaterialRepository.Add(material);
         }
 
-        public async Task DeleteMaterial(Material material)
+        public Task DeleteMaterial(Material material)
         {
-            await MaterialRepository.Delete(material);
+            return MaterialRepository.Delete(material);
         }
 
         public async Task<bool> Exists(Material material)
@@ -44,9 +44,9 @@ namespace Portal.Application
             return allMaterials.Any(m => m.Equals(material));
         }
 
-        public async Task UpdateMaterial(Material material)
+        public Task UpdateMaterial(Material material)
         {
-            await MaterialRepository.Update(material);
+            return MaterialRepository.Update(material);
         }
     }
 }

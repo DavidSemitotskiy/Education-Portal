@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Portal.Domain.BaseModels;
 using Portal.Domain.Interfaces;
 
@@ -21,13 +22,12 @@ namespace Portal.EFInfrastructure.Repositories
             await Entities.AddAsync(entity);
         }
 
-        public async Task Delete(TEntity entity)
+        public Task Delete(TEntity entity)
         {
-            var entityToDelete = await Entities.FirstOrDefaultAsync(e => e.Id == entity.Id);
-            if (entityToDelete != null)
-            {
-                Entities.Remove(entityToDelete);
-            }
+            EntityEntry entityEntry = _context.Entry(entity);
+            entityEntry.State = EntityState.Deleted;
+            Entities.Remove(entity);
+            return Task.CompletedTask;
         }
 
         public Task<List<TEntity>> GetAllEntities()
@@ -35,13 +35,12 @@ namespace Portal.EFInfrastructure.Repositories
             return Entities.ToListAsync();
         }
 
-        public async Task Update(TEntity entity)
+        public Task Update(TEntity entity)
         {
-            var entityToUpdate = await Entities.FirstOrDefaultAsync(e => e.Id == entity.Id);
-            if (entityToUpdate != null)
-            {
-                Entities.Update(entityToUpdate);
-            }
+            EntityEntry entityEntry = _context.Entry(entity);
+            entityEntry.State = EntityState.Modified;
+            Entities.Update(entity);
+            return Task.CompletedTask;
         }
 
         public Task<int> SaveChanges()

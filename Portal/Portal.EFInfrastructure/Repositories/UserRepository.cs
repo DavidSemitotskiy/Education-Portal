@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
 
@@ -18,13 +19,12 @@ namespace Portal.EFInfrastructure.Repositories
             await _context.Users.AddAsync(user);
         }
 
-        public async Task Delete(User user)
+        public Task Delete(User user)
         {
-            var userToDelete = await _context.Users.FirstOrDefaultAsync(u => u.UserId == user.UserId);
-            if (userToDelete != null)
-            {
-                _context.Users.Remove(userToDelete);
-            }
+            EntityEntry userEntry = _context.Entry(user);
+            userEntry.State = EntityState.Deleted;
+            _context.Users.Remove(user);
+            return Task.CompletedTask;
         }
 
         public Task<List<User>> GetAllUsers()
@@ -32,14 +32,12 @@ namespace Portal.EFInfrastructure.Repositories
             return _context.Users.ToListAsync();
         }
 
-        public async Task Update(User user)
+        public Task Update(User user)
         {
-            var userToUpdate = await _context.Users.FirstOrDefaultAsync(u => u.UserId == user.UserId);
-            if (userToUpdate != null)
-            {
-                userToUpdate = user;
-                _context.Users.Update(userToUpdate);
-            }
+            EntityEntry userEntry = _context.Entry(user);
+            userEntry.State = EntityState.Modified;
+            _context.Users.Update(user);
+            return Task.CompletedTask;
         }
 
         public Task<int> SaveChanges()

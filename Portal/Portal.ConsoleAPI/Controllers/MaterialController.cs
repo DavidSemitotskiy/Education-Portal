@@ -56,7 +56,7 @@ namespace Portal.ConsoleAPI.Conrollers
             }
         }
 
-        public async Task<Material> CreatOwnMaterial()
+        public Task<Material> CreatOwnMaterial()
         {
             while (true)
             {
@@ -68,11 +68,11 @@ namespace Portal.ConsoleAPI.Conrollers
                 switch (pick)
                 {
                     case "1":
-                        return await CreateBookMaterial();
+                        return CreateBookMaterial();
                     case "2":
-                        return await CreateVidoeMaterial();
+                        return CreateVidoeMaterial();
                     case "3":
-                        return await CreateArticleMaterial();
+                        return CreateArticleMaterial();
                     default:
                         Console.WriteLine("Incorrect number of operation");
                         Console.ReadLine();

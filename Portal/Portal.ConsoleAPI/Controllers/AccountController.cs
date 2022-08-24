@@ -64,9 +64,9 @@ namespace Portal.ConsoleAPI.Conrollers
             await UserManager.UserRepository.SaveChanges();
         }
 
-        public async Task LogOff()
+        public Task LogOff()
         {
-            await UserManager.LogOff();
+            return UserManager.LogOff();
         }
     }
 }
