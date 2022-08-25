@@ -17,9 +17,10 @@ namespace Portal.EFInfrastructure.Repositories
 
         public DbSet<TEntity> Entities { get; set; }
 
-        public async Task Add(TEntity entity)
+        public Task Add(TEntity entity)
         {
-            await Entities.AddAsync(entity);
+            Entities.Add(entity);
+            return Task.CompletedTask;
         }
 
         public Task Delete(TEntity entity)

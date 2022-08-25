@@ -14,9 +14,10 @@ namespace Portal.EFInfrastructure.Repositories
             _context = context ?? throw new ArgumentNullException("Context can't be null");
         }
 
-        public async Task Add(User user)
+        public Task Add(User user)
         {
-            await _context.Users.AddAsync(user);
+            _context.Users.Add(user);
+            return Task.CompletedTask;
         }
 
         public Task Delete(User user)
