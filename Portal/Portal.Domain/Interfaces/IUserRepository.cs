@@ -8,9 +8,9 @@ namespace Portal.Domain.Interfaces
 
         Task Add(User user);
 
-        Task Delete(User user);
+        void Delete(User user);
 
-        Task Update(User user);
+        void Update(User user);
 
         Task<int> SaveChanges();
     }

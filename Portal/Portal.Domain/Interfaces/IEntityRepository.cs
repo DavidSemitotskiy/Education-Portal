@@ -8,9 +8,9 @@ namespace Portal.Domain.Interfaces
 
         Task Add(TEntity entity);
 
-        Task Delete(TEntity entity);
+        void Delete(TEntity entity);
 
-        Task Update(TEntity entity);
+        void Update(TEntity entity);
 
         Task<int> SaveChanges();
     }

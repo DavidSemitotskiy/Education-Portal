@@ -124,7 +124,7 @@ namespace Portal.ConsoleAPI.Conrollers
                 return;
             }
 
-            await CourseManager.DeleteCourse(ownCourses[index - 1]);
+            CourseManager.DeleteCourse(ownCourses[index - 1]);
             await CourseManager.CourseRepository.SaveChanges();
         }
 
@@ -180,7 +180,7 @@ namespace Portal.ConsoleAPI.Conrollers
                         continue;
                 }
 
-                await CourseManager.UpdateCourse(courseUpdate);
+                CourseManager.UpdateCourse(courseUpdate);
                 await CourseManager.CourseRepository.SaveChanges();
                 return;
             }

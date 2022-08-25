@@ -9,9 +9,9 @@ namespace Portal.Application.Interfaces
 
         Task AddMaterial(Material material);
 
-        Task DeleteMaterial(Material material);
+        void DeleteMaterial(Material material);
 
-        Task UpdateMaterial(Material material);
+        void UpdateMaterial(Material material);
 
         Task<bool> Exists(Material material);
     }

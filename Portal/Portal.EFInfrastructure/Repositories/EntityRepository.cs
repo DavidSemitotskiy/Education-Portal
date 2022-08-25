@@ -23,12 +23,9 @@ namespace Portal.EFInfrastructure.Repositories
             return Task.CompletedTask;
         }
 
-        public Task Delete(TEntity entity)
+        public void Delete(TEntity entity)
         {
-            EntityEntry entityEntry = _context.Entry(entity);
-            entityEntry.State = EntityState.Deleted;
             Entities.Remove(entity);
-            return Task.CompletedTask;
         }
 
         public Task<List<TEntity>> GetAllEntities()
@@ -36,12 +33,9 @@ namespace Portal.EFInfrastructure.Repositories
             return Entities.ToListAsync();
         }
 
-        public Task Update(TEntity entity)
+        public void Update(TEntity entity)
         {
-            EntityEntry entityEntry = _context.Entry(entity);
-            entityEntry.State = EntityState.Modified;
             Entities.Update(entity);
-            return Task.CompletedTask;
         }
 
         public Task<int> SaveChanges()
