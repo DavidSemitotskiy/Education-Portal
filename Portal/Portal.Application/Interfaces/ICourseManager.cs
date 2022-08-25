@@ -9,9 +9,9 @@ namespace Portal.Application.Interfaces
 
         Task AddCourse(Course course);
 
-        Task DeleteCourse(Course course);
+        void DeleteCourse(Course course);
 
-        Task UpdateCourse(Course course);
+        void UpdateCourse(Course course);
 
         Task<bool> Exists(string name, string description);
 

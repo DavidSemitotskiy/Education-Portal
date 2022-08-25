@@ -21,7 +21,7 @@ namespace Portal.ConsoleAPI.Conrollers
             string courseName = null;
             string courseDescription = null;
             var accessLevel = 0;
-            List<Skill> courseSkills = null;
+            List<CourseSkill> courseSkills = null;
             var countMaterials = 0;
             Course course = null;
             while (true)
@@ -43,8 +43,9 @@ namespace Portal.ConsoleAPI.Conrollers
                 Console.Write("Input skills of course: ");
                 var skills = Console.ReadLine();
                 var listSkills = skills.Split(',');
-                courseSkills = listSkills.Select(strSkill => new Skill
+                courseSkills = listSkills.Select(strSkill => new CourseSkill
                 {
+                    Id = Guid.NewGuid(),
                     Experience = strSkill
                 }).ToList();
                 Console.Write("Input count materials: ");
@@ -65,7 +66,6 @@ namespace Portal.ConsoleAPI.Conrollers
                     AccessLevel = accessLevel,
                     Skills = courseSkills,
                     Owner = IUserManager.CurrentUser,
-                    Subscribers = new List<User>(),
                     Materials = new List<Material>()
                 };
                 var errorMessages = await new ErrorMessages<CourseValidator, Course>().Validate(course);
@@ -79,38 +79,9 @@ namespace Portal.ConsoleAPI.Conrollers
                 break;
             }
 
-            Material material = null;
-            var materials = new List<Material>();
-            for (int i = 0; i < countMaterials;)
-            {
-                Console.WriteLine("1)Create own material");
-                Console.WriteLine("2)Choose existed material");
-                Console.Write("Choose the operation by its number: ");
-                var pick = Console.ReadLine();
-                switch (pick)
-                {
-                    case "1":
-                        material = await MaterialController.CreatOwnMaterial();
-                        break;
-                    case "2":
-                        material = await MaterialController.ChooseExistedMaterial();
-                        break;
-                    default:
-                        Console.WriteLine("Incorrect number of operation");
-                        Console.ReadLine();
-                        Console.Clear();
-                        continue;
-                }
-
-                materials.Add(material);
-                i++;
-                Console.Write("Press Enter to continue!!!");
-                Console.ReadLine();
-                Console.Clear();
-            }
-
-            course.Materials = materials;
+            course.Materials = await MaterialController.FillMaterialsForCourse(countMaterials);
             await CourseManager.AddCourse(course);
+            await CourseManager.CourseRepository.SaveChanges();
             return;
         }
 
@@ -153,7 +124,8 @@ namespace Portal.ConsoleAPI.Conrollers
                 return;
             }
 
-            await CourseManager.DeleteCourse(ownCourses[index - 1]);
+            CourseManager.DeleteCourse(ownCourses[index - 1]);
+            await CourseManager.CourseRepository.SaveChanges();
         }
 
         public async Task Update()
@@ -193,23 +165,24 @@ namespace Portal.ConsoleAPI.Conrollers
                     case "1":
                         Console.Write("Input new name: ");
                         courseUpdate.Name = Console.ReadLine();
-                        await CourseManager.CourseRepository.Update(courseUpdate);
-                        return;
+                        break;
                     case "2":
                         Console.Write("Input new description: ");
                         courseUpdate.Description = Console.ReadLine();
-                        await CourseManager.CourseRepository.Update(courseUpdate);
-                        return;
+                        break;
                     case "3":
                         await MaterialController.UpdateMaterial(courseUpdate);
-                        await CourseManager.CourseRepository.Update(courseUpdate);
-                        return;
+                        break;
                     default:
                         Console.WriteLine("Incorrect number of operation");
                         Console.ReadLine();
                         Console.Clear();
-                        break;
+                        continue;
                 }
+
+                CourseManager.UpdateCourse(courseUpdate);
+                await CourseManager.CourseRepository.SaveChanges();
+                return;
             }
         }
     }

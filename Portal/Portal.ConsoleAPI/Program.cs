@@ -1,25 +1,20 @@
 ﻿using Portal.Application;
 using Portal.Application.Interfaces;
 using Portal.ConsoleAPI.Conrollers;
-using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
-using Portal.Infrastructure;
+using Portal.EFInfrastructure;
+using Portal.EFInfrastructure.Repositories;
 
 namespace Portal.ConsoleAPI
 {
     public class Program
     {
-        private const string _pathUserStorage = @"..\..\..\..\DataBases\UserStorage.json";
-
-        private const string _pathMaterialStorage = @"..\..\..\..\DataBases\MaterialStorage.json";
-
-        private const string _pathCourseStorage = @"..\..\..\..\DataBases\CourseStorage.json";
-
         public static async Task Main()
         {
-            var userRepository = new UserRepository(_pathUserStorage);
-            var materialRepository = new EntityFileRepository<Material>(_pathMaterialStorage);
-            var courseRepository = new EntityFileRepository<Course>(_pathCourseStorage);
+            var context = new Context();
+            var userRepository = new UserRepository(context);
+            var materialRepository = new EntityRepository<Material>(context);
+            var courseRepository = new EntityRepository<Course>(context);
             var userManager = new UserManager(userRepository);
             var materialManager = new MaterialManager(materialRepository);
             var courseManager = new CourseManager(courseRepository);
@@ -83,6 +78,8 @@ namespace Portal.ConsoleAPI
                 Console.ReadLine();
                 Console.Clear();
             }
+
+            context.Dispose();
         }
     }
 }

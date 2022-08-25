@@ -1,6 +1,8 @@
-﻿namespace Portal.Domain.Models
+﻿using Portal.Domain.BaseModels;
+
+namespace Portal.Domain.Models
 {
-    public class Skill
+    public class Skill : Entity
     {
         public string? Experience { get; set; }
     }

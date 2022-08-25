@@ -4,12 +4,14 @@ namespace Portal.Domain.Interfaces
 {
     public interface IEntityRepository<TEntity> where TEntity : Entity
     {
-        Task<IEnumerable<TEntity>> GetAllEntities();
+        Task<List<TEntity>> GetAllEntities();
 
         Task Add(TEntity entity);
 
-        Task Delete(TEntity entity);
+        void Delete(TEntity entity);
 
-        Task Update(TEntity entity);
+        void Update(TEntity entity);
+
+        Task<int> SaveChanges();
     }
 }

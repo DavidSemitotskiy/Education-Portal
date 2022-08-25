@@ -28,7 +28,7 @@ namespace Portal.Application
         public async Task<IEnumerable<Course>> GetOwnCourses(User user)
         {
             var allCourses = await CourseRepository.GetAllEntities();
-            return allCourses.Where(course => course.Owner.IdUser == user.IdUser);
+            return allCourses.Where(course => course.Owner.UserId == user.UserId);
         }
 
         public async Task AddCourse(Course course)
@@ -46,14 +46,14 @@ namespace Portal.Application
             await CourseRepository.Add(course);
         }
 
-        public async Task DeleteCourse(Course course)
+        public void DeleteCourse(Course course)
         {
-            await CourseRepository.Delete(course);
+           CourseRepository.Delete(course);
         }
 
-        public async Task UpdateCourse(Course course)
+        public void UpdateCourse(Course course)
         {
-            await CourseRepository.Update(course);
+            CourseRepository.Update(course);
         }
     }
 }

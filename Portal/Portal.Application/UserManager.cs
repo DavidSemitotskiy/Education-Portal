@@ -27,9 +27,8 @@ namespace Portal.Application
                 throw new ArgumentNullException("User can't be null");
             }
 
-            var taskAllUsers = UserRepository.GetAllUsers();
+            var allUsers = await UserRepository.GetAllUsers();
             var hashedPassword = AccountService.GetHashPassword(userLogIn.Password);
-            var allUsers = await taskAllUsers;
             return allUsers.FirstOrDefault(user => user.Email == userLogIn.Email && user.Password == hashedPassword);
         }
 
@@ -41,6 +40,8 @@ namespace Portal.Application
                 throw new Exception("User isn't registered");
             }
 
+            logInUser.Skills = logInUser.Skills ?? new List<UserSkill>();
+            logInUser.OwnCourses = logInUser.OwnCourses ?? new List<Course>();
             IUserManager.CurrentUser = logInUser;
         }
 
@@ -64,7 +65,7 @@ namespace Portal.Application
 
             var user = new User
             {
-                IdUser = Guid.NewGuid(),
+                UserId = Guid.NewGuid(),
                 FirstName = userRegister.FirstName,
                 LastName = userRegister.LastName,
                 Password = AccountService.GetHashPassword(userRegister.Password),

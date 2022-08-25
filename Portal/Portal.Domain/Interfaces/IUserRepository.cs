@@ -4,12 +4,14 @@ namespace Portal.Domain.Interfaces
 {
     public interface IUserRepository
     {
-        Task<IEnumerable<User>> GetAllUsers();
+        Task<List<User>> GetAllUsers();
 
         Task Add(User user);
 
-        Task Delete(User user);
+        void Delete(User user);
 
-        Task Update(User user);
+        void Update(User user);
+
+        Task<int> SaveChanges();
     }
 }

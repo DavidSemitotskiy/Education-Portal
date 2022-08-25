@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Portal.Application\Portal.Application.csproj" />
-    <ProjectReference Include="..\Portal.Infrastructure\Portal.Infrastructure.csproj" />
+    <ProjectReference Include="..\Portal.EFInfrastructure\Portal.EFInfrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -23,7 +23,7 @@ namespace Portal.Infrastructure
             };
         }
 
-        public async Task<IEnumerable<User>> GetAllUsers()
+        public async Task<List<User>> GetAllUsers()
         {
             var users = new List<User>();
             using (StreamReader file = new StreamReader(_path))
@@ -58,7 +58,7 @@ namespace Portal.Infrastructure
             }
 
             var allUsers = (await GetAllUsers()).ToList();
-            var userToDelete = allUsers.FirstOrDefault(u => u.IdUser == user.IdUser);
+            var userToDelete = allUsers.FirstOrDefault(u => u.UserId == user.UserId);
             var resultRemoving = allUsers.Remove(userToDelete);
             if (!resultRemoving)
             {
@@ -79,7 +79,7 @@ namespace Portal.Infrastructure
             var resultUpdating = false;
             for (int i = 0; i < allUsers.Count; i++)
             {
-                if (allUsers[i].IdUser == user.IdUser)
+                if (allUsers[i].UserId == user.UserId)
                 {
                     allUsers[i] = user;
                     resultUpdating = true;
@@ -93,6 +93,11 @@ namespace Portal.Infrastructure
             }
 
             await WriteUsersToFile(allUsers);
+        }
+
+        public async Task SaveChanges()
+        {
+            await Task.Delay(0);
         }
 
         private async Task WriteUsersToFile(List<User> users)

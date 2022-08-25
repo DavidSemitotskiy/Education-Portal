@@ -24,7 +24,7 @@ namespace Portal.Infrastructure
             };
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllEntities()
+        public async Task<List<TEntity>> GetAllEntities()
         {
             var entities = new List<TEntity>();
             using (StreamReader file = new StreamReader(_path))
@@ -94,6 +94,11 @@ namespace Portal.Infrastructure
             }
 
             await WriteEntitiesToFile(allEntities);
+        }
+
+        public async Task SaveChanges()
+        {
+            await Task.Delay(0);
         }
 
         private async Task WriteEntitiesToFile(List<TEntity> entities)
