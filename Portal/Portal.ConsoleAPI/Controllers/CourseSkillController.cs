@@ -34,12 +34,30 @@ namespace Portal.ConsoleAPI.Controllers
             }
         }
 
+        public async Task<List<CourseSkill>> FillCourseSkillsForCourse(int countCourseSkills)
+        {
+            CourseSkill skill = null;
+            var skills = new List<CourseSkill>();
+            for (int i = 0; i < countCourseSkills;)
+            {
+                skill = await CreateOrChooseExistedCourseSkill();
+                skills.Add(skill);
+                i++;
+                Console.Write("Press Enter to continue!!!");
+                Console.ReadLine();
+                Console.Clear();
+            }
+
+            return skills;
+        }
+
         public Task<CourseSkill> CreateCourseSkill()
         {
             Console.Write("Input name of skill: ");
             string strSkill = Console.ReadLine();
             var courseSkill = new CourseSkill
             {
+                Id = Guid.NewGuid(),
                 Experience = strSkill
             };
             return CourseSkillManager.CreateOrGetExistedCourseSkill(courseSkill);

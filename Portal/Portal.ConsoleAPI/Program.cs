@@ -1,6 +1,7 @@
 ﻿using Portal.Application;
 using Portal.Application.Interfaces;
 using Portal.ConsoleAPI.Conrollers;
+using Portal.ConsoleAPI.Controllers;
 using Portal.Domain.Models;
 using Portal.EFInfrastructure;
 using Portal.EFInfrastructure.Repositories;
@@ -15,12 +16,15 @@ namespace Portal.ConsoleAPI
             var userRepository = new UserRepository(context);
             var materialRepository = new EntityRepository<Material>(context);
             var courseRepository = new EntityRepository<Course>(context);
+            var courseSkillRepository = new EntityRepository<CourseSkill>(context);
             var userManager = new UserManager(userRepository);
             var materialManager = new MaterialManager(materialRepository);
             var courseManager = new CourseManager(courseRepository);
+            var courseSkillManager = new CourseSkillManager(courseSkillRepository);
             var accountController = new AccountController(userManager);
             var materialController = new MaterialController(materialManager);
-            var courseController = new CourseController(courseManager, materialController);
+            var courseSkillController = new CourseSkillController(courseSkillManager);
+            var courseController = new CourseController(courseManager, materialController, courseSkillController);
             while (true)
             {
                 Console.WriteLine(IUserManager.CurrentUser == null ? "User isn't authorized" : $"Hello {IUserManager.CurrentUser.FirstName} {IUserManager.CurrentUser.LastName}");

@@ -1,4 +1,5 @@
 ﻿using Portal.Application.Interfaces;
+using Portal.ConsoleAPI.Controllers;
 using Portal.ConsoleAPI.Validation;
 using Portal.Domain.Models;
 
@@ -6,22 +7,25 @@ namespace Portal.ConsoleAPI.Conrollers
 {
     public class CourseController
     {
-        public CourseController(ICourseManager courseManager, MaterialController materialController)
+        public CourseController(ICourseManager courseManager, MaterialController materialController, CourseSkillController courseSkillController)
         {
             CourseManager = courseManager ?? throw new ArgumentNullException("Manager can't be null");
             MaterialController = materialController ?? throw new ArgumentNullException("Controller can't be null");
+            CourseSkillController = courseSkillController ?? throw new ArgumentNullException("Controller can't be null");
         }
 
         public ICourseManager CourseManager { get; set; }
 
         public MaterialController MaterialController { get; set; }
 
+        public CourseSkillController CourseSkillController { get; set; }
+
         public async Task CreateCourse()
         {
             string courseName = null;
             string courseDescription = null;
             var accessLevel = 0;
-            List<CourseSkill> courseSkills = null;
+            var countSkills = 0;
             var countMaterials = 0;
             Course course = null;
             while (true)
@@ -40,14 +44,16 @@ namespace Portal.ConsoleAPI.Conrollers
                     continue;
                 }
 
-                Console.Write("Input skills of course: ");
-                var skills = Console.ReadLine();
-                var listSkills = skills.Split(',');
-                courseSkills = listSkills.Select(strSkill => new CourseSkill
+                Console.Write("Input count of skills: ");
+                var resultCountSkillsParsing = int.TryParse(Console.ReadLine(), out countSkills);
+                if (!resultCountSkillsParsing || countSkills <= 0)
                 {
-                    Id = Guid.NewGuid(),
-                    Experience = strSkill
-                }).ToList();
+                    Console.WriteLine("Incorrect count!!");
+                    Console.ReadLine();
+                    Console.Clear();
+                    continue;
+                }
+
                 Console.Write("Input count materials: ");
                 var resultCountParsing = int.TryParse(Console.ReadLine(), out countMaterials);
                 if (!resultCountParsing || countMaterials <= 0)
@@ -64,7 +70,7 @@ namespace Portal.ConsoleAPI.Conrollers
                     Name = courseName,
                     Description = courseDescription,
                     AccessLevel = accessLevel,
-                    Skills = courseSkills,
+                    Skills = new List<CourseSkill>(),
                     Owner = IUserManager.CurrentUser,
                     Materials = new List<Material>()
                 };
@@ -79,10 +85,10 @@ namespace Portal.ConsoleAPI.Conrollers
                 break;
             }
 
+            course.Skills = await CourseSkillController.FillCourseSkillsForCourse(countSkills);
             course.Materials = await MaterialController.FillMaterialsForCourse(countMaterials);
             await CourseManager.AddCourse(course);
             await CourseManager.CourseRepository.SaveChanges();
-            return;
         }
 
         public async Task SeeAvailableCourses()
@@ -96,7 +102,18 @@ namespace Portal.ConsoleAPI.Conrollers
 
             foreach (var course in availableCourses)
             {
-                Console.Write($"{course.Name} - {course.Description} - {course.AccessLevel}\n");
+                Console.Write($"{course.Name} - {course.Description} - {course.AccessLevel}");
+                Console.WriteLine("\n\tSkills:");
+                foreach (var skill in course.Skills)
+                {
+                    Console.WriteLine($"\t\t-{skill.Experience}");
+                }
+
+                Console.WriteLine("\tMaterials:");
+                foreach (var material in course.Materials)
+                {
+                    Console.WriteLine($"\t\t-{material}");
+                }
             }
         }
 
@@ -157,7 +174,10 @@ namespace Portal.ConsoleAPI.Conrollers
             {
                 Console.WriteLine("1)Update only name");
                 Console.WriteLine("2)Update description");
-                Console.WriteLine("3)Update material");
+                Console.WriteLine("3)Add skill to list");
+                Console.WriteLine("4)Delete skill from list");
+                Console.WriteLine("5)Update skill from list");
+                Console.WriteLine("6)Update material");
                 Console.Write("Choose the operation by its number: ");
                 var choose = Console.ReadLine();
                 switch (choose)
@@ -171,6 +191,15 @@ namespace Portal.ConsoleAPI.Conrollers
                         courseUpdate.Description = Console.ReadLine();
                         break;
                     case "3":
+                        courseUpdate.Skills.Add(await CourseSkillController.CreateOrChooseExistedCourseSkill());
+                        break;
+                    case "4":
+                        CourseSkillController.DeleteCourseSkill(courseUpdate);
+                        break;
+                    case "5":
+                        await CourseSkillController.UpdateCourseSkill(courseUpdate);
+                        break;
+                    case "6":
                         await MaterialController.UpdateMaterial(courseUpdate);
                         break;
                     default:
