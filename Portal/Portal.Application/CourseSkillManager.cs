@@ -33,8 +33,7 @@ namespace Portal.Application
                 throw new ArgumentNullException("Course can't be null");
             }
 
-            var certainSkill = course.Skills.FirstOrDefault(s => s.Experience == skill.Experience);
-            course.Skills.Remove(certainSkill);
+            course.Skills.Remove(skill);
         }
 
         public void UpdateCourseSkill(Course course, int indexCourseSkill, CourseSkill newSkill)
