@@ -1,4 +1,6 @@
 ﻿using Portal.Application.Interfaces;
+using Portal.ConsoleAPI.Conrollers;
+using Portal.ConsoleAPI.Validation;
 using Portal.Domain.Models;
 
 namespace Portal.ConsoleAPI.Controllers
@@ -51,16 +53,28 @@ namespace Portal.ConsoleAPI.Controllers
             return skills;
         }
 
-        public Task<CourseSkill> CreateCourseSkill()
+        public async Task<CourseSkill> CreateCourseSkill()
         {
-            Console.Write("Input name of skill: ");
-            string strSkill = Console.ReadLine();
-            var courseSkill = new CourseSkill
+            while (true)
             {
-                Id = Guid.NewGuid(),
-                Experience = strSkill
-            };
-            return CourseSkillManager.CreateOrGetExistedCourseSkill(courseSkill);
+                Console.Write("Input name of skill: ");
+                string strSkill = Console.ReadLine();
+                var courseSkill = new CourseSkill
+                {
+                    Id = Guid.NewGuid(),
+                    Experience = strSkill,
+                    Courses = new List<Course>()
+                };
+                var resultValidation = await new ErrorMessages<CourseSkillValidator, CourseSkill>().Validate(courseSkill);
+                if (!resultValidation)
+                {
+                    Console.ReadLine();
+                    Console.Clear();
+                    continue;
+                }
+
+                return await CourseSkillManager.CreateOrGetExistedCourseSkill(courseSkill);
+            }
         }
 
         public async Task<CourseSkill> ChooseExistedCourseSkill()
