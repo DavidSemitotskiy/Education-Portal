@@ -50,7 +50,7 @@ namespace Portal.Infrastructure
             }
         }
 
-        public async Task Delete(User user)
+        public async void Delete(User user)
         {
             if (user == null)
             {
@@ -68,7 +68,7 @@ namespace Portal.Infrastructure
             await WriteUsersToFile(allUsers);
         }
 
-        public async Task Update(User user)
+        public async void Update(User user)
         {
             if (user == null)
             {
@@ -95,9 +95,10 @@ namespace Portal.Infrastructure
             await WriteUsersToFile(allUsers);
         }
 
-        public async Task SaveChanges()
+        public async Task<int> SaveChanges()
         {
             await Task.Delay(0);
+            return 1;
         }
 
         private async Task WriteUsersToFile(List<User> users)
