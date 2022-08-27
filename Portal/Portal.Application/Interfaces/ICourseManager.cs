@@ -15,8 +15,12 @@ namespace Portal.Application.Interfaces
 
         Task<bool> Exists(string name, string description);
 
+        void PublishCourse(Course course);
+
         Task<IEnumerable<Course>> GetAvailableCourses(User user);
 
         Task<IEnumerable<Course>> GetOwnCourses(User user);
+
+        Task<IEnumerable<Course>> GetCoursesNotPublished(User user);
     }
 }
