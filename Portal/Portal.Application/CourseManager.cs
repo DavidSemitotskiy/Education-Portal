@@ -19,16 +19,32 @@ namespace Portal.Application
             return allCourses.Any(course => course.Name == name && course.Description == description);
         }
 
+        public void PublishCourse(Course course)
+        {
+            if (course == null)
+            {
+                throw new ArgumentNullException("Course can't be null");
+            }
+
+            course.IsPublished = true;
+        }
+
         public async Task<IEnumerable<Course>> GetAvailableCourses(User user)
         {
             var allCourses = await CourseRepository.GetAllEntities();
-            return allCourses.Where(course => course.AccessLevel <= user.AccessLevel);
+            return allCourses.Where(course => course.AccessLevel <= user.AccessLevel && course.IsPublished);
         }
 
         public async Task<IEnumerable<Course>> GetOwnCourses(User user)
         {
             var allCourses = await CourseRepository.GetAllEntities();
             return allCourses.Where(course => course.Owner.UserId == user.UserId);
+        }
+
+        public async Task<IEnumerable<Course>> GetCoursesNotPublished(User user)
+        {
+            var allCourses = await CourseRepository.GetAllEntities();
+            return allCourses.Where(course => course.Owner.UserId == user.UserId && !course.IsPublished);
         }
 
         public async Task AddCourse(Course course)

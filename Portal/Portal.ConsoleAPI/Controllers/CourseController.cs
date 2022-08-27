@@ -70,6 +70,7 @@ namespace Portal.ConsoleAPI.Conrollers
                     Name = courseName,
                     Description = courseDescription,
                     AccessLevel = accessLevel,
+                    IsPublished = false,
                     Skills = new List<CourseSkill>(),
                     Owner = IUserManager.CurrentUser,
                     Materials = new List<Material>()
@@ -119,7 +120,7 @@ namespace Portal.ConsoleAPI.Conrollers
 
         public async Task DeleteCourse()
         {
-            var ownCourses = (await CourseManager.GetOwnCourses(IUserManager.CurrentUser)).ToList();
+            var ownCourses = (await CourseManager.GetCoursesNotPublished(IUserManager.CurrentUser)).ToList();
             if (ownCourses.Count == 0)
             {
                 Console.WriteLine("You don't have any courses to delete!!!");
@@ -172,43 +173,55 @@ namespace Portal.ConsoleAPI.Conrollers
             var courseUpdate = ownCourses[index - 1];
             while (true)
             {
-                Console.WriteLine("1)Update only name");
-                Console.WriteLine("2)Update description");
-                Console.WriteLine("3)Add skill to list");
-                Console.WriteLine("4)Delete skill from list");
-                Console.WriteLine("5)Update skill from list");
-                Console.WriteLine("6)Add material to course");
-                Console.WriteLine("7)Delete material from course");
-                Console.WriteLine("8)Update material from course");
+                if (courseUpdate.IsPublished)
+                {
+                    Console.WriteLine("1)Update description");
+                }
+                else
+                {
+                    Console.WriteLine("1)Update description");
+                    Console.WriteLine("2)Update only name");
+                    Console.WriteLine("3)Add skill to course");
+                    Console.WriteLine("4)Delete skill from course");
+                    Console.WriteLine("5)Update skill from course");
+                    Console.WriteLine("6)Add material to course");
+                    Console.WriteLine("7)Delete material from course");
+                    Console.WriteLine("8)Update material from course");
+                    Console.WriteLine("9)Publish course");
+                }
+
                 Console.Write("Choose the operation by its number: ");
-                var choose = Console.ReadLine();
+                var choose = (CourseOperations)int.Parse(Console.ReadLine());
                 switch (choose)
                 {
-                    case "1":
+                    case CourseOperations.UpdateName:
                         Console.Write("Input new name: ");
                         courseUpdate.Name = Console.ReadLine();
                         break;
-                    case "2":
+                    case CourseOperations.UpdateDescription:
                         Console.Write("Input new description: ");
                         courseUpdate.Description = Console.ReadLine();
                         break;
-                    case "3":
+                    case CourseOperations.AddSkill:
                         courseUpdate.Skills.Add(await CourseSkillController.CreateOrChooseExistedCourseSkill());
                         break;
-                    case "4":
+                    case CourseOperations.DeleteSkill:
                         CourseSkillController.DeleteCourseSkill(courseUpdate);
                         break;
-                    case "5":
+                    case CourseOperations.UpdateSkill:
                         await CourseSkillController.UpdateCourseSkill(courseUpdate);
                         break;
-                    case "6":
+                    case CourseOperations.AddMaterial:
                         courseUpdate.Materials.Add(await MaterialController.CreateOrChooseExistedMaterial());
                         break;
-                    case "7":
+                    case CourseOperations.DeleteMaterial:
                         MaterialController.DeleteMaterial(courseUpdate);
                         break;
-                    case "8":
+                    case CourseOperations.UpdateMaterial:
                         await MaterialController.UpdateMaterial(courseUpdate);
+                        break;
+                    case CourseOperations.PublishCourse:
+                        CourseManager.PublishCourse(courseUpdate);
                         break;
                     default:
                         Console.WriteLine("Incorrect number of operation");
