@@ -177,7 +177,9 @@ namespace Portal.ConsoleAPI.Conrollers
                 Console.WriteLine("3)Add skill to list");
                 Console.WriteLine("4)Delete skill from list");
                 Console.WriteLine("5)Update skill from list");
-                Console.WriteLine("6)Update material");
+                Console.WriteLine("6)Add material to course");
+                Console.WriteLine("7)Delete material from course");
+                Console.WriteLine("8)Update material from course");
                 Console.Write("Choose the operation by its number: ");
                 var choose = Console.ReadLine();
                 switch (choose)
@@ -200,6 +202,12 @@ namespace Portal.ConsoleAPI.Conrollers
                         await CourseSkillController.UpdateCourseSkill(courseUpdate);
                         break;
                     case "6":
+                        courseUpdate.Materials.Add(await MaterialController.CreateOrChooseExistedMaterial());
+                        break;
+                    case "7":
+                        MaterialController.DeleteMaterial(courseUpdate);
+                        break;
+                    case "8":
                         await MaterialController.UpdateMaterial(courseUpdate);
                         break;
                     default:

@@ -52,11 +52,46 @@ namespace Portal.ConsoleAPI.Conrollers
             return materials;
         }
 
+        public void DeleteMaterial(Course course)
+        {
+            if (course == null)
+            {
+                throw new ArgumentNullException("Course can't b null");
+            }
+
+            if (course.Materials.Count == 0)
+            {
+                Console.WriteLine("There aren't any materials to delete");
+                return;
+            }
+
+            for (int i = 0; i < course.Materials.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}){course.Materials[i]}");
+            }
+
+            Console.Write("Choose the material to delete by its number: ");
+            var resultParing = int.TryParse(Console.ReadLine(), out int index);
+            if (!resultParing || index - 1 >= course.Materials.Count)
+            {
+                Console.WriteLine("Incorrect number of material");
+                return;
+            }
+
+            MaterialManager.DeleteMaterial(course, course.Materials[index - 1]);
+        }
+
         public async Task UpdateMaterial(Course course)
         {
             if (course == null)
             {
                 throw new ArgumentNullException("Course can't b null");
+            }
+
+            if (course.Materials.Count == 0)
+            {
+                Console.WriteLine("There aren't any materials to update");
+                return;
             }
 
             for (int i = 0; i < course.Materials.Count; i++)
@@ -72,7 +107,7 @@ namespace Portal.ConsoleAPI.Conrollers
                 return;
             }
 
-            course.Materials[index - 1] = await CreateOrChooseExistedMaterial();
+            MaterialManager.UpdateMaterial(course, index - 1, await CreateOrChooseExistedMaterial());
         }
 
         public Task<Material> CreatOwnMaterial()
@@ -148,9 +183,7 @@ namespace Portal.ConsoleAPI.Conrollers
                     continue;
                 }
 
-                await MaterialManager.AddMaterial(material);
-                await MaterialManager.MaterialRepository.SaveChanges();
-                return material;
+                return await MaterialManager.CreateOrGetExistedMaterial(material);
             }
         }
 
@@ -184,9 +217,7 @@ namespace Portal.ConsoleAPI.Conrollers
                     continue;
                 }
 
-                await MaterialManager.AddMaterial(material);
-                await MaterialManager.MaterialRepository.SaveChanges();
-                return material;
+                return await MaterialManager.CreateOrGetExistedMaterial(material);
             }
         }
 
@@ -220,9 +251,7 @@ namespace Portal.ConsoleAPI.Conrollers
                     continue;
                 }
 
-                await MaterialManager.AddMaterial(material);
-                await MaterialManager.MaterialRepository.SaveChanges();
-                return material;
+                return await MaterialManager.CreateOrGetExistedMaterial(material);
             }
         }
 

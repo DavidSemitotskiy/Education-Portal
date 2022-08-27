@@ -18,24 +18,27 @@ namespace Portal.Application
 
         public IEntityRepository<Material> MaterialRepository { get; }
 
-        public async Task AddMaterial(Material material)
+        public async Task<Material> CreateOrGetExistedMaterial(Material material)
         {
-            if (material == null)
+            var allMaterials = await MaterialRepository.GetAllEntities();
+            var certainMaterial = allMaterials.FirstOrDefault(m => m.Equals(material));
+            if (certainMaterial == null)
+            {
+                await MaterialRepository.Add(material);
+                return material;
+            }
+
+            return certainMaterial;
+        }
+
+        public void DeleteMaterial(Course course, Material material)
+        {
+            if (course == null)
             {
                 throw new ArgumentNullException("Course can't be null");
             }
 
-            if (await Exists(material))
-            {
-                throw new ArgumentException("This material already exists");
-            }
-
-            await MaterialRepository.Add(material);
-        }
-
-        public void DeleteMaterial(Material material)
-        {
-            MaterialRepository.Delete(material);
+            course.Materials.Remove(material);
         }
 
         public async Task<bool> Exists(Material material)
@@ -44,9 +47,14 @@ namespace Portal.Application
             return allMaterials.Any(m => m.Equals(material));
         }
 
-        public void UpdateMaterial(Material material)
+        public void UpdateMaterial(Course course, int index, Material material)
         {
-            MaterialRepository.Update(material);
+            if (course == null)
+            {
+                throw new ArgumentNullException("Course can't be null");
+            }
+
+            course.Materials[index] = material;
         }
     }
 }
