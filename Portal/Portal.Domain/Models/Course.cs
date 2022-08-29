@@ -14,6 +14,8 @@ namespace Portal.Domain.Models
 
         public bool IsPublished { get; set; }
 
+        public List<CourseState> CourseStates { get; set; }
+
         public List<Material> Materials { get; set; }
 
         public List<CourseSkill> Skills { get; set; }

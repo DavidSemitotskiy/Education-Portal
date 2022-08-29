@@ -14,6 +14,8 @@
 
         public int AccessLevel { get; set; }
 
+        public List<CourseState> CourseStates { get; set; }
+
         public List<UserSkill> Skills { get; set; }
 
         public List<Course> OwnCourses { get; set; }
