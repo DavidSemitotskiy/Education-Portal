@@ -38,13 +38,13 @@ namespace Portal.Application
         public async Task<IEnumerable<Course>> GetOwnCourses(User user)
         {
             var allCourses = await CourseRepository.GetAllEntities();
-            return allCourses.Where(course => course.Owner.UserId == user.UserId);
+            return allCourses.Where(course => course.OwnerUser == user.UserId);
         }
 
         public async Task<IEnumerable<Course>> GetCoursesNotPublished(User user)
         {
             var allCourses = await CourseRepository.GetAllEntities();
-            return allCourses.Where(course => course.Owner.UserId == user.UserId && !course.IsPublished);
+            return allCourses.Where(course => course.OwnerUser == user.UserId && !course.IsPublished);
         }
 
         public async Task AddCourse(Course course)

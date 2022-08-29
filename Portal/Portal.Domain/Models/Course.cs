@@ -8,13 +8,11 @@ namespace Portal.Domain.Models
 
         public string Description { get; set; }
 
-        public User Owner { get; set; }
+        public Guid OwnerUser { get; set; }
 
         public int AccessLevel { get; set; }
 
         public bool IsPublished { get; set; }
-
-        public List<CourseState> CourseStates { get; set; }
 
         public List<Material> Materials { get; set; }
 

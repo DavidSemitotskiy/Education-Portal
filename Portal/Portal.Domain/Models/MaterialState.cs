@@ -6,11 +6,9 @@ namespace Portal.Domain.Models
     {
         public List<CourseState> CourseStates { get; set; }
 
-        public Material OwnerMaterial { get; set; }
+        public Guid OwnerMaterial { get; set; }
 
         public Guid UserId { get; set; }
-
-        public User OwnerUser { get; set; }
 
         public bool IsCompleted { get; set; }
     }

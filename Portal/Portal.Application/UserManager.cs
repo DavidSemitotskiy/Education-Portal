@@ -41,7 +41,6 @@ namespace Portal.Application
             }
 
             logInUser.Skills = logInUser.Skills ?? new List<UserSkill>();
-            logInUser.OwnCourses = logInUser.OwnCourses ?? new List<Course>();
             IUserManager.CurrentUser = logInUser;
         }
 

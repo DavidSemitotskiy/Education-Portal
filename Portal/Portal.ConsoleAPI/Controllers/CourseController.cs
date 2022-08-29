@@ -72,7 +72,7 @@ namespace Portal.ConsoleAPI.Conrollers
                     AccessLevel = accessLevel,
                     IsPublished = false,
                     Skills = new List<CourseSkill>(),
-                    Owner = IUserManager.CurrentUser,
+                    OwnerUser = IUserManager.CurrentUser.UserId,
                     Materials = new List<Material>()
                 };
                 var errorMessages = await new ErrorMessages<CourseValidator, Course>().Validate(course);

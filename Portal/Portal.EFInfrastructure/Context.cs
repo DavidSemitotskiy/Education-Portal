@@ -26,6 +26,10 @@ namespace Portal.EFInfrastructure
 
         public DbSet<UserSkill> UserSkills { get; set; }
 
+        public DbSet<CourseState> CourseStates { get; set; }
+
+        public DbSet<MaterialState> MaterialStates { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var configBuilder = new ConfigurationBuilder();
@@ -47,10 +51,6 @@ namespace Portal.EFInfrastructure
                 Navigation(course => course.Skills).AutoInclude();
             modelBuilder.Entity<Course>().
                 Navigation(course => course.Materials).AutoInclude();
-            modelBuilder.Entity<Course>().
-                Navigation(course => course.Owner).AutoInclude();
-            modelBuilder.Entity<UserSkill>().
-                Navigation(userSkill => userSkill.Owner).AutoInclude();
         }
     }
 }
