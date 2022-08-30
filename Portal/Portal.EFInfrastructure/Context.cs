@@ -39,18 +39,5 @@ namespace Portal.EFInfrastructure
             var connectionString = config.GetConnectionString("DatabaseConnection");
             optionsBuilder.UseSqlServer(connectionString);
         }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            if (modelBuilder == null)
-            {
-                throw new ArgumentNullException("ModelBuilder can't be null");
-            }
-
-            modelBuilder.Entity<Course>().
-                Navigation(course => course.Skills).AutoInclude();
-            modelBuilder.Entity<Course>().
-                Navigation(course => course.Materials).AutoInclude();
-        }
     }
 }

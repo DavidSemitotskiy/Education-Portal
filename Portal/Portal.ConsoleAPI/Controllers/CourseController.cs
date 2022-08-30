@@ -101,17 +101,19 @@ namespace Portal.ConsoleAPI.Conrollers
                 return;
             }
 
+            Course courseWithIncludes = null;
             foreach (var course in availableCourses)
             {
-                Console.Write($"{course.Name} - {course.Description} - {course.AccessLevel}");
+                courseWithIncludes = await CourseManager.CourseRepository.FindByIdWithIncludesAsync(course.Id, new string[] {"Skills", "Materials"});
+                Console.Write($"{courseWithIncludes.Name} - {courseWithIncludes.Description} - {courseWithIncludes.AccessLevel}");
                 Console.WriteLine("\n\tSkills:");
-                foreach (var skill in course.Skills)
+                foreach (var skill in courseWithIncludes.Skills)
                 {
                     Console.WriteLine($"\t\t-{skill.Experience}");
                 }
 
                 Console.WriteLine("\tMaterials:");
-                foreach (var material in course.Materials)
+                foreach (var material in courseWithIncludes.Materials)
                 {
                     Console.WriteLine($"\t\t-{material}");
                 }
@@ -170,10 +172,10 @@ namespace Portal.ConsoleAPI.Conrollers
                 return;
             }
 
-            var courseUpdate = ownCourses[index - 1];
+            var courseUpdateWithIncludes = await CourseManager.CourseRepository.FindByIdWithIncludesAsync(ownCourses[index - 1].Id, new string[] { "Skills", "Materials" });
             while (true)
             {
-                if (courseUpdate.IsPublished)
+                if (courseUpdateWithIncludes.IsPublished)
                 {
                     Console.WriteLine("1)Update description");
                 }
@@ -196,32 +198,32 @@ namespace Portal.ConsoleAPI.Conrollers
                 {
                     case CourseOperations.UpdateName:
                         Console.Write("Input new name: ");
-                        courseUpdate.Name = Console.ReadLine();
+                        courseUpdateWithIncludes.Name = Console.ReadLine();
                         break;
                     case CourseOperations.UpdateDescription:
                         Console.Write("Input new description: ");
-                        courseUpdate.Description = Console.ReadLine();
+                        courseUpdateWithIncludes.Description = Console.ReadLine();
                         break;
                     case CourseOperations.AddSkill:
-                        courseUpdate.Skills.Add(await CourseSkillController.CreateOrChooseExistedCourseSkill());
+                        courseUpdateWithIncludes.Skills.Add(await CourseSkillController.CreateOrChooseExistedCourseSkill());
                         break;
                     case CourseOperations.DeleteSkill:
-                        CourseSkillController.DeleteCourseSkill(courseUpdate);
+                        CourseSkillController.DeleteCourseSkill(courseUpdateWithIncludes);
                         break;
                     case CourseOperations.UpdateSkill:
-                        await CourseSkillController.UpdateCourseSkill(courseUpdate);
+                        await CourseSkillController.UpdateCourseSkill(courseUpdateWithIncludes);
                         break;
                     case CourseOperations.AddMaterial:
-                        courseUpdate.Materials.Add(await MaterialController.CreateOrChooseExistedMaterial());
+                        courseUpdateWithIncludes.Materials.Add(await MaterialController.CreateOrChooseExistedMaterial());
                         break;
                     case CourseOperations.DeleteMaterial:
-                        MaterialController.DeleteMaterial(courseUpdate);
+                        MaterialController.DeleteMaterial(courseUpdateWithIncludes);
                         break;
                     case CourseOperations.UpdateMaterial:
-                        await MaterialController.UpdateMaterial(courseUpdate);
+                        await MaterialController.UpdateMaterial(courseUpdateWithIncludes);
                         break;
                     case CourseOperations.PublishCourse:
-                        CourseManager.PublishCourse(courseUpdate);
+                        CourseManager.PublishCourse(courseUpdateWithIncludes);
                         break;
                     default:
                         Console.WriteLine("Incorrect number of operation");
@@ -230,7 +232,7 @@ namespace Portal.ConsoleAPI.Conrollers
                         continue;
                 }
 
-                CourseManager.UpdateCourse(courseUpdate);
+                CourseManager.UpdateCourse(courseUpdateWithIncludes);
                 await CourseManager.CourseRepository.SaveChanges();
                 return;
             }
@@ -245,17 +247,19 @@ namespace Portal.ConsoleAPI.Conrollers
                 return;
             }
 
+            Course courseWithIncludes = null;
             for (int i = 0; i < availableCourses.Count; i++)
             {
-                Console.Write($"{i + 1}){availableCourses[i].Name} - {availableCourses[i].Description} - {availableCourses[i].AccessLevel}");
+                courseWithIncludes = await CourseManager.CourseRepository.FindByIdWithIncludesAsync(availableCourses[i].Id, new string[] { "Skills", "Materials" });
+                Console.Write($"{i + 1}){courseWithIncludes.Name} - {courseWithIncludes.Description} - {courseWithIncludes.AccessLevel}");
                 Console.WriteLine("\n\tSkills:");
-                foreach (var skill in availableCourses[i].Skills)
+                foreach (var skill in courseWithIncludes.Skills)
                 {
                     Console.WriteLine($"\t\t-{skill.Experience}");
                 }
 
                 Console.WriteLine("\tMaterials:");
-                foreach (var material in availableCourses[i].Materials)
+                foreach (var material in courseWithIncludes.Materials)
                 {
                     Console.WriteLine($"\t\t-{material}");
                 }
