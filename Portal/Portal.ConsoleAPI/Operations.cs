@@ -10,6 +10,7 @@
         Update = 6,
         SeeAvailableCourses = 7,
         SubscribeCourse = 8,
-        SeeCoursesInProgress = 9
+        SeeCoursesInProgress = 9,
+        UnSubscribeCourse = 10
     }
 }

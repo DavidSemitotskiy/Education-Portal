@@ -90,5 +90,10 @@ namespace Portal.Application
 
             return CourseStateManager.Subscribe(user, course);
         }
+
+        public void UnSubscribeCourse(CourseState courseState)
+        {
+            CourseStateManager.UnSubscribe(courseState);
+        }
     }
 }

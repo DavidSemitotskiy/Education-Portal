@@ -44,6 +44,16 @@ namespace Portal.Application
             CourseStateRepository.Add(courseState);
         }
 
+        public void UnSubscribe(CourseState courseState)
+        {
+            if (courseState == null)
+            {
+                throw new ArgumentNullException("CourseState can't be null");
+            }
+
+            CourseStateRepository.Delete(courseState);
+        }
+
         public async Task<bool> Exists(User user, CourseState courseState)
         {
             var allMaterials = await CourseStateRepository.GetAllEntities();

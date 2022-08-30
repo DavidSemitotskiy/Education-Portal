@@ -18,6 +18,8 @@ namespace Portal.Application.Interfaces
 
         Task Subscribe(User user, Course course);
 
+        void UnSubscribe(CourseState courseState);
+
         Task<string> GetCourseProgress(CourseState courseState);
     }
 }

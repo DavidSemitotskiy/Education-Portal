@@ -28,5 +28,7 @@ namespace Portal.Application.Interfaces
         Task<IEnumerable<CourseState>> GetCoursesInProgress(User user);
 
         Task SubscribeCourse(User user, Course course);
+
+        void UnSubscribeCourse(CourseState courseState);
     }
 }

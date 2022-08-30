@@ -291,5 +291,28 @@ namespace Portal.ConsoleAPI.Conrollers
 
             await CourseManager.CourseStateManager.CourseStateRepository.SaveChanges();
         }
+
+        public async Task UnSubscribeCourse()
+        {
+            var allCoursesInProgress = (await CourseManager.GetCoursesInProgress(IUserManager.CurrentUser)).ToList();
+            if (allCoursesInProgress.Count == 0)
+            {
+                Console.WriteLine("You haven't subscribed on any courses");
+                Console.ReadLine();
+                return;
+            }
+
+            Course course = null;
+            for (int i = 0; i < allCoursesInProgress.Count; i++)
+            {
+                course = await CourseManager.CourseRepository.FindById(allCoursesInProgress[i].CourseId);
+                Console.WriteLine($"{i + 1}){course.Name}");
+            }
+
+            Console.Write("Choose the course to subscribe: ");
+            var pick = int.Parse(Console.ReadLine()) - 1;
+            CourseManager.UnSubscribeCourse(allCoursesInProgress[pick]);
+            await CourseManager.CourseStateManager.CourseStateRepository.SaveChanges();
+        }
     }
 }
