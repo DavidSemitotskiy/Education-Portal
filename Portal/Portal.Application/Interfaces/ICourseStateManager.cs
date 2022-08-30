@@ -17,5 +17,7 @@ namespace Portal.Application.Interfaces
         Task<bool> Exists(User user, CourseState courseState);
 
         Task Subscribe(User user, Course course);
+
+        Task<string> GetCourseProgress(CourseState courseState);
     }
 }

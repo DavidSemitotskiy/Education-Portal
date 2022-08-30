@@ -50,6 +50,12 @@ namespace Portal.Application
             return allCourses.Where(course => course.OwnerUser == user.UserId && !course.IsPublished);
         }
 
+        public async Task<IEnumerable<CourseState>> GetCoursesInProgress(User user)
+        {
+            var allSubscribedCourses = await CourseStateManager.CourseStateRepository.GetAllEntities();
+            return allSubscribedCourses.Where(courseState => courseState.UserId == user.UserId);
+        }
+
         public async Task AddCourse(Course course)
         {
             if (course == null)

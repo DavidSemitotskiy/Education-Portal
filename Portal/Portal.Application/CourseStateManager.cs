@@ -49,5 +49,24 @@ namespace Portal.Application
             var allMaterials = await CourseStateRepository.GetAllEntities();
             return allMaterials.Any(state => state.CourseId == courseState.CourseId && state.UserId == courseState.UserId);
         }
+
+        public async Task<string> GetCourseProgress(CourseState courseState)
+        {
+            if (courseState == null)
+            {
+                throw new ArgumentNullException("CourseState can't be null");
+            }
+
+            var courseStateWithIncludes = await CourseStateRepository.FindByIdWithIncludesAsync(courseState.Id, new string[]{ "MaterialStates" });
+            var countFinishedMaterials = courseStateWithIncludes.MaterialStates.Count(materialState => materialState.IsCompleted);
+            var countMaterials = courseStateWithIncludes.MaterialStates.Count();
+            if (countFinishedMaterials == countMaterials)
+            {
+                courseStateWithIncludes.IsFinished = true;
+                CourseStateRepository.Update(courseStateWithIncludes);
+            }
+
+            return $"{countFinishedMaterials}/{countMaterials}";
+        }
     }
 }

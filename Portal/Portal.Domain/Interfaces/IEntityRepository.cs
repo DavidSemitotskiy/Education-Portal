@@ -6,6 +6,10 @@ namespace Portal.Domain.Interfaces
     {
         Task<List<TEntity>> GetAllEntities();
 
+        Task<TEntity> FindById(Guid id);
+
+        Task<TEntity> FindByIdWithIncludesAsync(Guid id, string[] includeNames);
+
         Task Add(TEntity entity);
 
         void Delete(TEntity entity);

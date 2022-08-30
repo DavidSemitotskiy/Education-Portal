@@ -58,6 +58,7 @@ namespace Portal.ConsoleAPI
                     Console.WriteLine("4)Update course");
                     Console.WriteLine("5)See available courses");
                     Console.WriteLine("6)Subscribe on course");
+                    Console.WriteLine("7)See courses in progress");
                     var offset = 2;
                     Console.Write("Choose the operation by its number: ");
                     var pick = (Operations)(int.Parse(Console.ReadLine()) + offset);
@@ -80,6 +81,9 @@ namespace Portal.ConsoleAPI
                             break;
                         case Operations.SubscribeCourse:
                             await courseController.SubscribeCourse();
+                            break;
+                        case Operations.SeeCoursesInProgress:
+                            await courseController.SeeCoursesInProgress();
                             break;
                         default:
                             break;
