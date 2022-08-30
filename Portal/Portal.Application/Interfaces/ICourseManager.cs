@@ -7,6 +7,8 @@ namespace Portal.Application.Interfaces
     {
         IEntityRepository<Course> CourseRepository { get; }
 
+        ICourseStateManager CourseStateManager { get; }
+
         Task AddCourse(Course course);
 
         void DeleteCourse(Course course);
@@ -22,5 +24,7 @@ namespace Portal.Application.Interfaces
         Task<IEnumerable<Course>> GetOwnCourses(User user);
 
         Task<IEnumerable<Course>> GetCoursesNotPublished(User user);
+
+        Task SubscribeCourse(User user, Course course);
     }
 }

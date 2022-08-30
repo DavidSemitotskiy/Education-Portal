@@ -6,12 +6,15 @@ namespace Portal.Application
 {
     public class CourseManager : ICourseManager
     {
-        public CourseManager(IEntityRepository<Course> repository)
+        public CourseManager(IEntityRepository<Course> repository, ICourseStateManager courseStateManager)
         {
             CourseRepository = repository ?? throw new ArgumentNullException("Repository can't be null");
+            CourseStateManager = courseStateManager ?? throw new ArgumentNullException("Manager can't be null");
         }
 
         public IEntityRepository<Course> CourseRepository { get; }
+
+        public ICourseStateManager CourseStateManager { get; }
 
         public async Task<bool> Exists(string name, string description)
         {
@@ -70,6 +73,16 @@ namespace Portal.Application
         public void UpdateCourse(Course course)
         {
             CourseRepository.Update(course);
+        }
+
+        public Task SubscribeCourse(User user, Course course)
+        {
+            if (user == null || course == null)
+            {
+                throw new ArgumentNullException("User and course can't be null");
+            }
+
+            return CourseStateManager.Subscribe(user, course);
         }
     }
 }
