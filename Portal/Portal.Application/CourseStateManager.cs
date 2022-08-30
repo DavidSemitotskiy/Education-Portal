@@ -41,6 +41,7 @@ namespace Portal.Application
             }
 
             courseState.MaterialStates = await MaterialStateManager.GetMaterialStatesFromCourse(user, course);
+            CourseStateRepository.Add(courseState);
         }
 
         public async Task<bool> Exists(User user, CourseState courseState)

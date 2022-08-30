@@ -235,5 +235,37 @@ namespace Portal.ConsoleAPI.Conrollers
                 return;
             }
         }
+
+        public async Task SubscribeCourse()
+        {
+            var availableCourses = (await CourseManager.GetAvailableCourses(IUserManager.CurrentUser)).ToList();
+            if (availableCourses.Count == 0)
+            {
+                Console.WriteLine("There aren't any available course by your access level!!!");
+                return;
+            }
+
+            for (int i = 0; i < availableCourses.Count; i++)
+            {
+                Console.Write($"{i + 1}){availableCourses[i].Name} - {availableCourses[i].Description} - {availableCourses[i].AccessLevel}");
+                Console.WriteLine("\n\tSkills:");
+                foreach (var skill in availableCourses[i].Skills)
+                {
+                    Console.WriteLine($"\t\t-{skill.Experience}");
+                }
+
+                Console.WriteLine("\tMaterials:");
+                foreach (var material in availableCourses[i].Materials)
+                {
+                    Console.WriteLine($"\t\t-{material}");
+                }
+            }
+
+            Console.Write("Choose the course to subscribe: ");
+            var pick = int.Parse(Console.ReadLine()) - 1;
+            var courseToSubscribe = availableCourses[pick];
+            await CourseManager.SubscribeCourse(IUserManager.CurrentUser, courseToSubscribe);
+            await CourseManager.CourseStateManager.CourseStateRepository.SaveChanges();
+        }
     }
 }
