@@ -56,5 +56,16 @@ namespace Portal.Application
 
             return materialStates;
         }
+
+        public void CompleteMaterial(MaterialState materialState)
+        {
+            if (materialState == null)
+            {
+                throw new ArgumentNullException("MaterialState can't be null");
+            }
+
+            materialState.IsCompleted = true;
+            MaterialStateRepository.Update(materialState);
+        }
     }
 }

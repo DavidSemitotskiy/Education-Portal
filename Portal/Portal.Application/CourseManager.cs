@@ -95,5 +95,10 @@ namespace Portal.Application
         {
             CourseStateManager.UnSubscribe(courseState);
         }
+
+        public void CompleteMaterial(MaterialState materialState)
+        {
+            CourseStateManager.CompleteMaterialState(materialState);
+        }
     }
 }

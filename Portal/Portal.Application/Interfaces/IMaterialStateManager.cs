@@ -15,5 +15,7 @@ namespace Portal.Application.Interfaces
         Task<MaterialState> CreateOrGetExistedMaterialState(MaterialState materialState);
 
         Task<List<MaterialState>> GetMaterialStatesFromCourse(User user, Course course);
+
+        void CompleteMaterial(MaterialState materialState);
     }
 }

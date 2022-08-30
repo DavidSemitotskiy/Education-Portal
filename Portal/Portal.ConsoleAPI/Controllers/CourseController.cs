@@ -314,5 +314,42 @@ namespace Portal.ConsoleAPI.Conrollers
             CourseManager.UnSubscribeCourse(allCoursesInProgress[pick]);
             await CourseManager.CourseStateManager.CourseStateRepository.SaveChanges();
         }
+
+        public async Task CompleteMaterial()
+        {
+            var allCoursesInProgress = (await CourseManager.GetCoursesInProgress(IUserManager.CurrentUser))
+                .Where(courseState => !courseState.IsFinished).ToList();
+            if (allCoursesInProgress.Count == 0)
+            {
+                Console.WriteLine("You haven't subscribed on any courses");
+                Console.ReadLine();
+                return;
+            }
+
+            Course course = null;
+            for (int i = 0; i < allCoursesInProgress.Count; i++)
+            {
+                course = await CourseManager.CourseRepository.FindById(allCoursesInProgress[i].CourseId);
+                Console.WriteLine($"{i + 1}){course.Name}");
+            }
+
+            Console.Write("Choose the course to complete material: ");
+            var pick = int.Parse(Console.ReadLine()) - 1;
+            Material material = null;
+            var certainCourseStateWithIncludes = await CourseManager.CourseStateManager.CourseStateRepository
+                .FindByIdWithIncludesAsync(allCoursesInProgress[pick].Id, new string[] { "MaterialStates" });
+            for (int i = 0; i < certainCourseStateWithIncludes.MaterialStates.Count; i++)
+            {
+                material = await MaterialController.MaterialManager.MaterialRepository
+                    .FindById(certainCourseStateWithIncludes.MaterialStates[i].OwnerMaterial);
+                Console.WriteLine($"{i + 1}){material}");
+            }
+
+            Console.Write("Choose the material to complete: ");
+            var pickMaterial = int.Parse(Console.ReadLine()) - 1;
+            CourseManager.CompleteMaterial(allCoursesInProgress[pick].MaterialStates[pickMaterial]);
+            await CourseManager.CourseStateManager.MaterialStateManager.
+                MaterialStateRepository.SaveChanges();
+        }
     }
 }

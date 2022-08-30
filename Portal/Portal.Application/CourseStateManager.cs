@@ -54,6 +54,11 @@ namespace Portal.Application
             CourseStateRepository.Delete(courseState);
         }
 
+        public void CompleteMaterialState(MaterialState materialState)
+        {
+            MaterialStateManager.CompleteMaterial(materialState);
+        }
+
         public async Task<bool> Exists(User user, CourseState courseState)
         {
             var allMaterials = await CourseStateRepository.GetAllEntities();

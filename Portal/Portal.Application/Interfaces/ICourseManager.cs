@@ -19,6 +19,8 @@ namespace Portal.Application.Interfaces
 
         void PublishCourse(Course course);
 
+        void CompleteMaterial(MaterialState materialState);
+
         Task<IEnumerable<Course>> GetAvailableCourses(User user);
 
         Task<IEnumerable<Course>> GetOwnCourses(User user);

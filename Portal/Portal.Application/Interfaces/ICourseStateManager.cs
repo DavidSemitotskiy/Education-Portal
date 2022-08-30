@@ -20,6 +20,8 @@ namespace Portal.Application.Interfaces
 
         void UnSubscribe(CourseState courseState);
 
+        void CompleteMaterialState(MaterialState materialState);
+
         Task<string> GetCourseProgress(CourseState courseState);
     }
 }

@@ -11,6 +11,7 @@
         SeeAvailableCourses = 7,
         SubscribeCourse = 8,
         SeeCoursesInProgress = 9,
-        UnSubscribeCourse = 10
+        UnSubscribeCourse = 10,
+        CompleteMaterial = 11
     }
 }
