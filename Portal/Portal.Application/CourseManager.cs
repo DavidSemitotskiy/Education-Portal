@@ -96,6 +96,27 @@ namespace Portal.Application
             CourseStateManager.UnSubscribe(courseState);
         }
 
+        public async Task<int> CheckIfCoursesCompleted(User user, List<CourseState> courseStates)
+        {
+            if (courseStates == null)
+            {
+                throw new ArgumentNullException("CourseState can't be null");
+            }
+
+            Course course = null;
+            int countChangedRows = 0;
+            foreach (var courseState in courseStates)
+            {
+                course = await CourseRepository.FindByIdWithIncludesAsync(courseState.CourseId, new string[] { "Skills" });
+                if (await CourseStateManager.CheckIfCourseCompleted(user, course, courseState))
+                {
+                    countChangedRows++;
+                }
+            }
+
+            return countChangedRows;
+        }
+
         public void CompleteMaterial(MaterialState materialState)
         {
             CourseStateManager.CompleteMaterialState(materialState);

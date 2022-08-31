@@ -19,10 +19,12 @@ namespace Portal.ConsoleAPI
             var courseSkillRepository = new EntityRepository<CourseSkill>(context);
             var materialStateRepository = new EntityRepository<MaterialState>(context);
             var courseStateRepository = new EntityRepository<CourseState>(context);
+            var userSkillRepository = new EntityRepository<UserSkill>(context);
+            var userSkillManager = new UserSkillManager(userSkillRepository);
             var userManager = new UserManager(userRepository);
             var materialManager = new MaterialManager(materialRepository);
             var materialStateManager = new MaterialStateManager(materialStateRepository);
-            var courseStateManager = new CourseStateManager(courseStateRepository, materialStateManager);
+            var courseStateManager = new CourseStateManager(courseStateRepository, materialStateManager, userSkillManager, userManager);
             var courseManager = new CourseManager(courseRepository, courseStateManager);
             var courseSkillManager = new CourseSkillManager(courseSkillRepository);
             var accountController = new AccountController(userManager);

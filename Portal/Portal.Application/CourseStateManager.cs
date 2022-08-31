@@ -11,15 +11,21 @@ namespace Portal.Application
 {
     public class CourseStateManager : ICourseStateManager
     {
-        public CourseStateManager(IEntityRepository<CourseState> courseStateRepository, IMaterialStateManager materialStateManager)
+        public CourseStateManager(IEntityRepository<CourseState> courseStateRepository, IMaterialStateManager materialStateManager, IUserSkillManager userSkillManager, IUserManager userManager)
         {
             CourseStateRepository = courseStateRepository ?? throw new ArgumentNullException("Repository can't be null");
             MaterialStateManager = materialStateManager ?? throw new ArgumentNullException("Manager can't be null");
+            UserSkillManager = userSkillManager ?? throw new ArgumentNullException("Manager can't be null");
+            UserManager = userManager ?? throw new ArgumentNullException("Manager can't be null");
         }
 
         public IEntityRepository<CourseState> CourseStateRepository { get; }
 
         public IMaterialStateManager MaterialStateManager { get; }
+
+        public IUserManager UserManager { get; }
+
+        public IUserSkillManager UserSkillManager { get; }
 
         public async Task Subscribe(User user, Course course)
         {
@@ -54,6 +60,31 @@ namespace Portal.Application
             CourseStateRepository.Delete(courseState);
         }
 
+        public async Task<bool> CheckIfCourseCompleted(User user, Course course, CourseState courseState)
+        {
+            if (courseState == null || user == null || course == null)
+            {
+                throw new ArgumentNullException("CourseState, User and Course can't be null");
+            }
+
+            var userWithIncludes = await UserManager.UserRepository.FindByIdWithIncludesAsync(user.UserId, new string[] { "Skills" });
+            var courseStateWithIncludes = await CourseStateRepository.FindByIdWithIncludesAsync(courseState.Id, new string[] { "MaterialStates" });
+            if (courseStateWithIncludes.MaterialStates.All(materialState => materialState.IsCompleted)
+                && courseStateWithIncludes.IsFinished != true)
+            {
+                foreach (var courseSkill in course.Skills)
+                {
+                    await UserSkillManager.AddUserSkill(userWithIncludes, courseSkill);
+                }
+
+                courseStateWithIncludes.IsFinished = true;
+                CourseStateRepository.Update(courseStateWithIncludes);
+                return true;
+            }
+
+            return false;
+        }
+
         public void CompleteMaterialState(MaterialState materialState)
         {
             MaterialStateManager.CompleteMaterial(materialState);
@@ -72,15 +103,9 @@ namespace Portal.Application
                 throw new ArgumentNullException("CourseState can't be null");
             }
 
-            var courseStateWithIncludes = await CourseStateRepository.FindByIdWithIncludesAsync(courseState.Id, new string[]{ "MaterialStates" });
+            var courseStateWithIncludes = await CourseStateRepository.FindByIdWithIncludesAsync(courseState.Id, new string[] { "MaterialStates" });
             var countFinishedMaterials = courseStateWithIncludes.MaterialStates.Count(materialState => materialState.IsCompleted);
             var countMaterials = courseStateWithIncludes.MaterialStates.Count();
-            if (countFinishedMaterials == countMaterials)
-            {
-                courseStateWithIncludes.IsFinished = true;
-                CourseStateRepository.Update(courseStateWithIncludes);
-            }
-
             return $"{countFinishedMaterials}/{countMaterials}";
         }
     }

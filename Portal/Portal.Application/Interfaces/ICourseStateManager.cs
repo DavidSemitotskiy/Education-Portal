@@ -14,6 +14,10 @@ namespace Portal.Application.Interfaces
 
         IMaterialStateManager MaterialStateManager { get; }
 
+        IUserManager UserManager { get; }
+
+        IUserSkillManager UserSkillManager { get; }
+
         Task<bool> Exists(User user, CourseState courseState);
 
         Task Subscribe(User user, Course course);
@@ -21,6 +25,8 @@ namespace Portal.Application.Interfaces
         void UnSubscribe(CourseState courseState);
 
         void CompleteMaterialState(MaterialState materialState);
+
+        Task<bool> CheckIfCourseCompleted(User user, Course course, CourseState courseState);
 
         Task<string> GetCourseProgress(CourseState courseState);
     }
