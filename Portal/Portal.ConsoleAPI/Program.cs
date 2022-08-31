@@ -33,80 +33,90 @@ namespace Portal.ConsoleAPI
             var courseController = new CourseController(courseManager, materialController, courseSkillController);
             while (true)
             {
-                Console.WriteLine(IUserManager.CurrentUser == null ? "User isn't authorized" : $"Hello {IUserManager.CurrentUser.FirstName} {IUserManager.CurrentUser.LastName}");
-                if (IUserManager.CurrentUser == null)
+                try
                 {
-                    Console.WriteLine("1)Register");
-                    Console.WriteLine("2)Log in");
-                    Console.Write("Choose the operation by its number: ");
-                    var pick = (Operations)int.Parse(Console.ReadLine());
-                    switch (pick)
+                    Console.WriteLine(IUserManager.CurrentUser == null ? "User isn't authorized" : $"Hello {IUserManager.CurrentUser.FirstName} {IUserManager.CurrentUser.LastName}");
+                    if (IUserManager.CurrentUser == null)
                     {
-                        case Operations.Register:
-                            await accountController.Register();
-                            break;
-                        case Operations.LogIn:
-                            await accountController.LogIn();
-                            break;
-                        default:
-                            break;
+                        Console.WriteLine("1)Register");
+                        Console.WriteLine("2)Log in");
+                        Console.Write("Choose the operation by its number: ");
+                        var pick = (Operations)int.Parse(Console.ReadLine());
+                        switch (pick)
+                        {
+                            case Operations.Register:
+                                await accountController.Register();
+                                break;
+                            case Operations.LogIn:
+                                await accountController.LogIn();
+                                break;
+                            default:
+                                break;
+                        }
                     }
-                }
-                else
-                {
-                    Console.WriteLine("1)Log off");
-                    Console.WriteLine("2)Create course");
-                    Console.WriteLine("3)Delete course");
-                    Console.WriteLine("4)Update course");
-                    Console.WriteLine("5)See available courses");
-                    Console.WriteLine("6)Subscribe on course");
-                    Console.WriteLine("7)See courses in progress");
-                    Console.WriteLine("8)Unsubscribe course");
-                    Console.WriteLine("9)Complete material");
-                    Console.WriteLine("10)See user profile");
-                    var offset = 2;
-                    Console.Write("Choose the operation by its number: ");
-                    var pick = (Operations)(int.Parse(Console.ReadLine()) + offset);
-                    switch (pick)
+                    else
                     {
-                        case Operations.LogOff:
-                            await accountController.LogOff();
-                            break;
-                        case Operations.CreateCourse:
-                            await courseController.CreateCourse();
-                            break;
-                        case Operations.DeleteCourse:
-                            await courseController.DeleteCourse();
-                            break;
-                        case Operations.Update:
-                            await courseController.Update();
-                            break;
-                        case Operations.SeeAvailableCourses:
-                            await courseController.SeeAvailableCourses();
-                            break;
-                        case Operations.SubscribeCourse:
-                            await courseController.SubscribeCourse();
-                            break;
-                        case Operations.SeeCoursesInProgress:
-                            await courseController.SeeCoursesInProgress();
-                            break;
-                        case Operations.UnSubscribeCourse:
-                            await courseController.UnSubscribeCourse();
-                            break;
-                        case Operations.CompleteMaterial:
-                            await courseController.CompleteMaterial();
-                            break;
-                        case Operations.SeeProfile:
-                            await accountController.SeeUserProfile();
-                            break;
-                        default:
-                            break;
+                        Console.WriteLine("1)Log off");
+                        Console.WriteLine("2)Create course");
+                        Console.WriteLine("3)Delete course");
+                        Console.WriteLine("4)Update course");
+                        Console.WriteLine("5)See available courses");
+                        Console.WriteLine("6)Subscribe on course");
+                        Console.WriteLine("7)See courses in progress");
+                        Console.WriteLine("8)Unsubscribe course");
+                        Console.WriteLine("9)Complete material");
+                        Console.WriteLine("10)See user profile");
+                        var offset = 2;
+                        Console.Write("Choose the operation by its number: ");
+                        var pick = (Operations)(int.Parse(Console.ReadLine()) + offset);
+                        switch (pick)
+                        {
+                            case Operations.LogOff:
+                                await accountController.LogOff();
+                                break;
+                            case Operations.CreateCourse:
+                                await courseController.CreateCourse();
+                                break;
+                            case Operations.DeleteCourse:
+                                await courseController.DeleteCourse();
+                                break;
+                            case Operations.Update:
+                                await courseController.Update();
+                                break;
+                            case Operations.SeeAvailableCourses:
+                                await courseController.SeeAvailableCourses();
+                                break;
+                            case Operations.SubscribeCourse:
+                                await courseController.SubscribeCourse();
+                                break;
+                            case Operations.SeeCoursesInProgress:
+                                await courseController.SeeCoursesInProgress();
+                                break;
+                            case Operations.UnSubscribeCourse:
+                                await courseController.UnSubscribeCourse();
+                                break;
+                            case Operations.CompleteMaterial:
+                                await courseController.CompleteMaterial();
+                                break;
+                            case Operations.SeeProfile:
+                                await accountController.SeeUserProfile();
+                                break;
+                            default:
+                                break;
+                        }
                     }
-                }
 
-                Console.Write("Press Enter to continue!!!");
-                Console.ReadLine();
-                Console.Clear();
+                    Console.Write("Press Enter to continue!!!");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.Write("Press Enter to continue!!!");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
             }
 
             context.Dispose();
