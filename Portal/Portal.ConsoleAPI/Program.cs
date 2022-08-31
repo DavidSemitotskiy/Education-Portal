@@ -61,6 +61,7 @@ namespace Portal.ConsoleAPI
                     Console.WriteLine("7)See courses in progress");
                     Console.WriteLine("8)Unsubscribe course");
                     Console.WriteLine("9)Complete material");
+                    Console.WriteLine("10)See user profile");
                     var offset = 2;
                     Console.Write("Choose the operation by its number: ");
                     var pick = (Operations)(int.Parse(Console.ReadLine()) + offset);
@@ -92,6 +93,9 @@ namespace Portal.ConsoleAPI
                             break;
                         case Operations.CompleteMaterial:
                             await courseController.CompleteMaterial();
+                            break;
+                        case Operations.SeeProfile:
+                            await accountController.SeeUserProfile();
                             break;
                         default:
                             break;

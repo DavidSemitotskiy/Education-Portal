@@ -14,6 +14,27 @@ namespace Portal.EFInfrastructure.Repositories
             _context = context ?? throw new ArgumentNullException("Context can't be null");
         }
 
+        public Task<User> FindById(Guid id)
+        {
+            return _context.Users.FirstOrDefaultAsync(user => user.UserId == id);
+        }
+
+        public Task<User> FindByIdWithIncludesAsync(Guid id, string[] includeNames)
+        {
+            if (includeNames == null)
+            {
+                throw new ArgumentNullException("Include names can't be null");
+            }
+
+            IQueryable<User> query = _context.Users;
+            foreach (var includeName in includeNames)
+            {
+                query = query.Include(includeName);
+            }
+
+            return query.FirstOrDefaultAsync(user => user.UserId == id);
+        }
+
         public Task Add(User user)
         {
             _context.Users.Add(user);
