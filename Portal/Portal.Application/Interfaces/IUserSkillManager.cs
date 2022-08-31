@@ -7,6 +7,6 @@ namespace Portal.Application.Interfaces
     {
         IEntityRepository<UserSkill> UserSkillRepository { get; }
 
-        void AddUserSkill(User user, CourseSkill courseSkill);
+        Task AddUserSkill(User user, CourseSkill courseSkill);
     }
 }

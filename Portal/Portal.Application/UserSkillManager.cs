@@ -13,7 +13,7 @@ namespace Portal.Application
 
         public IEntityRepository<UserSkill> UserSkillRepository { get; }
 
-        public void AddUserSkill(User user, CourseSkill courseSkill)
+        public Task AddUserSkill(User user, CourseSkill courseSkill)
         {
             if (user == null || courseSkill == null)
             {
@@ -30,11 +30,12 @@ namespace Portal.Application
                     Owner = user,
                     Level = 0
                 };
-                user.Skills.Add(skill);
-                return;
+                return UserSkillRepository.Add(skill);
             }
 
             certainSkill.Level++;
+            UserSkillRepository.Update(certainSkill);
+            return Task.CompletedTask;
         }
     }
 }
