@@ -76,10 +76,10 @@ namespace Portal.ConsoleAPI.Conrollers
             Console.WriteLine($"Last name: {currentUserWithIncludes.LastName}");
             Console.WriteLine($"Email: {currentUserWithIncludes.Email}");
             Console.WriteLine($"Access level: {currentUserWithIncludes.AccessLevel}");
-            Console.Write("Skills:");
+            Console.WriteLine("Skills:");
             foreach (var skill in currentUserWithIncludes.Skills)
             {
-                Console.Write($" {skill.Experience} - {skill.Level},");
+                Console.WriteLine($"\t- {skill.Experience}  Level: {skill.Level}");
             }
         }
     }
