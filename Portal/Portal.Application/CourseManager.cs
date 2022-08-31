@@ -29,6 +29,11 @@ namespace Portal.Application
                 throw new ArgumentNullException("Course can't be null");
             }
 
+            if (course.Materials.Count() == 0 || course.Skills.Count() == 0)
+            {
+                throw new ArgumentException("Course must have one or more materials and skills");
+            }
+
             course.IsPublished = true;
         }
 
