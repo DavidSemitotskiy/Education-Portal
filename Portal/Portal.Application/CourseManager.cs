@@ -31,7 +31,7 @@ namespace Portal.Application
 
             if (course.Materials.Count() == 0 || course.Skills.Count() == 0)
             {
-                throw new ArgumentException("Course must have one or more materials and skills");
+                throw new ArgumentException("Course must have one or more materials and skills to be published");
             }
 
             course.IsPublished = true;
