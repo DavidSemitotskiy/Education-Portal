@@ -268,8 +268,12 @@ namespace Portal.ConsoleAPI.Conrollers
             Console.Write("Choose the course to subscribe: ");
             var pick = int.Parse(Console.ReadLine()) - 1;
             var courseToSubscribe = availableCourses[pick];
-            await CourseManager.SubscribeCourse(IUserManager.CurrentUser, courseToSubscribe);
+            var courseState = await CourseManager.SubscribeCourse(IUserManager.CurrentUser, courseToSubscribe);
             await CourseManager.CourseStateManager.CourseStateRepository.SaveChanges();
+            if (await CourseManager.CourseStateManager.CheckIfCourseCompleted(IUserManager.CurrentUser, courseToSubscribe, courseState))
+            {
+                await CourseManager.CourseStateManager.CourseStateRepository.SaveChanges();
+            }
         }
 
         public async Task SeeCoursesInProgress()

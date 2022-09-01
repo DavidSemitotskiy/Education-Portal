@@ -15,7 +15,7 @@ namespace Portal.Application.Interfaces
 
         Task<bool> Exists(User user, CourseState courseState);
 
-        Task Subscribe(User user, Course course);
+        Task<CourseState> Subscribe(User user, Course course);
 
         void UnSubscribe(CourseState courseState);
 

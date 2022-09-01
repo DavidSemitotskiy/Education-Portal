@@ -22,7 +22,7 @@ namespace Portal.Application
 
         public IUserSkillManager UserSkillManager { get; }
 
-        public async Task Subscribe(User user, Course course)
+        public async Task<CourseState> Subscribe(User user, Course course)
         {
             if (user == null || course == null)
             {
@@ -43,6 +43,7 @@ namespace Portal.Application
 
             courseState.MaterialStates = await MaterialStateManager.GetMaterialStatesFromCourse(user, course);
             CourseStateRepository.Add(courseState);
+            return courseState;
         }
 
         public void UnSubscribe(CourseState courseState)

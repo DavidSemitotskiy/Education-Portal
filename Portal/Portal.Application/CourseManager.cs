@@ -86,7 +86,7 @@ namespace Portal.Application
             CourseRepository.Update(course);
         }
 
-        public Task SubscribeCourse(User user, Course course)
+        public Task<CourseState> SubscribeCourse(User user, Course course)
         {
             if (user == null || course == null)
             {
