@@ -46,7 +46,7 @@ namespace Portal.ConsoleAPI.Conrollers
 
                 Console.Write("Input count of skills: ");
                 var resultCountSkillsParsing = int.TryParse(Console.ReadLine(), out countSkills);
-                if (!resultCountSkillsParsing || countSkills <= 0)
+                if (!resultCountSkillsParsing || countSkills < 0)
                 {
                     Console.WriteLine("Incorrect count!!");
                     Console.ReadLine();
@@ -56,7 +56,7 @@ namespace Portal.ConsoleAPI.Conrollers
 
                 Console.Write("Input count materials: ");
                 var resultCountParsing = int.TryParse(Console.ReadLine(), out countMaterials);
-                if (!resultCountParsing || countMaterials <= 0)
+                if (!resultCountParsing || countMaterials < 0)
                 {
                     Console.WriteLine("Incorrect count!!");
                     Console.ReadLine();
