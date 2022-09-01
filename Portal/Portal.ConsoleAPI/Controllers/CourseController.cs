@@ -319,27 +319,18 @@ namespace Portal.ConsoleAPI.Conrollers
 
         public async Task CompleteMaterial()
         {
-            var allCoursesInProgress = (await CourseManager.GetCoursesInProgress(IUserManager.CurrentUser)).ToList();
+            var allCoursesInProgress = (await CourseManager.GetCoursesInProgress(IUserManager.CurrentUser)).Where(courseState => !courseState.IsFinished).ToList();
             if (allCoursesInProgress.Count == 0)
             {
-                Console.WriteLine("You haven't subscribed on any courses");
-                Console.ReadLine();
-                return;
-            }
-
-            await CourseManager.CheckIfCoursesCompleted(IUserManager.CurrentUser, allCoursesInProgress);
-            var coursesNotFinished = allCoursesInProgress.Where(courseState => !courseState.IsFinished).ToList();
-            if (coursesNotFinished.Count == 0)
-            {
-                Console.WriteLine("You don't have any course to finish");
+                Console.WriteLine("You don't have any courses in progress");
                 Console.ReadLine();
                 return;
             }
 
             Course course = null;
-            for (int i = 0; i < coursesNotFinished.Count; i++)
+            for (int i = 0; i < allCoursesInProgress.Count; i++)
             {
-                course = await CourseManager.CourseRepository.FindById(coursesNotFinished[i].CourseId);
+                course = await CourseManager.CourseRepository.FindById(allCoursesInProgress[i].CourseId);
                 Console.WriteLine($"{i + 1}){course.Name}");
             }
 
@@ -347,7 +338,7 @@ namespace Portal.ConsoleAPI.Conrollers
             var pick = int.Parse(Console.ReadLine()) - 1;
             Material material = null;
             var certainCourseStateWithIncludes = await CourseManager.CourseStateManager.CourseStateRepository
-                .FindByIdWithIncludesAsync(coursesNotFinished[pick].Id, new string[] { "MaterialStates" });
+                .FindByIdWithIncludesAsync(allCoursesInProgress[pick].Id, new string[] { "MaterialStates" });
             var materialsNotCompleted = certainCourseStateWithIncludes.MaterialStates.Where(state => !state.IsCompleted).ToList();
             for (int i = 0; i < materialsNotCompleted.Count; i++)
             {
@@ -359,7 +350,7 @@ namespace Portal.ConsoleAPI.Conrollers
             Console.Write("Choose the material to complete: ");
             var pickMaterial = int.Parse(Console.ReadLine()) - 1;
             CourseManager.CompleteMaterial(materialsNotCompleted[pickMaterial]);
-            await CourseManager.CheckIfCoursesCompleted(IUserManager.CurrentUser, coursesNotFinished);
+            await CourseManager.CheckIfCoursesCompleted(IUserManager.CurrentUser, allCoursesInProgress);
             await CourseManager.CourseStateManager.MaterialStateManager.
                 MaterialStateRepository.SaveChanges();
         }
