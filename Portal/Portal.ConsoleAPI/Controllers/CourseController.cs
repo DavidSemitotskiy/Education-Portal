@@ -298,7 +298,7 @@ namespace Portal.ConsoleAPI.Conrollers
 
         public async Task UnSubscribeCourse()
         {
-            var allCoursesInProgress = (await CourseManager.GetCoursesInProgress(IUserManager.CurrentUser)).ToList();
+            var allCoursesInProgress = (await CourseManager.GetCoursesInProgress(IUserManager.CurrentUser)).Where(courseState => !courseState.IsFinished).ToList();
             if (allCoursesInProgress.Count == 0)
             {
                 Console.WriteLine("You haven't subscribed on any courses");
