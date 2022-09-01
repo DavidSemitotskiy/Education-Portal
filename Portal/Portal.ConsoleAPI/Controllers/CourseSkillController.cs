@@ -43,6 +43,15 @@ namespace Portal.ConsoleAPI.Controllers
             for (int i = 0; i < countCourseSkills;)
             {
                 skill = await CreateOrChooseExistedCourseSkill();
+                if (skills.Contains(skill))
+                {
+                    Console.WriteLine("Course already has this skill");
+                    Console.Write("Press Enter to continue!!!");
+                    Console.ReadLine();
+                    Console.Clear();
+                    continue;
+                }
+
                 skills.Add(skill);
                 i++;
                 Console.Write("Press Enter to continue!!!");

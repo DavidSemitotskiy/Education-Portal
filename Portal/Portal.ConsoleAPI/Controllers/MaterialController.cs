@@ -42,6 +42,15 @@ namespace Portal.ConsoleAPI.Conrollers
             for (int i = 0; i < countMaterials;)
             {
                 material = await CreateOrChooseExistedMaterial();
+                if (materials.Contains(material))
+                {
+                    Console.WriteLine("Course already has this material");
+                    Console.Write("Press Enter to continue!!!");
+                    Console.ReadLine();
+                    Console.Clear();
+                    continue;
+                }
+
                 materials.Add(material);
                 i++;
                 Console.Write("Press Enter to continue!!!");
