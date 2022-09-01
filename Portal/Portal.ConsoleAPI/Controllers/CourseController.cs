@@ -101,23 +101,7 @@ namespace Portal.ConsoleAPI.Conrollers
                 return;
             }
 
-            Course courseWithIncludes = null;
-            foreach (var course in availableCourses)
-            {
-                courseWithIncludes = await CourseManager.CourseRepository.FindByIdWithIncludesAsync(course.Id, new string[] {"Skills", "Materials"});
-                Console.Write($"{courseWithIncludes.Name} - {courseWithIncludes.Description} - {courseWithIncludes.AccessLevel}");
-                Console.WriteLine("\n\tSkills:");
-                foreach (var skill in courseWithIncludes.Skills)
-                {
-                    Console.WriteLine($"\t\t-{skill.Experience}");
-                }
-
-                Console.WriteLine("\tMaterials:");
-                foreach (var material in courseWithIncludes.Materials)
-                {
-                    Console.WriteLine($"\t\t-{material}");
-                }
-            }
+            await ShowCourses(availableCourses);
         }
 
         public async Task DeleteCourse()
@@ -247,24 +231,7 @@ namespace Portal.ConsoleAPI.Conrollers
                 return;
             }
 
-            Course courseWithIncludes = null;
-            for (int i = 0; i < availableCourses.Count; i++)
-            {
-                courseWithIncludes = await CourseManager.CourseRepository.FindByIdWithIncludesAsync(availableCourses[i].Id, new string[] { "Skills", "Materials" });
-                Console.Write($"{i + 1}){courseWithIncludes.Name} - {courseWithIncludes.Description} - {courseWithIncludes.AccessLevel}");
-                Console.WriteLine("\n\tSkills:");
-                foreach (var skill in courseWithIncludes.Skills)
-                {
-                    Console.WriteLine($"\t\t-{skill.Experience}");
-                }
-
-                Console.WriteLine("\tMaterials:");
-                foreach (var material in courseWithIncludes.Materials)
-                {
-                    Console.WriteLine($"\t\t-{material}");
-                }
-            }
-
+            await ShowCourses(availableCourses);
             Console.Write("Choose the course to subscribe: ");
             var pick = int.Parse(Console.ReadLine()) - 1;
             var courseToSubscribe = availableCourses[pick];
@@ -353,6 +320,27 @@ namespace Portal.ConsoleAPI.Conrollers
             await CourseManager.CheckIfCoursesCompleted(IUserManager.CurrentUser, allCoursesInProgress);
             await CourseManager.CourseStateManager.MaterialStateManager.
                 MaterialStateRepository.SaveChanges();
+        }
+
+        private async Task ShowCourses(List<Course> courses)
+        {
+            Course courseWithIncludes = null;
+            for (int i = 0; i < courses.Count; i++)
+            {
+                courseWithIncludes = await CourseManager.CourseRepository.FindByIdWithIncludesAsync(courses[i].Id, new string[] { "Skills", "Materials" });
+                Console.Write($"{i + 1}){courseWithIncludes.Name} - {courseWithIncludes.Description} - {courseWithIncludes.AccessLevel}");
+                Console.WriteLine("\n\tSkills:");
+                foreach (var skill in courseWithIncludes.Skills)
+                {
+                    Console.WriteLine($"\t\t-{skill.Experience}");
+                }
+
+                Console.WriteLine("\tMaterials:");
+                foreach (var material in courseWithIncludes.Materials)
+                {
+                    Console.WriteLine($"\t\t-{material}");
+                }
+            }
         }
     }
 }
