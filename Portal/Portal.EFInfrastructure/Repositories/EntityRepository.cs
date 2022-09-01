@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Portal.Domain.BaseModels;
 using Portal.Domain.Interfaces;
 
