@@ -361,6 +361,7 @@ namespace Portal.ConsoleAPI.Conrollers
             Console.Write("Choose the material to complete: ");
             var pickMaterial = int.Parse(Console.ReadLine()) - 1;
             CourseManager.CompleteMaterial(materialsNotCompleted[pickMaterial]);
+            await CourseManager.CheckIfCoursesCompleted(IUserManager.CurrentUser, coursesNotFinished);
             await CourseManager.CourseStateManager.MaterialStateManager.
                 MaterialStateRepository.SaveChanges();
         }
