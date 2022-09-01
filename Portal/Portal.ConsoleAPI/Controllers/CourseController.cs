@@ -287,16 +287,10 @@ namespace Portal.ConsoleAPI.Conrollers
             }
 
             Course course = null;
-            var countChangedRows = await CourseManager.CheckIfCoursesCompleted(IUserManager.CurrentUser, allCoursesInProgress);
             for (int i = 0; i < allCoursesInProgress.Count; i++)
             {
                 course = await CourseManager.CourseRepository.FindById(allCoursesInProgress[i].CourseId);
                 Console.WriteLine($"{i + 1}){course.Name} - {await CourseManager.CourseStateManager.GetCourseProgress(allCoursesInProgress[i])} - {(allCoursesInProgress[i].IsFinished ? "Finished" : "In progress")}");
-            }
-
-            if (countChangedRows > 0)
-            {
-                await CourseManager.CourseStateManager.CourseStateRepository.SaveChanges();
             }
         }
 
