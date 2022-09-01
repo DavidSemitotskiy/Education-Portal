@@ -189,7 +189,17 @@ namespace Portal.ConsoleAPI.Conrollers
                         courseUpdateWithIncludes.Description = Console.ReadLine();
                         break;
                     case CourseOperations.AddSkill:
-                        courseUpdateWithIncludes.Skills.Add(await CourseSkillController.CreateOrChooseExistedCourseSkill());
+                        var addedSkill = await CourseSkillController.CreateOrChooseExistedCourseSkill();
+                        if (courseUpdateWithIncludes.Skills.Contains(addedSkill))
+                        {
+                            Console.WriteLine("Course already has this skill");
+                            Console.Write("Press Enter to continue!!!");
+                            Console.ReadLine();
+                            Console.Clear();
+                            return;
+                        }
+
+                        courseUpdateWithIncludes.Skills.Add(addedSkill);
                         break;
                     case CourseOperations.DeleteSkill:
                         CourseSkillController.DeleteCourseSkill(courseUpdateWithIncludes);
@@ -198,7 +208,17 @@ namespace Portal.ConsoleAPI.Conrollers
                         await CourseSkillController.UpdateCourseSkill(courseUpdateWithIncludes);
                         break;
                     case CourseOperations.AddMaterial:
-                        courseUpdateWithIncludes.Materials.Add(await MaterialController.CreateOrChooseExistedMaterial());
+                        var addedMaterial = await MaterialController.CreateOrChooseExistedMaterial();
+                        if (courseUpdateWithIncludes.Materials.Contains(addedMaterial))
+                        {
+                            Console.WriteLine("Course already has this material");
+                            Console.Write("Press Enter to continue!!!");
+                            Console.ReadLine();
+                            Console.Clear();
+                            return;
+                        }
+
+                        courseUpdateWithIncludes.Materials.Add(addedMaterial);
                         break;
                     case CourseOperations.DeleteMaterial:
                         MaterialController.DeleteMaterial(courseUpdateWithIncludes);

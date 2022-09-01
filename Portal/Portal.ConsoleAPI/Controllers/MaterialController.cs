@@ -116,7 +116,17 @@ namespace Portal.ConsoleAPI.Conrollers
                 return;
             }
 
-            MaterialManager.UpdateMaterial(course, index - 1, await CreateOrChooseExistedMaterial());
+            var updatedMaterial = await CreateOrChooseExistedMaterial();
+            if (course.Materials.Contains(updatedMaterial))
+            {
+                Console.WriteLine("Course already has this material");
+                Console.Write("Press Enter to continue!!!");
+                Console.ReadLine();
+                Console.Clear();
+                return;
+            }
+
+            MaterialManager.UpdateMaterial(course, index - 1, updatedMaterial);
         }
 
         public Task<Material> CreatOwnMaterial()

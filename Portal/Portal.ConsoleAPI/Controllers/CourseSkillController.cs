@@ -171,7 +171,17 @@ namespace Portal.ConsoleAPI.Controllers
                 return;
             }
 
-            CourseSkillManager.UpdateCourseSkill(course, index - 1, await CreateOrChooseExistedCourseSkill());
+            var updatedSkill = await CreateOrChooseExistedCourseSkill();
+            if (course.Skills.Contains(updatedSkill))
+            {
+                Console.WriteLine("Course already has this skill");
+                Console.Write("Press Enter to continue!!!");
+                Console.ReadLine();
+                Console.Clear();
+                return;
+            }
+
+            CourseSkillManager.UpdateCourseSkill(course, index - 1, updatedSkill);
         }
     }
 }
