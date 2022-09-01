@@ -350,16 +350,17 @@ namespace Portal.ConsoleAPI.Conrollers
             Material material = null;
             var certainCourseStateWithIncludes = await CourseManager.CourseStateManager.CourseStateRepository
                 .FindByIdWithIncludesAsync(coursesNotFinished[pick].Id, new string[] { "MaterialStates" });
-            for (int i = 0; i < certainCourseStateWithIncludes.MaterialStates.Count; i++)
+            var materialsNotCompleted = certainCourseStateWithIncludes.MaterialStates.Where(state => !state.IsCompleted).ToList();
+            for (int i = 0; i < materialsNotCompleted.Count; i++)
             {
                 material = await MaterialController.MaterialManager.MaterialRepository
-                    .FindById(certainCourseStateWithIncludes.MaterialStates[i].OwnerMaterial);
+                    .FindById(materialsNotCompleted[i].OwnerMaterial);
                 Console.WriteLine($"{i + 1}){material}");
             }
 
             Console.Write("Choose the material to complete: ");
             var pickMaterial = int.Parse(Console.ReadLine()) - 1;
-            CourseManager.CompleteMaterial(coursesNotFinished[pick].MaterialStates[pickMaterial]);
+            CourseManager.CompleteMaterial(materialsNotCompleted[pickMaterial]);
             await CourseManager.CourseStateManager.MaterialStateManager.
                 MaterialStateRepository.SaveChanges();
         }
