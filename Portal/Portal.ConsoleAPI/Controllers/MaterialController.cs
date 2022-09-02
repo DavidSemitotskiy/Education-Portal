@@ -202,7 +202,9 @@ namespace Portal.ConsoleAPI.Conrollers
                     continue;
                 }
 
-                return await MaterialManager.CreateOrGetExistedMaterial(material);
+                var createdMaterial = await MaterialManager.CreateOrGetExistedMaterial(material);
+                await MaterialManager.MaterialRepository.SaveChanges();
+                return createdMaterial;
             }
         }
 
@@ -236,7 +238,9 @@ namespace Portal.ConsoleAPI.Conrollers
                     continue;
                 }
 
-                return await MaterialManager.CreateOrGetExistedMaterial(material);
+                var createdMaterial = await MaterialManager.CreateOrGetExistedMaterial(material);
+                await MaterialManager.MaterialRepository.SaveChanges();
+                return createdMaterial;
             }
         }
 
@@ -270,7 +274,9 @@ namespace Portal.ConsoleAPI.Conrollers
                     continue;
                 }
 
-                return await MaterialManager.CreateOrGetExistedMaterial(material);
+                var createdMaterial = await MaterialManager.CreateOrGetExistedMaterial(material);
+                await MaterialManager.MaterialRepository.SaveChanges();
+                return createdMaterial;
             }
         }
 

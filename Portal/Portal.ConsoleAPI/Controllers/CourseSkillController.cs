@@ -82,7 +82,9 @@ namespace Portal.ConsoleAPI.Controllers
                     continue;
                 }
 
-                return await CourseSkillManager.CreateOrGetExistedCourseSkill(courseSkill);
+                var createdSkill = await CourseSkillManager.CreateOrGetExistedCourseSkill(courseSkill);
+                await CourseSkillManager.CourseSkillRepository.SaveChanges();
+                return createdSkill;
             }
         }
 
