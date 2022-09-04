@@ -68,5 +68,19 @@ namespace Portal.ConsoleAPI.Conrollers
         {
             return UserManager.LogOff();
         }
+
+        public async Task SeeUserProfile()
+        {
+            var currentUserWithIncludes = await UserManager.UserRepository.FindByIdWithIncludesAsync(IUserManager.CurrentUser.UserId, new string[]{ "Skills" });
+            Console.WriteLine($"First name: {currentUserWithIncludes.FirstName}");
+            Console.WriteLine($"Last name: {currentUserWithIncludes.LastName}");
+            Console.WriteLine($"Email: {currentUserWithIncludes.Email}");
+            Console.WriteLine($"Access level: {currentUserWithIncludes.AccessLevel}");
+            Console.WriteLine("Skills:");
+            foreach (var skill in currentUserWithIncludes.Skills)
+            {
+                Console.WriteLine($"\t- {skill.Experience}  Level: {skill.Level}");
+            }
+        }
     }
 }

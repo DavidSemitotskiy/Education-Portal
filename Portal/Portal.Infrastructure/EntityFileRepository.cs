@@ -51,7 +51,7 @@ namespace Portal.Infrastructure
             }
         }
 
-        public async Task Delete(TEntity entity)
+        public async void Delete(TEntity entity)
         {
             if (entity == null)
             {
@@ -69,7 +69,7 @@ namespace Portal.Infrastructure
             await WriteEntitiesToFile(allEntities);
         }
 
-        public async Task Update(TEntity entity)
+        public async void Update(TEntity entity)
         {
             if (entity == null)
             {
@@ -96,9 +96,10 @@ namespace Portal.Infrastructure
             await WriteEntitiesToFile(allEntities);
         }
 
-        public async Task SaveChanges()
+        public async Task<int> SaveChanges()
         {
             await Task.Delay(0);
+            return 1;
         }
 
         private async Task WriteEntitiesToFile(List<TEntity> entities)

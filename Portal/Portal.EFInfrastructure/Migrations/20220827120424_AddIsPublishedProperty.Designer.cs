@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Portal.EFInfrastructure;
 
@@ -11,9 +12,10 @@ using Portal.EFInfrastructure;
 namespace Portal.EFInfrastructure.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220827120424_AddIsPublishedProperty")]
+    partial class AddIsPublishedProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,21 +54,6 @@ namespace Portal.EFInfrastructure.Migrations
                     b.ToTable("CourseMaterial");
                 });
 
-            modelBuilder.Entity("CourseStateMaterialState", b =>
-                {
-                    b.Property<Guid>("CourseStatesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("MaterialStatesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("CourseStatesId", "MaterialStatesId");
-
-                    b.HasIndex("MaterialStatesId");
-
-                    b.ToTable("CourseStateMaterialState");
-                });
-
             modelBuilder.Entity("Portal.Domain.Models.Course", b =>
                 {
                     b.Property<Guid>("Id")
@@ -87,10 +74,12 @@ namespace Portal.EFInfrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("OwnerUser")
+                    b.Property<Guid>("OwnerUserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerUserId");
 
                     b.ToTable("Courses");
                 });
@@ -109,26 +98,6 @@ namespace Portal.EFInfrastructure.Migrations
                     b.ToTable("CourseSkills");
                 });
 
-            modelBuilder.Entity("Portal.Domain.Models.CourseState", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CourseId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsFinished")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CourseStates");
-                });
-
             modelBuilder.Entity("Portal.Domain.Models.Material", b =>
                 {
                     b.Property<Guid>("Id")
@@ -144,26 +113,6 @@ namespace Portal.EFInfrastructure.Migrations
                     b.ToTable("Materials");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Material");
-                });
-
-            modelBuilder.Entity("Portal.Domain.Models.MaterialState", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("OwnerMaterial")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MaterialStates");
                 });
 
             modelBuilder.Entity("Portal.Domain.Models.User", b =>
@@ -300,19 +249,15 @@ namespace Portal.EFInfrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CourseStateMaterialState", b =>
+            modelBuilder.Entity("Portal.Domain.Models.Course", b =>
                 {
-                    b.HasOne("Portal.Domain.Models.CourseState", null)
-                        .WithMany()
-                        .HasForeignKey("CourseStatesId")
+                    b.HasOne("Portal.Domain.Models.User", "Owner")
+                        .WithMany("OwnCourses")
+                        .HasForeignKey("OwnerUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Portal.Domain.Models.MaterialState", null)
-                        .WithMany()
-                        .HasForeignKey("MaterialStatesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("Portal.Domain.Models.UserSkill", b =>
@@ -328,6 +273,8 @@ namespace Portal.EFInfrastructure.Migrations
 
             modelBuilder.Entity("Portal.Domain.Models.User", b =>
                 {
+                    b.Navigation("OwnCourses");
+
                     b.Navigation("Skills");
                 });
 #pragma warning restore 612, 618

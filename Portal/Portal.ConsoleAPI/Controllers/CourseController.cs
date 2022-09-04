@@ -1,4 +1,5 @@
 ﻿using Portal.Application.Interfaces;
+using Portal.ConsoleAPI.Controllers;
 using Portal.ConsoleAPI.Validation;
 using Portal.Domain.Models;
 
@@ -6,22 +7,25 @@ namespace Portal.ConsoleAPI.Conrollers
 {
     public class CourseController
     {
-        public CourseController(ICourseManager courseManager, MaterialController materialController)
+        public CourseController(ICourseManager courseManager, MaterialController materialController, CourseSkillController courseSkillController)
         {
             CourseManager = courseManager ?? throw new ArgumentNullException("Manager can't be null");
             MaterialController = materialController ?? throw new ArgumentNullException("Controller can't be null");
+            CourseSkillController = courseSkillController ?? throw new ArgumentNullException("Controller can't be null");
         }
 
         public ICourseManager CourseManager { get; set; }
 
         public MaterialController MaterialController { get; set; }
 
+        public CourseSkillController CourseSkillController { get; set; }
+
         public async Task CreateCourse()
         {
             string courseName = null;
             string courseDescription = null;
             var accessLevel = 0;
-            List<CourseSkill> courseSkills = null;
+            var countSkills = 0;
             var countMaterials = 0;
             Course course = null;
             while (true)
@@ -40,17 +44,19 @@ namespace Portal.ConsoleAPI.Conrollers
                     continue;
                 }
 
-                Console.Write("Input skills of course: ");
-                var skills = Console.ReadLine();
-                var listSkills = skills.Split(',');
-                courseSkills = listSkills.Select(strSkill => new CourseSkill
+                Console.Write("Input count of skills: ");
+                var resultCountSkillsParsing = int.TryParse(Console.ReadLine(), out countSkills);
+                if (!resultCountSkillsParsing || countSkills < 0)
                 {
-                    Id = Guid.NewGuid(),
-                    Experience = strSkill
-                }).ToList();
+                    Console.WriteLine("Incorrect count!!");
+                    Console.ReadLine();
+                    Console.Clear();
+                    continue;
+                }
+
                 Console.Write("Input count materials: ");
                 var resultCountParsing = int.TryParse(Console.ReadLine(), out countMaterials);
-                if (!resultCountParsing || countMaterials <= 0)
+                if (!resultCountParsing || countMaterials < 0)
                 {
                     Console.WriteLine("Incorrect count!!");
                     Console.ReadLine();
@@ -64,8 +70,9 @@ namespace Portal.ConsoleAPI.Conrollers
                     Name = courseName,
                     Description = courseDescription,
                     AccessLevel = accessLevel,
-                    Skills = courseSkills,
-                    Owner = IUserManager.CurrentUser,
+                    IsPublished = false,
+                    Skills = new List<CourseSkill>(),
+                    OwnerUser = IUserManager.CurrentUser.UserId,
                     Materials = new List<Material>()
                 };
                 var errorMessages = await new ErrorMessages<CourseValidator, Course>().Validate(course);
@@ -79,10 +86,10 @@ namespace Portal.ConsoleAPI.Conrollers
                 break;
             }
 
+            course.Skills = await CourseSkillController.FillCourseSkillsForCourse(countSkills);
             course.Materials = await MaterialController.FillMaterialsForCourse(countMaterials);
             await CourseManager.AddCourse(course);
             await CourseManager.CourseRepository.SaveChanges();
-            return;
         }
 
         public async Task SeeAvailableCourses()
@@ -94,15 +101,12 @@ namespace Portal.ConsoleAPI.Conrollers
                 return;
             }
 
-            foreach (var course in availableCourses)
-            {
-                Console.Write($"{course.Name} - {course.Description} - {course.AccessLevel}\n");
-            }
+            await ShowCourses(availableCourses);
         }
 
         public async Task DeleteCourse()
         {
-            var ownCourses = (await CourseManager.GetOwnCourses(IUserManager.CurrentUser)).ToList();
+            var ownCourses = (await CourseManager.GetCoursesNotPublished(IUserManager.CurrentUser)).ToList();
             if (ownCourses.Count == 0)
             {
                 Console.WriteLine("You don't have any courses to delete!!!");
@@ -152,26 +156,78 @@ namespace Portal.ConsoleAPI.Conrollers
                 return;
             }
 
-            var courseUpdate = ownCourses[index - 1];
+            var courseUpdateWithIncludes = await CourseManager.CourseRepository.FindByIdWithIncludesAsync(ownCourses[index - 1].Id, new string[] { "Skills", "Materials" });
             while (true)
             {
-                Console.WriteLine("1)Update only name");
-                Console.WriteLine("2)Update description");
-                Console.WriteLine("3)Update material");
+                if (courseUpdateWithIncludes.IsPublished)
+                {
+                    Console.WriteLine("1)Update description");
+                }
+                else
+                {
+                    Console.WriteLine("1)Update description");
+                    Console.WriteLine("2)Update only name");
+                    Console.WriteLine("3)Add skill to course");
+                    Console.WriteLine("4)Delete skill from course");
+                    Console.WriteLine("5)Update skill from course");
+                    Console.WriteLine("6)Add material to course");
+                    Console.WriteLine("7)Delete material from course");
+                    Console.WriteLine("8)Update material from course");
+                    Console.WriteLine("9)Publish course");
+                }
+
                 Console.Write("Choose the operation by its number: ");
-                var choose = Console.ReadLine();
+                var choose = (CourseOperations)int.Parse(Console.ReadLine());
                 switch (choose)
                 {
-                    case "1":
+                    case CourseOperations.UpdateName:
                         Console.Write("Input new name: ");
-                        courseUpdate.Name = Console.ReadLine();
+                        courseUpdateWithIncludes.Name = Console.ReadLine();
                         break;
-                    case "2":
+                    case CourseOperations.UpdateDescription:
                         Console.Write("Input new description: ");
-                        courseUpdate.Description = Console.ReadLine();
+                        courseUpdateWithIncludes.Description = Console.ReadLine();
                         break;
-                    case "3":
-                        await MaterialController.UpdateMaterial(courseUpdate);
+                    case CourseOperations.AddSkill:
+                        var addedSkill = await CourseSkillController.CreateOrChooseExistedCourseSkill();
+                        if (courseUpdateWithIncludes.Skills.Contains(addedSkill))
+                        {
+                            Console.WriteLine("Course already has this skill");
+                            Console.Write("Press Enter to continue!!!");
+                            Console.ReadLine();
+                            Console.Clear();
+                            return;
+                        }
+
+                        courseUpdateWithIncludes.Skills.Add(addedSkill);
+                        break;
+                    case CourseOperations.DeleteSkill:
+                        CourseSkillController.DeleteCourseSkill(courseUpdateWithIncludes);
+                        break;
+                    case CourseOperations.UpdateSkill:
+                        await CourseSkillController.UpdateCourseSkill(courseUpdateWithIncludes);
+                        break;
+                    case CourseOperations.AddMaterial:
+                        var addedMaterial = await MaterialController.CreateOrChooseExistedMaterial();
+                        if (courseUpdateWithIncludes.Materials.Contains(addedMaterial))
+                        {
+                            Console.WriteLine("Course already has this material");
+                            Console.Write("Press Enter to continue!!!");
+                            Console.ReadLine();
+                            Console.Clear();
+                            return;
+                        }
+
+                        courseUpdateWithIncludes.Materials.Add(addedMaterial);
+                        break;
+                    case CourseOperations.DeleteMaterial:
+                        MaterialController.DeleteMaterial(courseUpdateWithIncludes);
+                        break;
+                    case CourseOperations.UpdateMaterial:
+                        await MaterialController.UpdateMaterial(courseUpdateWithIncludes);
+                        break;
+                    case CourseOperations.PublishCourse:
+                        CourseManager.PublishCourse(courseUpdateWithIncludes);
                         break;
                     default:
                         Console.WriteLine("Incorrect number of operation");
@@ -180,9 +236,130 @@ namespace Portal.ConsoleAPI.Conrollers
                         continue;
                 }
 
-                CourseManager.UpdateCourse(courseUpdate);
+                CourseManager.UpdateCourse(courseUpdateWithIncludes);
                 await CourseManager.CourseRepository.SaveChanges();
                 return;
+            }
+        }
+
+        public async Task SubscribeCourse()
+        {
+            var availableCourses = (await CourseManager.GetAvailableCourses(IUserManager.CurrentUser)).ToList();
+            if (availableCourses.Count == 0)
+            {
+                Console.WriteLine("There aren't any available course by your access level!!!");
+                return;
+            }
+
+            await ShowCourses(availableCourses);
+            Console.Write("Choose the course to subscribe: ");
+            var pick = int.Parse(Console.ReadLine()) - 1;
+            var courseToSubscribe = availableCourses[pick];
+            var courseState = await CourseManager.SubscribeCourse(IUserManager.CurrentUser, courseToSubscribe);
+            await CourseManager.CourseStateManager.CourseStateRepository.SaveChanges();
+            if (await CourseManager.CourseStateManager.CheckIfCourseCompleted(IUserManager.CurrentUser, courseToSubscribe, courseState))
+            {
+                await CourseManager.CourseStateManager.CourseStateRepository.SaveChanges();
+            }
+        }
+
+        public async Task SeeCoursesInProgress()
+        {
+            var allCoursesInProgress = (await CourseManager.GetCoursesInProgress(IUserManager.CurrentUser)).ToList();
+            if (allCoursesInProgress.Count == 0)
+            {
+                Console.WriteLine("You haven't subscribed on any courses");
+                Console.ReadLine();
+                return;
+            }
+
+            Course course = null;
+            for (int i = 0; i < allCoursesInProgress.Count; i++)
+            {
+                course = await CourseManager.CourseRepository.FindById(allCoursesInProgress[i].CourseId);
+                Console.WriteLine($"{i + 1}){course.Name} - {await CourseManager.CourseStateManager.GetCourseProgress(allCoursesInProgress[i])} - {(allCoursesInProgress[i].IsFinished ? "Finished" : "In progress")}");
+            }
+        }
+
+        public async Task UnSubscribeCourse()
+        {
+            var allCoursesInProgress = (await CourseManager.GetCoursesInProgress(IUserManager.CurrentUser)).Where(courseState => !courseState.IsFinished).ToList();
+            if (allCoursesInProgress.Count == 0)
+            {
+                Console.WriteLine("You haven't subscribed on any courses");
+                Console.ReadLine();
+                return;
+            }
+
+            Course course = null;
+            for (int i = 0; i < allCoursesInProgress.Count; i++)
+            {
+                course = await CourseManager.CourseRepository.FindById(allCoursesInProgress[i].CourseId);
+                Console.WriteLine($"{i + 1}){course.Name}");
+            }
+
+            Console.Write("Choose the course to subscribe: ");
+            var pick = int.Parse(Console.ReadLine()) - 1;
+            CourseManager.UnSubscribeCourse(allCoursesInProgress[pick]);
+            await CourseManager.CourseStateManager.CourseStateRepository.SaveChanges();
+        }
+
+        public async Task CompleteMaterial()
+        {
+            var allCoursesInProgress = (await CourseManager.GetCoursesInProgress(IUserManager.CurrentUser)).Where(courseState => !courseState.IsFinished).ToList();
+            if (allCoursesInProgress.Count == 0)
+            {
+                Console.WriteLine("You don't have any courses in progress");
+                Console.ReadLine();
+                return;
+            }
+
+            Course course = null;
+            for (int i = 0; i < allCoursesInProgress.Count; i++)
+            {
+                course = await CourseManager.CourseRepository.FindById(allCoursesInProgress[i].CourseId);
+                Console.WriteLine($"{i + 1}){course.Name}");
+            }
+
+            Console.Write("Choose the course to complete material: ");
+            var pick = int.Parse(Console.ReadLine()) - 1;
+            Material material = null;
+            var certainCourseStateWithIncludes = await CourseManager.CourseStateManager.CourseStateRepository
+                .FindByIdWithIncludesAsync(allCoursesInProgress[pick].Id, new string[] { "MaterialStates" });
+            var materialsNotCompleted = certainCourseStateWithIncludes.MaterialStates.Where(state => !state.IsCompleted).ToList();
+            for (int i = 0; i < materialsNotCompleted.Count; i++)
+            {
+                material = await MaterialController.MaterialManager.MaterialRepository
+                    .FindById(materialsNotCompleted[i].OwnerMaterial);
+                Console.WriteLine($"{i + 1}){material}");
+            }
+
+            Console.Write("Choose the material to complete: ");
+            var pickMaterial = int.Parse(Console.ReadLine()) - 1;
+            CourseManager.CompleteMaterial(materialsNotCompleted[pickMaterial]);
+            await CourseManager.CheckIfCoursesCompleted(IUserManager.CurrentUser, allCoursesInProgress);
+            await CourseManager.CourseStateManager.MaterialStateManager.
+                MaterialStateRepository.SaveChanges();
+        }
+
+        private async Task ShowCourses(List<Course> courses)
+        {
+            Course courseWithIncludes = null;
+            for (int i = 0; i < courses.Count; i++)
+            {
+                courseWithIncludes = await CourseManager.CourseRepository.FindByIdWithIncludesAsync(courses[i].Id, new string[] { "Skills", "Materials" });
+                Console.Write($"{i + 1}){courseWithIncludes.Name} - {courseWithIncludes.Description} - {courseWithIncludes.AccessLevel}");
+                Console.WriteLine("\n\tSkills:");
+                foreach (var skill in courseWithIncludes.Skills)
+                {
+                    Console.WriteLine($"\t\t-{skill.Experience}");
+                }
+
+                Console.WriteLine("\tMaterials:");
+                foreach (var material in courseWithIncludes.Materials)
+                {
+                    Console.WriteLine($"\t\t-{material}");
+                }
             }
         }
     }

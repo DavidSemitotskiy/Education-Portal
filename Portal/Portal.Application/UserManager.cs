@@ -40,8 +40,6 @@ namespace Portal.Application
                 throw new Exception("User isn't registered");
             }
 
-            logInUser.Skills = logInUser.Skills ?? new List<UserSkill>();
-            logInUser.OwnCourses = logInUser.OwnCourses ?? new List<Course>();
             IUserManager.CurrentUser = logInUser;
         }
 

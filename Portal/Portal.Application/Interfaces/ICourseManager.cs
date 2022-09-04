@@ -7,6 +7,8 @@ namespace Portal.Application.Interfaces
     {
         IEntityRepository<Course> CourseRepository { get; }
 
+        ICourseStateManager CourseStateManager { get; }
+
         Task AddCourse(Course course);
 
         void DeleteCourse(Course course);
@@ -15,8 +17,22 @@ namespace Portal.Application.Interfaces
 
         Task<bool> Exists(string name, string description);
 
+        void PublishCourse(Course course);
+
+        Task<int> CheckIfCoursesCompleted(User user, List<CourseState> courseStates);
+
+        void CompleteMaterial(MaterialState materialState);
+
         Task<IEnumerable<Course>> GetAvailableCourses(User user);
 
         Task<IEnumerable<Course>> GetOwnCourses(User user);
+
+        Task<IEnumerable<Course>> GetCoursesNotPublished(User user);
+
+        Task<IEnumerable<CourseState>> GetCoursesInProgress(User user);
+
+        Task<CourseState> SubscribeCourse(User user, Course course);
+
+        void UnSubscribeCourse(CourseState courseState);
     }
 }

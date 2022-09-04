@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Portal.Domain.BaseModels;
 using Portal.Domain.Interfaces;
 
@@ -16,6 +15,27 @@ namespace Portal.EFInfrastructure.Repositories
         }
 
         public DbSet<TEntity> Entities { get; set; }
+
+        public Task<TEntity> FindById(Guid id)
+        {
+            return Entities.FirstOrDefaultAsync(entity => entity.Id == id);
+        }
+
+        public Task<TEntity> FindByIdWithIncludesAsync(Guid id, string[] includeNames)
+        {
+            if (includeNames == null)
+            {
+                throw new ArgumentNullException("Include names can't be null");
+            }
+
+            IQueryable<TEntity> query = Entities;
+            foreach (var includeName in includeNames)
+            {
+                query = query.Include(includeName);
+            }
+
+            return query.FirstOrDefaultAsync(entity => entity.Id == id);
+        }
 
         public Task Add(TEntity entity)
         {

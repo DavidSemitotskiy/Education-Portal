@@ -7,11 +7,11 @@ namespace Portal.Application.Interfaces
     {
         IEntityRepository<Material> MaterialRepository { get; }
 
-        Task AddMaterial(Material material);
+        Task<Material> CreateOrGetExistedMaterial(Material material);
 
-        void DeleteMaterial(Material material);
+        void DeleteMaterial(Course course, Material material);
 
-        void UpdateMaterial(Material material);
+        void UpdateMaterial(Course course, int index, Material material);
 
         Task<bool> Exists(Material material);
     }
