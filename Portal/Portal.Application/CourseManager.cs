@@ -50,10 +50,10 @@ namespace Portal.Application
             return CourseRepository.FindEntitiesBySpecification(ownUserCourseSpecification);
         }
 
-        public async Task<IEnumerable<Course>> GetCoursesNotPublished(User user)
+        public Task<List<Course>> GetCoursesNotPublished(User user)
         {
-            var allCourses = await CourseRepository.GetAllEntities();
-            return allCourses.Where(course => course.OwnerUser == user.UserId && !course.IsPublished);
+            var notPublishedUserCourseSpecification = new NotPublishedUserCourseSpecification(user);
+            return CourseRepository.FindEntitiesBySpecification(notPublishedUserCourseSpecification);
         }
 
         public async Task<IEnumerable<CourseState>> GetCoursesInProgress(User user)
