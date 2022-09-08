@@ -23,7 +23,7 @@ namespace Portal.Application.Interfaces
 
         void CompleteMaterial(MaterialState materialState);
 
-        Task<IEnumerable<Course>> GetAvailableCourses(User user);
+        Task<List<Course>> GetAvailableCourses(User user);
 
         Task<IEnumerable<Course>> GetOwnCourses(User user);
 

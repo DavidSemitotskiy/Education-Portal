@@ -1,6 +1,7 @@
 ﻿using Portal.Application.Interfaces;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
+using Portal.Domain.Specifications.CourseSpecifications;
 
 namespace Portal.Application
 {
@@ -37,10 +38,10 @@ namespace Portal.Application
             course.IsPublished = true;
         }
 
-        public async Task<IEnumerable<Course>> GetAvailableCourses(User user)
+        public Task<List<Course>> GetAvailableCourses(User user)
         {
-            var allCourses = await CourseRepository.GetAllEntities();
-            return allCourses.Where(course => course.AccessLevel <= user.AccessLevel && course.IsPublished);
+            var availableUserCourseSpecification = new AvailableUserCourseSpecification(user);
+            return CourseRepository.FindEntitiesBySpecification(availableUserCourseSpecification);
         }
 
         public async Task<IEnumerable<Course>> GetOwnCourses(User user)
