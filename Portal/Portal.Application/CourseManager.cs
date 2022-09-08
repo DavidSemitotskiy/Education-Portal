@@ -56,10 +56,10 @@ namespace Portal.Application
             return CourseRepository.FindEntitiesBySpecification(notPublishedUserCourseSpecification);
         }
 
-        public async Task<IEnumerable<CourseState>> GetCoursesInProgress(User user)
+        public Task<List<CourseState>> GetCoursesInProgress(User user)
         {
-            var allSubscribedCourses = await CourseStateManager.CourseStateRepository.GetAllEntities();
-            return allSubscribedCourses.Where(courseState => courseState.UserId == user.UserId);
+            var userCourseInProgressSpecification = new UserCourseInProgressSpecification(user);
+            return CourseStateManager.CourseStateRepository.FindEntitiesBySpecification(userCourseInProgressSpecification);
         }
 
         public async Task AddCourse(Course course)

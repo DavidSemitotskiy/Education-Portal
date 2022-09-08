@@ -29,7 +29,7 @@ namespace Portal.Application.Interfaces
 
         Task<List<Course>> GetCoursesNotPublished(User user);
 
-        Task<IEnumerable<CourseState>> GetCoursesInProgress(User user);
+        Task<List<CourseState>> GetCoursesInProgress(User user);
 
         Task<CourseState> SubscribeCourse(User user, Course course);
 
