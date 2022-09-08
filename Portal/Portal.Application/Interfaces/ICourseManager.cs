@@ -25,7 +25,7 @@ namespace Portal.Application.Interfaces
 
         Task<List<Course>> GetAvailableCourses(User user);
 
-        Task<IEnumerable<Course>> GetOwnCourses(User user);
+        Task<List<Course>> GetOwnCourses(User user);
 
         Task<IEnumerable<Course>> GetCoursesNotPublished(User user);
 

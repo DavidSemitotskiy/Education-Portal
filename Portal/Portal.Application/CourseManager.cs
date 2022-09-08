@@ -44,10 +44,10 @@ namespace Portal.Application
             return CourseRepository.FindEntitiesBySpecification(availableUserCourseSpecification);
         }
 
-        public async Task<IEnumerable<Course>> GetOwnCourses(User user)
+        public Task<List<Course>> GetOwnCourses(User user)
         {
-            var allCourses = await CourseRepository.GetAllEntities();
-            return allCourses.Where(course => course.OwnerUser == user.UserId);
+            var ownUserCourseSpecification = new OwnUserCourseSpecification(user);
+            return CourseRepository.FindEntitiesBySpecification(ownUserCourseSpecification);
         }
 
         public async Task<IEnumerable<Course>> GetCoursesNotPublished(User user)
