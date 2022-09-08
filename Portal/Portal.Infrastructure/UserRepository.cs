@@ -101,6 +101,16 @@ namespace Portal.Infrastructure
             return 1;
         }
 
+        public Task<User> FindById(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<User> FindByIdWithIncludesAsync(Guid id, string[] includeNames)
+        {
+            throw new NotImplementedException();
+        }
+
         private async Task WriteUsersToFile(List<User> users)
         {
             string serializeUser = null;

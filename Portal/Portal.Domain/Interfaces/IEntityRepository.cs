@@ -1,10 +1,13 @@
 ﻿using Portal.Domain.BaseModels;
+using Portal.Domain.Specifications;
 
 namespace Portal.Domain.Interfaces
 {
     public interface IEntityRepository<TEntity> where TEntity : Entity
     {
         Task<List<TEntity>> GetAllEntities();
+
+        Task<List<TEntity>> FindEntitiesBySpecification(Specification<TEntity> specification);
 
         Task<TEntity> FindById(Guid id);
 
