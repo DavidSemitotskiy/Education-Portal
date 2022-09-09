@@ -11,7 +11,7 @@ namespace Portal.Domain.Specifications
     {
         private readonly ParameterExpression _parameter;
 
-        internal ParameterReplacer(ParameterExpression parameter)
+        public ParameterReplacer(ParameterExpression parameter)
         {
             _parameter = parameter;
         }
