@@ -1,9 +1,9 @@
 ﻿using Portal.Application.Interfaces;
+using Portal.Application.Specifications.CourseSpecifications;
+using Portal.Application.Specifications.MaterialSpecifications;
 using Portal.ConsoleAPI.Controllers;
 using Portal.ConsoleAPI.Validation;
 using Portal.Domain.Models;
-using Portal.Domain.Specifications.CourseSpecifications;
-using Portal.Domain.Specifications.MaterialStateSpecifications;
 
 namespace Portal.ConsoleAPI.Conrollers
 {

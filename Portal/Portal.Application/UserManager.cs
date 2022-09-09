@@ -1,8 +1,8 @@
 ﻿using Portal.Application.Interfaces;
+using Portal.Application.Specifications.UserSpecifications;
 using Portal.Domain.DTOs;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
-using Portal.Domain.Specifications.UserSpecifications;
 
 namespace Portal.Application
 {

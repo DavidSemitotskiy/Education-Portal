@@ -1,7 +1,7 @@
 ﻿using Portal.Application.Interfaces;
+using Portal.Application.Specifications.CourseSpecifications;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
-using Portal.Domain.Specifications.CourseSpecifications;
 
 namespace Portal.Application
 {

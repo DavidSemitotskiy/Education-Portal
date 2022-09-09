@@ -1,8 +1,8 @@
 ﻿using Portal.Application.Interfaces;
+using Portal.Application.Specifications.CourseSpecifications;
+using Portal.Application.Specifications.MaterialSpecifications;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
-using Portal.Domain.Specifications.CourseSpecifications;
-using Portal.Domain.Specifications.MaterialStateSpecifications;
 
 namespace Portal.Application
 {
