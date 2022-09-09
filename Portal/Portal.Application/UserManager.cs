@@ -30,8 +30,7 @@ namespace Portal.Application
             }
 
             var allUsers = await UserRepository.GetAllUsers();
-            var hashedPassword = AccountService.GetHashPassword(userLogIn.Password);
-            var existsUserLogInSpecification = new ExistsUserLogInSpecification(userLogIn, hashedPassword);
+            var existsUserLogInSpecification = new ExistsUserLogInSpecification(userLogIn);
             return allUsers.FirstOrDefault(existsUserLogInSpecification.ToExpression().Compile());
         }
 

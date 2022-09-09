@@ -14,17 +14,15 @@ namespace Portal.Application.Specifications.UserSpecifications
     {
         private readonly UserLoginDTO _userLogInDTO;
 
-        private readonly string _hashedPassword;
-
-        public ExistsUserLogInSpecification(UserLoginDTO userLogInDTO, string hashedPassword)
+        public ExistsUserLogInSpecification(UserLoginDTO userLogInDTO)
         {
             _userLogInDTO = userLogInDTO;
-            _hashedPassword = hashedPassword;
         }
 
         public override Expression<Func<User, bool>> ToExpression()
         {
-            return user => user.Email == _userLogInDTO.Email && user.Password == _hashedPassword;
+            var hashedPassword = AccountService.GetHashPassword(_userLogInDTO.Password);
+            return user => user.Email == _userLogInDTO.Email && user.Password == hashedPassword;
         }
     }
 }
