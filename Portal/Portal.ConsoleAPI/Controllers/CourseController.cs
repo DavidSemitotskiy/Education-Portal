@@ -2,6 +2,8 @@
 using Portal.ConsoleAPI.Controllers;
 using Portal.ConsoleAPI.Validation;
 using Portal.Domain.Models;
+using Portal.Domain.Specifications.CourseSpecifications;
+using Portal.Domain.Specifications.MaterialStateSpecifications;
 
 namespace Portal.ConsoleAPI.Conrollers
 {
@@ -283,7 +285,8 @@ namespace Portal.ConsoleAPI.Conrollers
 
         public async Task UnSubscribeCourse()
         {
-            var allCoursesInProgress = (await CourseManager.GetCoursesInProgress(IUserManager.CurrentUser)).Where(courseState => !courseState.IsFinished).ToList();
+            var finishedCourseStateSpecification = new FinishedCourseStateSpecification();
+            var allCoursesInProgress = (await CourseManager.GetCoursesInProgress(IUserManager.CurrentUser)).Where(courseState => !finishedCourseStateSpecification.IsSatisfiedBy(courseState)).ToList();
             if (allCoursesInProgress.Count == 0)
             {
                 Console.WriteLine("You haven't subscribed on any courses");
@@ -306,7 +309,8 @@ namespace Portal.ConsoleAPI.Conrollers
 
         public async Task CompleteMaterial()
         {
-            var allCoursesInProgress = (await CourseManager.GetCoursesInProgress(IUserManager.CurrentUser)).Where(courseState => !courseState.IsFinished).ToList();
+            var finishedCourseStateSpecification = new FinishedCourseStateSpecification();
+            var allCoursesInProgress = (await CourseManager.GetCoursesInProgress(IUserManager.CurrentUser)).Where(courseState => !finishedCourseStateSpecification.IsSatisfiedBy(courseState)).ToList();
             if (allCoursesInProgress.Count == 0)
             {
                 Console.WriteLine("You don't have any courses in progress");
@@ -326,7 +330,8 @@ namespace Portal.ConsoleAPI.Conrollers
             Material material = null;
             var certainCourseStateWithIncludes = await CourseManager.CourseStateManager.CourseStateRepository
                 .FindByIdWithIncludesAsync(allCoursesInProgress[pick].Id, new string[] { "MaterialStates" });
-            var materialsNotCompleted = certainCourseStateWithIncludes.MaterialStates.Where(state => !state.IsCompleted).ToList();
+            var completeMaterialStateSpecification = new CompleteMaterialStateSpecification();
+            var materialsNotCompleted = certainCourseStateWithIncludes.MaterialStates.Where(state => !completeMaterialStateSpecification.IsSatisfiedBy(state)).ToList();
             for (int i = 0; i < materialsNotCompleted.Count; i++)
             {
                 material = await MaterialController.MaterialManager.MaterialRepository

@@ -1,6 +1,7 @@
 ﻿using Portal.Application.Interfaces;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
+using Portal.Domain.Specifications.MaterialStateSpecifications;
 
 namespace Portal.Application
 {
@@ -65,7 +66,8 @@ namespace Portal.Application
 
             var userWithIncludes = await UserManager.UserRepository.FindByIdWithIncludesAsync(user.UserId, new string[] { "Skills" });
             var courseStateWithIncludes = await CourseStateRepository.FindByIdWithIncludesAsync(courseState.Id, new string[] { "MaterialStates" });
-            if (courseStateWithIncludes.MaterialStates.All(materialState => materialState.IsCompleted)
+            var completeMaterialStateSpecification = new CompleteMaterialStateSpecification();
+            if (courseStateWithIncludes.MaterialStates.All(materialState => completeMaterialStateSpecification.IsSatisfiedBy(materialState))
                 && courseStateWithIncludes.IsFinished != true)
             {
                 foreach (var courseSkill in course.Skills)
@@ -100,7 +102,8 @@ namespace Portal.Application
             }
 
             var courseStateWithIncludes = await CourseStateRepository.FindByIdWithIncludesAsync(courseState.Id, new string[] { "MaterialStates" });
-            var countFinishedMaterials = courseStateWithIncludes.MaterialStates.Count(materialState => materialState.IsCompleted);
+            var completeMaterialStateSpecification = new CompleteMaterialStateSpecification();
+            var countFinishedMaterials = courseStateWithIncludes.MaterialStates.Count(materialState => completeMaterialStateSpecification.IsSatisfiedBy(materialState));
             var countMaterials = courseStateWithIncludes.MaterialStates.Count();
             return $"{countFinishedMaterials}/{countMaterials}";
         }
