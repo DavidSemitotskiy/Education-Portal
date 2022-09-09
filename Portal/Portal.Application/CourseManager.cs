@@ -17,10 +17,11 @@ namespace Portal.Application
 
         public ICourseStateManager CourseStateManager { get; }
 
-        public async Task<bool> Exists(string name, string description)
+        public async Task<bool> Exists(Course newCourse)
         {
             var allCourses = await CourseRepository.GetAllEntities();
-            return allCourses.Any(course => course.Name == name && course.Description == description);
+            var existsSpecification = new ExistsCourseSpecification(newCourse);
+            return allCourses.Any(existsSpecification.ToExpression().Compile());
         }
 
         public void PublishCourse(Course course)
@@ -41,7 +42,8 @@ namespace Portal.Application
         public Task<List<Course>> GetAvailableCourses(User user)
         {
             var availableUserCourseSpecification = new AvailableUserCourseSpecification(user);
-            return CourseRepository.FindEntitiesBySpecification(availableUserCourseSpecification);
+            var publishCourseSpecification = new PublishCourseSpecification();
+            return CourseRepository.FindEntitiesBySpecification(availableUserCourseSpecification.And(publishCourseSpecification));
         }
 
         public Task<List<Course>> GetOwnCourses(User user)
@@ -52,8 +54,9 @@ namespace Portal.Application
 
         public Task<List<Course>> GetCoursesNotPublished(User user)
         {
-            var notPublishedUserCourseSpecification = new NotPublishedUserCourseSpecification(user);
-            return CourseRepository.FindEntitiesBySpecification(notPublishedUserCourseSpecification);
+            var ownUserCourseSpecification = new OwnUserCourseSpecification(user);
+            var notPublishedUserCourseSpecification = new PublishCourseSpecification().Not();
+            return CourseRepository.FindEntitiesBySpecification(ownUserCourseSpecification.And(notPublishedUserCourseSpecification));
         }
 
         public Task<List<CourseState>> GetCoursesInProgress(User user)
@@ -69,7 +72,7 @@ namespace Portal.Application
                 throw new ArgumentNullException("Course can't be null");
             }
 
-            if (await Exists(course.Name, course.Description))
+            if (await Exists(course))
             {
                 throw new ArgumentException("Course with this name and description already exists");
             }

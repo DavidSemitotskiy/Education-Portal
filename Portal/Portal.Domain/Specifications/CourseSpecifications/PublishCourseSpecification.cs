@@ -8,18 +8,11 @@ using System.Threading.Tasks;
 
 namespace Portal.Domain.Specifications.CourseSpecifications
 {
-    public class AvailableUserCourseSpecification : Specification<Course>
+    public class PublishCourseSpecification : Specification<Course>
     {
-        private readonly User _user;
-
-        public AvailableUserCourseSpecification(User user)
-        {
-            _user = user ?? throw new ArgumentNullException("User can't be null");
-        }
-
         public override Expression<Func<Course, bool>> ToExpression()
         {
-            return course => course.AccessLevel <= _user.AccessLevel;
+            return course => course.IsPublished;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Portal.Application.Interfaces;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
+using Portal.Domain.Specifications.SkillSpecifications;
 
 namespace Portal.Application
 {
@@ -20,7 +21,8 @@ namespace Portal.Application
                 throw new ArgumentNullException("User or CourseSkill can't be null");
             }
 
-            var certainSkill = user.Skills.FirstOrDefault(s => s.Experience == courseSkill.Experience);
+            var existsSkillSpecification = new ExistsSkillSpecification(courseSkill);
+            var certainSkill = (UserSkill)user.Skills.FirstOrDefault(existsSkillSpecification.ToExpression().Compile());
             if (certainSkill == null)
             {
                 var skill = new UserSkill()

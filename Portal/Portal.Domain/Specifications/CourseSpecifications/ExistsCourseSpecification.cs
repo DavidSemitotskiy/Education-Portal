@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace Portal.Domain.Specifications.CourseSpecifications
 {
-    public class NotPublishedUserCourseSpecification : Specification<Course>
+    public class ExistsCourseSpecification : Specification<Course>
     {
-        private readonly User _user;
+        private readonly Course _course;
 
-        public NotPublishedUserCourseSpecification(User user)
+        public ExistsCourseSpecification(Course course)
         {
-            _user = user ?? throw new ArgumentNullException("User can't be null");
+            _course = course;
         }
 
         public override Expression<Func<Course, bool>> ToExpression()
         {
-            return course => course.OwnerUser == _user.UserId && !course.IsPublished;
+            return course => course.Name == _course.Name && course.Description == _course.Description;
         }
     }
 }

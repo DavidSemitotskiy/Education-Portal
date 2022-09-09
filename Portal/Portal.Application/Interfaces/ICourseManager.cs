@@ -15,7 +15,7 @@ namespace Portal.Application.Interfaces
 
         void UpdateCourse(Course course);
 
-        Task<bool> Exists(string name, string description);
+        Task<bool> Exists(Course newCourse);
 
         void PublishCourse(Course course);
 
