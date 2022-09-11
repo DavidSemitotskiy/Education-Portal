@@ -17,9 +17,9 @@ namespace Portal.Application
 
         public async Task<bool> Exists(UserRegisterDTO userRegister)
         {
-            var allUsers = await UserRepository.GetAllUsers();
             var existsUserRegisterSpecification = new ExistsUserRegisterSpecification(userRegister);
-            return allUsers.Any(existsUserRegisterSpecification.ToExpression().Compile());
+            var count = (await UserRepository.FindUsersBySpecification(existsUserRegisterSpecification)).Count();
+            return Convert.ToBoolean(count);
         }
 
         public async Task<User> GetLogInUser(UserLoginDTO userLogIn)
@@ -29,9 +29,8 @@ namespace Portal.Application
                 throw new ArgumentNullException("User can't be null");
             }
 
-            var allUsers = await UserRepository.GetAllUsers();
             var existsUserLogInSpecification = new ExistsUserLogInSpecification(userLogIn);
-            return allUsers.FirstOrDefault(existsUserLogInSpecification.ToExpression().Compile());
+            return (await UserRepository.FindUsersBySpecification(existsUserLogInSpecification)).FirstOrDefault();
         }
 
         public async Task LogIn(UserLoginDTO userLogin)

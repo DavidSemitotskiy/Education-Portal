@@ -1,4 +1,5 @@
 ﻿using Portal.Domain.Models;
+using Portal.Domain.Specifications;
 
 namespace Portal.Domain.Interfaces
 {
@@ -9,6 +10,8 @@ namespace Portal.Domain.Interfaces
         Task<User> FindById(Guid id);
 
         Task<User> FindByIdWithIncludesAsync(Guid id, string[] includeNames);
+
+        Task<List<User>> FindUsersBySpecification(Specification<User> specification);
 
         Task Add(User user);
 

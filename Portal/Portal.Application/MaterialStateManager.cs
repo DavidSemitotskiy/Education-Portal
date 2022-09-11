@@ -16,9 +16,8 @@ namespace Portal.Application
 
         public async Task<MaterialState> CreateOrGetExistedMaterialState(MaterialState materialState)
         {
-            var allMaterialStates = await MaterialStateRepository.GetAllEntities();
             var existsMaterialStateSpecification = new ExistsMaterialStateSpecification(materialState);
-            var certainMaterialState = allMaterialStates.FirstOrDefault(existsMaterialStateSpecification.ToExpression().Compile());
+            var certainMaterialState = (await MaterialStateRepository.FindEntitiesBySpecification(existsMaterialStateSpecification)).FirstOrDefault();
             if (certainMaterialState == null)
             {
                 await MaterialStateRepository.Add(materialState);

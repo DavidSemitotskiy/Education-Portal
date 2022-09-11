@@ -91,9 +91,9 @@ namespace Portal.Application
 
         public async Task<bool> Exists(CourseState courseState)
         {
-            var allMaterials = await CourseStateRepository.GetAllEntities();
             var existsCourseStateSpecification = new ExistsCourseStateSpecification(courseState);
-            return allMaterials.Any(existsCourseStateSpecification.ToExpression().Compile());
+            var count = (await CourseStateRepository.FindEntitiesBySpecification(existsCourseStateSpecification)).Count();
+            return Convert.ToBoolean(count);
         }
 
         public async Task<string> GetCourseProgress(CourseState courseState)

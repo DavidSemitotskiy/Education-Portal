@@ -2,6 +2,7 @@
 using Portal.Domain.BaseModels;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Specifications;
+using System.Linq.Expressions;
 
 namespace Portal.EFInfrastructure.Repositories
 {
@@ -66,6 +67,8 @@ namespace Portal.EFInfrastructure.Repositories
 
         public Task<List<TEntity>> FindEntitiesBySpecification(Specification<TEntity> specification)
         {
+            var res = Entities;
+            var ent = res.FirstOrDefault(specification?.ToExpression());
             return Entities.Where(specification?.ToExpression()).ToListAsync();
         }
     }

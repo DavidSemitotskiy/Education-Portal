@@ -19,9 +19,9 @@ namespace Portal.Application
 
         public async Task<bool> Exists(Course newCourse)
         {
-            var allCourses = await CourseRepository.GetAllEntities();
             var existsSpecification = new ExistsCourseSpecification(newCourse);
-            return allCourses.Any(existsSpecification.ToExpression().Compile());
+            var count = (await CourseRepository.FindEntitiesBySpecification(existsSpecification)).Count();
+            return Convert.ToBoolean(count);
         }
 
         public void PublishCourse(Course course)
