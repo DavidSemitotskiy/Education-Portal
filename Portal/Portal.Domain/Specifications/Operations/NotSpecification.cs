@@ -14,9 +14,9 @@ namespace Portal.Domain.Specifications.Operations
         public override Expression<Func<T, bool>> ToExpression()
         {
             Expression<Func<T, bool>> expression = _specification.ToExpression();
-            var candidateExpr = expression.Parameters[0];
+            var candidateExpression = expression.Parameters[0];
             var body = Expression.Not(expression.Body);
-            var finalExpr = Expression.Lambda<Func<T, bool>>(body, candidateExpr);
+            var finalExpr = Expression.Lambda<Func<T, bool>>(body, candidateExpression);
             return finalExpr;
         }
     }

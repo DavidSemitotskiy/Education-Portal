@@ -19,10 +19,10 @@ namespace Portal.Domain.Specifications.Operations
             Expression<Func<T, bool>> leftExpression = _leftSpecification.ToExpression();
             Expression<Func<T, bool>> rightExpression = _rightSpecification.ToExpression();
 
-            var paramExpr = Expression.Parameter(typeof(T));
-            var exprBody = Expression.AndAlso(leftExpression.Body, rightExpression.Body);
-            exprBody = (BinaryExpression)new ParameterReplacer(paramExpr).Visit(exprBody);
-            var finalExpr = Expression.Lambda<Func<T, bool>>(exprBody, paramExpr);
+            var paramExpression = Expression.Parameter(typeof(T));
+            var expressionBody = Expression.AndAlso(leftExpression.Body, rightExpression.Body);
+            expressionBody = (BinaryExpression)new ParameterReplacer(paramExpression).Visit(expressionBody);
+            var finalExpr = Expression.Lambda<Func<T, bool>>(expressionBody, paramExpression);
 
             return finalExpr;
         }
