@@ -67,8 +67,6 @@ namespace Portal.EFInfrastructure.Repositories
 
         public Task<List<TEntity>> FindEntitiesBySpecification(Specification<TEntity> specification)
         {
-            var res = Entities;
-            var ent = res.FirstOrDefault(specification?.ToExpression());
             return Entities.Where(specification?.ToExpression()).ToListAsync();
         }
     }
