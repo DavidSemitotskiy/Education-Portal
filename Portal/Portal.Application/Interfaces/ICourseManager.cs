@@ -15,7 +15,7 @@ namespace Portal.Application.Interfaces
 
         void UpdateCourse(Course course);
 
-        Task<bool> Exists(string name, string description);
+        Task<bool> Exists(Course newCourse);
 
         void PublishCourse(Course course);
 
@@ -23,13 +23,13 @@ namespace Portal.Application.Interfaces
 
         void CompleteMaterial(MaterialState materialState);
 
-        Task<IEnumerable<Course>> GetAvailableCourses(User user);
+        Task<List<Course>> GetAvailableCourses(User user);
 
-        Task<IEnumerable<Course>> GetOwnCourses(User user);
+        Task<List<Course>> GetOwnCourses(User user);
 
-        Task<IEnumerable<Course>> GetCoursesNotPublished(User user);
+        Task<List<Course>> GetCoursesNotPublished(User user);
 
-        Task<IEnumerable<CourseState>> GetCoursesInProgress(User user);
+        Task<List<CourseState>> GetCoursesInProgress(User user);
 
         Task<CourseState> SubscribeCourse(User user, Course course);
 

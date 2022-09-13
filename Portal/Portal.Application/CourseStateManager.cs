@@ -1,4 +1,6 @@
 ﻿using Portal.Application.Interfaces;
+using Portal.Application.Specifications.CourseSpecifications;
+using Portal.Application.Specifications.MaterialSpecifications;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
 
@@ -36,7 +38,7 @@ namespace Portal.Application
                 UserId = user.UserId,
                 IsFinished = false,
             };
-            if (await Exists(user, courseState))
+            if (await Exists(courseState))
             {
                 throw new ArgumentNullException("You already subscribed on this course");
             }
@@ -65,7 +67,8 @@ namespace Portal.Application
 
             var userWithIncludes = await UserManager.UserRepository.FindByIdWithIncludesAsync(user.UserId, new string[] { "Skills" });
             var courseStateWithIncludes = await CourseStateRepository.FindByIdWithIncludesAsync(courseState.Id, new string[] { "MaterialStates" });
-            if (courseStateWithIncludes.MaterialStates.All(materialState => materialState.IsCompleted)
+            var completeMaterialStateSpecification = new CompleteMaterialStateSpecification();
+            if (courseStateWithIncludes.MaterialStates.All(completeMaterialStateSpecification.ToExpression().Compile())
                 && courseStateWithIncludes.IsFinished != true)
             {
                 foreach (var courseSkill in course.Skills)
@@ -86,10 +89,11 @@ namespace Portal.Application
             MaterialStateManager.CompleteMaterial(materialState);
         }
 
-        public async Task<bool> Exists(User user, CourseState courseState)
+        public async Task<bool> Exists(CourseState courseState)
         {
-            var allMaterials = await CourseStateRepository.GetAllEntities();
-            return allMaterials.Any(state => state.CourseId == courseState.CourseId && state.UserId == courseState.UserId);
+            var existsCourseStateSpecification = new ExistsCourseStateSpecification(courseState);
+            var count = (await CourseStateRepository.FindEntitiesBySpecification(existsCourseStateSpecification)).Count();
+            return Convert.ToBoolean(count);
         }
 
         public async Task<string> GetCourseProgress(CourseState courseState)
@@ -100,7 +104,8 @@ namespace Portal.Application
             }
 
             var courseStateWithIncludes = await CourseStateRepository.FindByIdWithIncludesAsync(courseState.Id, new string[] { "MaterialStates" });
-            var countFinishedMaterials = courseStateWithIncludes.MaterialStates.Count(materialState => materialState.IsCompleted);
+            var completeMaterialStateSpecification = new CompleteMaterialStateSpecification();
+            var countFinishedMaterials = courseStateWithIncludes.MaterialStates.Count(completeMaterialStateSpecification.ToExpression().Compile());
             var countMaterials = courseStateWithIncludes.MaterialStates.Count();
             return $"{countFinishedMaterials}/{countMaterials}";
         }

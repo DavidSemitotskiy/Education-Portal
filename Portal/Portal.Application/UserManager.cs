@@ -1,4 +1,5 @@
 ﻿using Portal.Application.Interfaces;
+using Portal.Application.Specifications.UserSpecifications;
 using Portal.Domain.DTOs;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
@@ -16,8 +17,9 @@ namespace Portal.Application
 
         public async Task<bool> Exists(UserRegisterDTO userRegister)
         {
-            var allUsers = await UserRepository.GetAllUsers();
-            return allUsers.Any(user => user.Email == userRegister.Email);
+            var existsUserRegisterSpecification = new ExistsUserRegisterSpecification(userRegister);
+            var count = (await UserRepository.FindUsersBySpecification(existsUserRegisterSpecification)).Count();
+            return Convert.ToBoolean(count);
         }
 
         public async Task<User> GetLogInUser(UserLoginDTO userLogIn)
@@ -27,9 +29,8 @@ namespace Portal.Application
                 throw new ArgumentNullException("User can't be null");
             }
 
-            var allUsers = await UserRepository.GetAllUsers();
-            var hashedPassword = AccountService.GetHashPassword(userLogIn.Password);
-            return allUsers.FirstOrDefault(user => user.Email == userLogIn.Email && user.Password == hashedPassword);
+            var existsUserLogInSpecification = new ExistsUserLogInSpecification(userLogIn);
+            return (await UserRepository.FindUsersBySpecification(existsUserLogInSpecification)).FirstOrDefault();
         }
 
         public async Task LogIn(UserLoginDTO userLogin)

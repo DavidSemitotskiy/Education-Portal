@@ -1,4 +1,5 @@
 ﻿using Portal.Application.Interfaces;
+using Portal.Application.Specifications.CourseSpecifications;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
 
@@ -16,10 +17,11 @@ namespace Portal.Application
 
         public ICourseStateManager CourseStateManager { get; }
 
-        public async Task<bool> Exists(string name, string description)
+        public async Task<bool> Exists(Course newCourse)
         {
-            var allCourses = await CourseRepository.GetAllEntities();
-            return allCourses.Any(course => course.Name == name && course.Description == description);
+            var existsSpecification = new ExistsCourseSpecification(newCourse);
+            var count = (await CourseRepository.FindEntitiesBySpecification(existsSpecification)).Count();
+            return Convert.ToBoolean(count);
         }
 
         public void PublishCourse(Course course)
@@ -37,28 +39,30 @@ namespace Portal.Application
             course.IsPublished = true;
         }
 
-        public async Task<IEnumerable<Course>> GetAvailableCourses(User user)
+        public Task<List<Course>> GetAvailableCourses(User user)
         {
-            var allCourses = await CourseRepository.GetAllEntities();
-            return allCourses.Where(course => course.AccessLevel <= user.AccessLevel && course.IsPublished);
+            var availableUserCourseSpecification = new AvailableUserCourseSpecification(user);
+            var publishCourseSpecification = new PublishCourseSpecification();
+            return CourseRepository.FindEntitiesBySpecification(availableUserCourseSpecification.And(publishCourseSpecification));
         }
 
-        public async Task<IEnumerable<Course>> GetOwnCourses(User user)
+        public Task<List<Course>> GetOwnCourses(User user)
         {
-            var allCourses = await CourseRepository.GetAllEntities();
-            return allCourses.Where(course => course.OwnerUser == user.UserId);
+            var ownUserCourseSpecification = new OwnUserCourseSpecification(user);
+            return CourseRepository.FindEntitiesBySpecification(ownUserCourseSpecification);
         }
 
-        public async Task<IEnumerable<Course>> GetCoursesNotPublished(User user)
+        public Task<List<Course>> GetCoursesNotPublished(User user)
         {
-            var allCourses = await CourseRepository.GetAllEntities();
-            return allCourses.Where(course => course.OwnerUser == user.UserId && !course.IsPublished);
+            var ownUserCourseSpecification = new OwnUserCourseSpecification(user);
+            var notPublishedUserCourseSpecification = new PublishCourseSpecification().Not();
+            return CourseRepository.FindEntitiesBySpecification(ownUserCourseSpecification.And(notPublishedUserCourseSpecification));
         }
 
-        public async Task<IEnumerable<CourseState>> GetCoursesInProgress(User user)
+        public Task<List<CourseState>> GetCoursesInProgress(User user)
         {
-            var allSubscribedCourses = await CourseStateManager.CourseStateRepository.GetAllEntities();
-            return allSubscribedCourses.Where(courseState => courseState.UserId == user.UserId);
+            var userCourseInProgressSpecification = new UserCourseInProgressSpecification(user);
+            return CourseStateManager.CourseStateRepository.FindEntitiesBySpecification(userCourseInProgressSpecification);
         }
 
         public async Task AddCourse(Course course)
@@ -68,7 +72,7 @@ namespace Portal.Application
                 throw new ArgumentNullException("Course can't be null");
             }
 
-            if (await Exists(course.Name, course.Description))
+            if (await Exists(course))
             {
                 throw new ArgumentException("Course with this name and description already exists");
             }

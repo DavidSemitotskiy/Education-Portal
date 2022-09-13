@@ -1,4 +1,5 @@
 ﻿using Portal.Application.Interfaces;
+using Portal.Application.Specifications.SkillSpecifications;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
 
@@ -16,7 +17,8 @@ namespace Portal.Application
         public async Task<CourseSkill> CreateOrGetExistedCourseSkill(CourseSkill skill)
         {
             var allCourseSkills = await CourseSkillRepository.GetAllEntities();
-            var certainSkill = allCourseSkills.FirstOrDefault(s => s.Experience == skill.Experience);
+            var existsSkillSpecification = new ExistsSkillSpecification(skill);
+            var certainSkill = (CourseSkill)allCourseSkills.FirstOrDefault(existsSkillSpecification.ToExpression().Compile());
             if (certainSkill == null)
             {
                 await CourseSkillRepository.Add(skill);

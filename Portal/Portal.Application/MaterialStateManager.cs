@@ -1,4 +1,5 @@
 ﻿using Portal.Application.Interfaces;
+using Portal.Application.Specifications.MaterialSpecifications;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
 
@@ -15,8 +16,8 @@ namespace Portal.Application
 
         public async Task<MaterialState> CreateOrGetExistedMaterialState(MaterialState materialState)
         {
-            var allMaterialStates = await MaterialStateRepository.GetAllEntities();
-            var certainMaterialState = allMaterialStates.FirstOrDefault(state => state.OwnerMaterial == materialState.OwnerMaterial && state.UserId == materialState.UserId);
+            var existsMaterialStateSpecification = new ExistsMaterialStateSpecification(materialState);
+            var certainMaterialState = (await MaterialStateRepository.FindEntitiesBySpecification(existsMaterialStateSpecification)).FirstOrDefault();
             if (certainMaterialState == null)
             {
                 await MaterialStateRepository.Add(materialState);

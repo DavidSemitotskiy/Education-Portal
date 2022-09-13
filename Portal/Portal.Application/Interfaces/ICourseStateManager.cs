@@ -13,7 +13,7 @@ namespace Portal.Application.Interfaces
 
         IUserSkillManager UserSkillManager { get; }
 
-        Task<bool> Exists(User user, CourseState courseState);
+        Task<bool> Exists(CourseState courseState);
 
         Task<CourseState> Subscribe(User user, Course course);
 

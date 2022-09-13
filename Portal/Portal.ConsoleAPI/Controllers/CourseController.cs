@@ -1,4 +1,6 @@
 ﻿using Portal.Application.Interfaces;
+using Portal.Application.Specifications.CourseSpecifications;
+using Portal.Application.Specifications.MaterialSpecifications;
 using Portal.ConsoleAPI.Controllers;
 using Portal.ConsoleAPI.Validation;
 using Portal.Domain.Models;
@@ -283,7 +285,10 @@ namespace Portal.ConsoleAPI.Conrollers
 
         public async Task UnSubscribeCourse()
         {
-            var allCoursesInProgress = (await CourseManager.GetCoursesInProgress(IUserManager.CurrentUser)).Where(courseState => !courseState.IsFinished).ToList();
+            var userCourseInProgressSpecification = new UserCourseInProgressSpecification(IUserManager.CurrentUser);
+            var notFinishedCourseStateSpecification = new FinishedCourseStateSpecification().Not();
+            var finalSpecification = userCourseInProgressSpecification.And(notFinishedCourseStateSpecification);
+            var allCoursesInProgress = await CourseManager.CourseStateManager.CourseStateRepository.FindEntitiesBySpecification(finalSpecification);
             if (allCoursesInProgress.Count == 0)
             {
                 Console.WriteLine("You haven't subscribed on any courses");
@@ -306,7 +311,10 @@ namespace Portal.ConsoleAPI.Conrollers
 
         public async Task CompleteMaterial()
         {
-            var allCoursesInProgress = (await CourseManager.GetCoursesInProgress(IUserManager.CurrentUser)).Where(courseState => !courseState.IsFinished).ToList();
+            var userCourseInProgressSpecification = new UserCourseInProgressSpecification(IUserManager.CurrentUser);
+            var notFinishedCourseStateSpecification = new FinishedCourseStateSpecification().Not();
+            var finalSpecification = userCourseInProgressSpecification.And(notFinishedCourseStateSpecification);
+            var allCoursesInProgress = await CourseManager.CourseStateManager.CourseStateRepository.FindEntitiesBySpecification(finalSpecification);
             if (allCoursesInProgress.Count == 0)
             {
                 Console.WriteLine("You don't have any courses in progress");
@@ -326,7 +334,8 @@ namespace Portal.ConsoleAPI.Conrollers
             Material material = null;
             var certainCourseStateWithIncludes = await CourseManager.CourseStateManager.CourseStateRepository
                 .FindByIdWithIncludesAsync(allCoursesInProgress[pick].Id, new string[] { "MaterialStates" });
-            var materialsNotCompleted = certainCourseStateWithIncludes.MaterialStates.Where(state => !state.IsCompleted).ToList();
+            var notCompleteMaterialStateSpecification = new CompleteMaterialStateSpecification().Not();
+            var materialsNotCompleted = certainCourseStateWithIncludes.MaterialStates.Where(notCompleteMaterialStateSpecification.ToExpression().Compile()).ToList();
             for (int i = 0; i < materialsNotCompleted.Count; i++)
             {
                 material = await MaterialController.MaterialManager.MaterialRepository

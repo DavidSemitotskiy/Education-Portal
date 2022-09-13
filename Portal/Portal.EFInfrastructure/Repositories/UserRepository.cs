@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
+using Portal.Domain.Specifications;
 
 namespace Portal.EFInfrastructure.Repositories
 {
@@ -32,6 +33,11 @@ namespace Portal.EFInfrastructure.Repositories
             }
 
             return query.FirstOrDefaultAsync(user => user.UserId == id);
+        }
+
+        public Task<List<User>> FindUsersBySpecification(Specification<User> specification)
+        {
+            return _context.Users.Where(specification?.ToExpression()).ToListAsync();
         }
 
         public Task Add(User user)

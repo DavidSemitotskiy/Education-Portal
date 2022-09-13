@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Serialization;
 using Portal.Domain.BaseModels;
 using Portal.Domain.Interfaces;
+using Portal.Domain.Specifications;
 
 namespace Portal.Infrastructure
 {
@@ -100,6 +101,21 @@ namespace Portal.Infrastructure
         {
             await Task.Delay(0);
             return 1;
+        }
+
+        public Task<List<TEntity>> FindEntitiesBySpecification(Specification<TEntity> specification)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TEntity> FindById(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TEntity> FindByIdWithIncludesAsync(Guid id, string[] includeNames)
+        {
+            throw new NotImplementedException();
         }
 
         private async Task WriteEntitiesToFile(List<TEntity> entities)

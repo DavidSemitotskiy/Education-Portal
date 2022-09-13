@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Portal.Domain.BaseModels;
 using Portal.Domain.Interfaces;
+using Portal.Domain.Specifications;
+using System.Linq.Expressions;
 
 namespace Portal.EFInfrastructure.Repositories
 {
@@ -61,6 +63,11 @@ namespace Portal.EFInfrastructure.Repositories
         public Task<int> SaveChanges()
         {
             return _context.SaveChangesAsync();
+        }
+
+        public Task<List<TEntity>> FindEntitiesBySpecification(Specification<TEntity> specification)
+        {
+            return Entities.Where(specification?.ToExpression()).ToListAsync();
         }
     }
 }
