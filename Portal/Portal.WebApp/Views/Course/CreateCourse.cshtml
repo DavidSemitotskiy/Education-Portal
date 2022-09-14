@@ -1,0 +1,32 @@
+﻿@using Portal.WebApp.Models.CourseViewModels
+@model CreateCourseViewModel
+@{
+    ViewData["Title"] = "CreateCourse";
+}
+
+<h1>CreateCourse</h1>
+
+<div style="display:flex;align-items: center;justify-content: center;">
+    <form method="post" style="width:30%;">
+        <div>
+            <label asp-for="Name"></label><br />
+            <input asp-for="Name" type="text" class="form-control" placeholder="Enter Name..." aria-label="Enter Name..." style="width:100%;margin-bottom:5px" />
+            <span asp-validation-for="Name"></span>
+        </div>
+        <div>
+            <label asp-for="Description"></label>
+            <input asp-for="Description" type="text" class="form-control" placeholder="Enter Description..." aria-label="Enter Description..." style="width:100%;height:70px;margin-bottom:5px" />
+            <span asp-validation-for="Description"></span>
+        </div>
+        <div>
+            <label asp-for="AccessLevel"></label>
+            <input asp-for="AccessLevel" type="number" class="form-control" placeholder="Enter AccessLevel..." aria-label="Enter AccessLevel..." style="width:100%;margin-bottom:5px" />
+            <span asp-validation-for="AccessLevel"></span>
+        </div>
+        <br />
+        <div>
+            <button class="btn btn-primary">Create</button>
+        </div>
+    </form>
+</div>
+

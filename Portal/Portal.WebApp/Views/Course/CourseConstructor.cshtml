@@ -10,5 +10,37 @@
     {
         <h1>You don't have any own courses</h1>
     }
+    else
+    {
+        <div>
+            <table class="table">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var course in Model)
+                    {
+                        <tr>
+                            <td>@course.Name</td>
+                            <td>@course.Description</td>
+                            <td>
+                                @if (!course.IsPublished)
+                                {
+                                    <a><i class="bi bi-pencil-fill"></i></a>
+                                }
+
+                                <a><i class="bi bi-trash"></i></a>
+                            </td>
+                        </tr> 
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    <a asp-action="CreateCourse">Create course</a>
 </div>
 
