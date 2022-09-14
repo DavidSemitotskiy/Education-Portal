@@ -7,16 +7,16 @@
 
 <h1>Login</h1>
 
-<div>
-    <form method="post">
+<div style="display:flex;align-items: center;justify-content: center;">
+    <form method="post" style="width:30%;">
         <div>
             <label asp-for="Email"></label><br />
-            <input asp-for="Email" type="email" class="form-control" placeholder="Enter Email..." aria-label="Enter Email..." style="width:30%;margin-bottom:5px" />
+            <input asp-for="Email" type="email" class="form-control" placeholder="Enter Email..." aria-label="Enter Email..." style="width:100%;margin-bottom:5px" />
             <span asp-validation-for="Email"></span>
         </div>
         <div>
             <label asp-for="Password"></label>
-            <input asp-for="Password" type="password" class="form-control" placeholder="Enter Password..." aria-label="Enter Password..." style="width:30%;margin-bottom:5px" />
+            <input asp-for="Password" type="password" class="form-control" placeholder="Enter Password..." aria-label="Enter Password..." style="width:100%;margin-bottom:5px" />
             <span asp-validation-for="Password"></span>
         </div>
         <div>
