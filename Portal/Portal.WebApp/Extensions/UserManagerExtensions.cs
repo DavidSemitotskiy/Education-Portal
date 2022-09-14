@@ -13,19 +13,9 @@ namespace Portal.WebApp.Extensions
             return signInManager?.PasswordSignInAsync(userLogin?.Email, userLogin.Password, userLogin.RememberMe, false);
         }
 
-        public static async Task<IdentityResult?> WebRegister(this IApplicationUserManager userManager, UserRegisterViewModel userRegister)
-        {
-            var user = new User
-            {
-                FirstName = userRegister?.FirstName,
-                LastName = userRegister.LastName,
-                Email = userRegister.Email,
-                UserName = userRegister.Email,
-                AccessLevel = 0,
-                Skills = new List<UserSkill>()
-            };
-
-            return await userManager?.UserManager.CreateAsync(user, userRegister.Password);
+        public static async Task<IdentityResult?> WebRegister(this IApplicationUserManager userManager, UserRegisterViewModel userRegister, User user)
+        { 
+            return await userManager?.UserManager.CreateAsync(user, userRegister?.Password);
         }
 
         public static Task WebLogOff(this IApplicationUserManager userManager, SignInManager<User> signInManager)
