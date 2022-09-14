@@ -1,4 +1,5 @@
-﻿using Portal.Application.Interfaces;
+﻿using Microsoft.AspNetCore.Identity;
+using Portal.Application.Interfaces;
 using Portal.Application.Specifications.UserSpecifications;
 using Portal.Domain.DTOs;
 using Portal.Domain.Interfaces;
@@ -6,14 +7,21 @@ using Portal.Domain.Models;
 
 namespace Portal.Application
 {
-    public class UserManager : IUserManager
+    public class ApplicationUserManager : IApplicationUserManager
     {
-        public UserManager(IUserRepository repository)
+        public ApplicationUserManager(IUserRepository repository)
         {
             UserRepository = repository ?? throw new ArgumentNullException("Repository can't be null");
         }
 
+        public ApplicationUserManager(IUserRepository repository, UserManager<User> userManager) : this(repository)
+        {
+            UserManager = userManager ?? throw new ArgumentNullException("Manager can't be null");
+        }
+
         public IUserRepository UserRepository { get; }
+
+        public UserManager<User> UserManager { get; }
 
         public async Task<bool> Exists(UserRegisterDTO userRegister)
         {
@@ -33,7 +41,7 @@ namespace Portal.Application
             return (await UserRepository.FindUsersBySpecification(existsUserLogInSpecification)).FirstOrDefault();
         }
 
-        public async Task LogIn(UserLoginDTO userLogin)
+        public async Task ConsoleLogIn(UserLoginDTO userLogin)
         {
             var logInUser = await GetLogInUser(userLogin);
             if (logInUser == null)
@@ -41,15 +49,15 @@ namespace Portal.Application
                 throw new Exception("User isn't registered");
             }
 
-            IUserManager.CurrentUser = logInUser;
+            IApplicationUserManager.CurrentUser = logInUser;
         }
 
-        public async Task LogOff()
+        public async Task ConsoleLogOff()
         {
-            IUserManager.CurrentUser = null;
+            IApplicationUserManager.CurrentUser = null;
         }
 
-        public async Task Register(UserRegisterDTO userRegister)
+        public async Task ConsoleRegister(UserRegisterDTO userRegister)
         {
             if (userRegister == null)
             {
@@ -64,16 +72,18 @@ namespace Portal.Application
 
             var user = new User
             {
-                UserId = Guid.NewGuid(),
+                Id = Guid.NewGuid().ToString(),
                 FirstName = userRegister.FirstName,
                 LastName = userRegister.LastName,
-                Password = AccountService.GetHashPassword(userRegister.Password),
+                PasswordHash = AccountService.GetHashPassword(userRegister.Password),
                 Email = userRegister.Email,
+                UserName = userRegister.Email,
                 AccessLevel = 0,
                 Skills = new List<UserSkill>()
             };
+
             await UserRepository.Add(user);
-            IUserManager.CurrentUser = user;
+            IApplicationUserManager.CurrentUser = user;
         }
     }
 }

@@ -1,10 +1,11 @@
-﻿using Portal.Domain.DTOs;
+﻿using Microsoft.AspNetCore.Identity;
+using Portal.Domain.DTOs;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
 
 namespace Portal.Application.Interfaces
 {
-    public interface IUserManager
+    public interface IApplicationUserManager
     {
         static User? CurrentUser { get; set; }
 
@@ -14,10 +15,10 @@ namespace Portal.Application.Interfaces
 
         Task<bool> Exists(UserRegisterDTO userRegister);
 
-        Task LogIn(UserLoginDTO userLogin);
+        Task ConsoleLogIn(UserLoginDTO userLogin);
 
-        Task Register(UserRegisterDTO userRegister);
+        Task ConsoleRegister(UserRegisterDTO userRegister);
 
-        Task LogOff();
+        Task ConsoleLogOff();
     }
 }

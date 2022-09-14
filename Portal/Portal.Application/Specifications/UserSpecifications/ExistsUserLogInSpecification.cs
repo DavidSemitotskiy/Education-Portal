@@ -17,7 +17,7 @@ namespace Portal.Application.Specifications.UserSpecifications
         public override Expression<Func<User, bool>> ToExpression()
         {
             var hashedPassword = AccountService.GetHashPassword(_userLogInDTO.Password);
-            return user => user.Email == _userLogInDTO.Email && user.Password == hashedPassword;
+            return user => user.Email == _userLogInDTO.Email && user.PasswordHash == hashedPassword;
         }
     }
 }

@@ -74,7 +74,7 @@ namespace Portal.ConsoleAPI.Conrollers
                     AccessLevel = accessLevel,
                     IsPublished = false,
                     Skills = new List<CourseSkill>(),
-                    OwnerUser = IUserManager.CurrentUser.UserId,
+                    OwnerUser = IApplicationUserManager.CurrentUser.UserName,
                     Materials = new List<Material>()
                 };
                 var errorMessages = await new ErrorMessages<CourseValidator, Course>().Validate(course);
@@ -96,7 +96,7 @@ namespace Portal.ConsoleAPI.Conrollers
 
         public async Task SeeAvailableCourses()
         {
-            var availableCourses = (await CourseManager.GetAvailableCourses(IUserManager.CurrentUser)).ToList();
+            var availableCourses = (await CourseManager.GetAvailableCourses(IApplicationUserManager.CurrentUser)).ToList();
             if (availableCourses.Count == 0)
             {
                 Console.WriteLine("There aren't any available course by your access level!!!");
@@ -108,7 +108,7 @@ namespace Portal.ConsoleAPI.Conrollers
 
         public async Task DeleteCourse()
         {
-            var ownCourses = (await CourseManager.GetCoursesNotPublished(IUserManager.CurrentUser)).ToList();
+            var ownCourses = (await CourseManager.GetCoursesNotPublished(IApplicationUserManager.CurrentUser)).ToList();
             if (ownCourses.Count == 0)
             {
                 Console.WriteLine("You don't have any courses to delete!!!");
@@ -136,7 +136,7 @@ namespace Portal.ConsoleAPI.Conrollers
 
         public async Task Update()
         {
-            var ownCourses = (await CourseManager.GetOwnCourses(IUserManager.CurrentUser)).ToList();
+            var ownCourses = (await CourseManager.GetOwnCourses(IApplicationUserManager.CurrentUser)).ToList();
             if (ownCourses.Count == 0)
             {
                 Console.WriteLine("You don't have any courses to update!!!");
@@ -246,7 +246,7 @@ namespace Portal.ConsoleAPI.Conrollers
 
         public async Task SubscribeCourse()
         {
-            var availableCourses = (await CourseManager.GetAvailableCourses(IUserManager.CurrentUser)).ToList();
+            var availableCourses = (await CourseManager.GetAvailableCourses(IApplicationUserManager.CurrentUser)).ToList();
             if (availableCourses.Count == 0)
             {
                 Console.WriteLine("There aren't any available course by your access level!!!");
@@ -257,9 +257,9 @@ namespace Portal.ConsoleAPI.Conrollers
             Console.Write("Choose the course to subscribe: ");
             var pick = int.Parse(Console.ReadLine()) - 1;
             var courseToSubscribe = availableCourses[pick];
-            var courseState = await CourseManager.SubscribeCourse(IUserManager.CurrentUser, courseToSubscribe);
+            var courseState = await CourseManager.SubscribeCourse(IApplicationUserManager.CurrentUser, courseToSubscribe);
             await CourseManager.CourseStateManager.CourseStateRepository.SaveChanges();
-            if (await CourseManager.CourseStateManager.CheckIfCourseCompleted(IUserManager.CurrentUser, courseToSubscribe, courseState))
+            if (await CourseManager.CourseStateManager.CheckIfCourseCompleted(IApplicationUserManager.CurrentUser, courseToSubscribe, courseState))
             {
                 await CourseManager.CourseStateManager.CourseStateRepository.SaveChanges();
             }
@@ -267,7 +267,7 @@ namespace Portal.ConsoleAPI.Conrollers
 
         public async Task SeeCoursesInProgress()
         {
-            var allCoursesInProgress = (await CourseManager.GetCoursesInProgress(IUserManager.CurrentUser)).ToList();
+            var allCoursesInProgress = (await CourseManager.GetCoursesInProgress(IApplicationUserManager.CurrentUser)).ToList();
             if (allCoursesInProgress.Count == 0)
             {
                 Console.WriteLine("You haven't subscribed on any courses");
@@ -285,7 +285,7 @@ namespace Portal.ConsoleAPI.Conrollers
 
         public async Task UnSubscribeCourse()
         {
-            var userCourseInProgressSpecification = new UserCourseInProgressSpecification(IUserManager.CurrentUser);
+            var userCourseInProgressSpecification = new UserCourseInProgressSpecification(IApplicationUserManager.CurrentUser);
             var notFinishedCourseStateSpecification = new FinishedCourseStateSpecification().Not();
             var finalSpecification = userCourseInProgressSpecification.And(notFinishedCourseStateSpecification);
             var allCoursesInProgress = await CourseManager.CourseStateManager.CourseStateRepository.FindEntitiesBySpecification(finalSpecification);
@@ -311,7 +311,7 @@ namespace Portal.ConsoleAPI.Conrollers
 
         public async Task CompleteMaterial()
         {
-            var userCourseInProgressSpecification = new UserCourseInProgressSpecification(IUserManager.CurrentUser);
+            var userCourseInProgressSpecification = new UserCourseInProgressSpecification(IApplicationUserManager.CurrentUser);
             var notFinishedCourseStateSpecification = new FinishedCourseStateSpecification().Not();
             var finalSpecification = userCourseInProgressSpecification.And(notFinishedCourseStateSpecification);
             var allCoursesInProgress = await CourseManager.CourseStateManager.CourseStateRepository.FindEntitiesBySpecification(finalSpecification);
@@ -346,7 +346,7 @@ namespace Portal.ConsoleAPI.Conrollers
             Console.Write("Choose the material to complete: ");
             var pickMaterial = int.Parse(Console.ReadLine()) - 1;
             CourseManager.CompleteMaterial(materialsNotCompleted[pickMaterial]);
-            await CourseManager.CheckIfCoursesCompleted(IUserManager.CurrentUser, allCoursesInProgress);
+            await CourseManager.CheckIfCoursesCompleted(IApplicationUserManager.CurrentUser, allCoursesInProgress);
             await CourseManager.CourseStateManager.MaterialStateManager.
                 MaterialStateRepository.SaveChanges();
         }

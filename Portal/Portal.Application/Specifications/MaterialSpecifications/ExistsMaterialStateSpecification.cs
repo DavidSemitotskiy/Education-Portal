@@ -15,7 +15,7 @@ namespace Portal.Application.Specifications.MaterialSpecifications
 
         public override Expression<Func<MaterialState, bool>> ToExpression()
         {
-            return state => state.OwnerMaterial == _materialState.OwnerMaterial && state.UserId == _materialState.UserId;
+            return state => state.OwnerMaterial == _materialState.OwnerMaterial && state.OwnerUser == _materialState.OwnerUser;
         }
     }
 }

@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Portal.Domain.Models;
 
 namespace Portal.EFInfrastructure
 {
-    public class Context : DbContext
+    public class Context : IdentityDbContext<User>
     {
-        public Context()
+        public Context(DbContextOptions<Context> options) : base(options)
         {
         }
 
@@ -22,22 +23,10 @@ namespace Portal.EFInfrastructure
 
         public DbSet<CourseSkill> CourseSkills { get; set; }
 
-        public DbSet<User> Users { get; set; }
-
         public DbSet<UserSkill> UserSkills { get; set; }
 
         public DbSet<CourseState> CourseStates { get; set; }
 
         public DbSet<MaterialState> MaterialStates { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            var configBuilder = new ConfigurationBuilder();
-            configBuilder.SetBasePath(Directory.GetCurrentDirectory());
-            configBuilder.AddJsonFile("appsettings.json");
-            var config = configBuilder.Build();
-            var connectionString = config.GetConnectionString("DatabaseConnection");
-            optionsBuilder.UseSqlServer(connectionString);
-        }
     }
 }

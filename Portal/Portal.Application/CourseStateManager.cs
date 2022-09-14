@@ -8,7 +8,7 @@ namespace Portal.Application
 {
     public class CourseStateManager : ICourseStateManager
     {
-        public CourseStateManager(IEntityRepository<CourseState> courseStateRepository, IMaterialStateManager materialStateManager, IUserSkillManager userSkillManager, IUserManager userManager)
+        public CourseStateManager(IEntityRepository<CourseState> courseStateRepository, IMaterialStateManager materialStateManager, IUserSkillManager userSkillManager, IApplicationUserManager userManager)
         {
             CourseStateRepository = courseStateRepository ?? throw new ArgumentNullException("Repository can't be null");
             MaterialStateManager = materialStateManager ?? throw new ArgumentNullException("Manager can't be null");
@@ -20,7 +20,7 @@ namespace Portal.Application
 
         public IMaterialStateManager MaterialStateManager { get; }
 
-        public IUserManager UserManager { get; }
+        public IApplicationUserManager UserManager { get; }
 
         public IUserSkillManager UserSkillManager { get; }
 
@@ -35,7 +35,7 @@ namespace Portal.Application
             {
                 Id = Guid.NewGuid(),
                 CourseId = course.Id,
-                UserId = user.UserId,
+                OwnerUser = user.UserName,
                 IsFinished = false,
             };
             if (await Exists(courseState))
@@ -65,7 +65,7 @@ namespace Portal.Application
                 throw new ArgumentNullException("CourseState, User and Course can't be null");
             }
 
-            var userWithIncludes = await UserManager.UserRepository.FindByIdWithIncludesAsync(user.UserId, new string[] { "Skills" });
+            var userWithIncludes = await UserManager.UserRepository.FindByIdWithIncludesAsync(user.Id, new string[] { "Skills" });
             var courseStateWithIncludes = await CourseStateRepository.FindByIdWithIncludesAsync(courseState.Id, new string[] { "MaterialStates" });
             var completeMaterialStateSpecification = new CompleteMaterialStateSpecification();
             if (courseStateWithIncludes.MaterialStates.All(completeMaterialStateSpecification.ToExpression().Compile())

@@ -1,4 +1,7 @@
-﻿using Portal.Application;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Portal.Application;
 using Portal.Application.Interfaces;
 using Portal.ConsoleAPI.Conrollers;
 using Portal.ConsoleAPI.Controllers;
@@ -12,7 +15,14 @@ namespace Portal.ConsoleAPI
     {
         public static async Task Main()
         {
-            var context = new Context();
+            var configBuilder = new ConfigurationBuilder();
+            configBuilder.SetBasePath(Directory.GetCurrentDirectory());
+            configBuilder.AddJsonFile("appsettings.json");
+            var config = configBuilder.Build();
+            var connectionString = config.GetConnectionString("DatabaseConnection");
+            var efOptions = new DbContextOptionsBuilder<Context>();
+            efOptions.UseSqlServer(connectionString);
+            var context = new Context(efOptions.Options);
             var userRepository = new UserRepository(context);
             var materialRepository = new EntityRepository<Material>(context);
             var courseRepository = new EntityRepository<Course>(context);
@@ -21,13 +31,13 @@ namespace Portal.ConsoleAPI
             var courseStateRepository = new EntityRepository<CourseState>(context);
             var userSkillRepository = new EntityRepository<UserSkill>(context);
             var userSkillManager = new UserSkillManager(userSkillRepository);
-            var userManager = new UserManager(userRepository);
+            var applicationUserManager = new ApplicationUserManager(userRepository);
             var materialManager = new MaterialManager(materialRepository);
             var materialStateManager = new MaterialStateManager(materialStateRepository);
-            var courseStateManager = new CourseStateManager(courseStateRepository, materialStateManager, userSkillManager, userManager);
+            var courseStateManager = new CourseStateManager(courseStateRepository, materialStateManager, userSkillManager, applicationUserManager);
             var courseManager = new CourseManager(courseRepository, courseStateManager);
             var courseSkillManager = new CourseSkillManager(courseSkillRepository);
-            var accountController = new AccountController(userManager);
+            var accountController = new AccountController(applicationUserManager);
             var materialController = new MaterialController(materialManager);
             var courseSkillController = new CourseSkillController(courseSkillManager);
             var courseController = new CourseController(courseManager, materialController, courseSkillController);
@@ -35,8 +45,8 @@ namespace Portal.ConsoleAPI
             {
                 try
                 {
-                    Console.WriteLine(IUserManager.CurrentUser == null ? "User isn't authorized" : $"Hello {IUserManager.CurrentUser.FirstName} {IUserManager.CurrentUser.LastName}");
-                    if (IUserManager.CurrentUser == null)
+                    Console.WriteLine(IApplicationUserManager.CurrentUser == null ? "User isn't authorized" : $"Hello {IApplicationUserManager.CurrentUser.FirstName} {IApplicationUserManager.CurrentUser.LastName}");
+                    if (IApplicationUserManager.CurrentUser == null)
                     {
                         Console.WriteLine("1)Register");
                         Console.WriteLine("2)Log in");
