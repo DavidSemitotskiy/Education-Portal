@@ -1,0 +1,32 @@
+﻿@using Portal.WebApp.Models.CourseViewModels
+@model EditCourseViewModel
+
+@{
+    ViewData["Title"] = "EditCourse";
+}
+
+<h1>EditCourse</h1>
+<div>
+    <label>Name: </label>
+    <span>@Model.Name</span><br />
+    <label>Description: </label>
+    <span>@Model.Description</span><br />
+    <label>AccessLevel: </label>
+    <span>@Model.AccessLevel</span><br />
+    <label>IsPublished: </label>
+    <span>@Model.IsPublished</span><br />
+    <span>Skills:</span><br />
+    @foreach(var skill in Model.Skills)
+    {
+        
+    }
+    <span>Materials:</span><br />
+    @foreach(var material in Model.Materials)
+    {
+        
+    }
+    <br />
+    <button class="btn btn-success">Publish</button>
+    <a asp-controller="Course" asp-action="DeleteCourse" asp-route-id="@Model.Id"><button class="btn btn-danger">Delete</button></a>
+</div>
+

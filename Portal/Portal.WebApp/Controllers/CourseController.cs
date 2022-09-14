@@ -58,6 +58,27 @@ namespace Portal.WebApp.Controllers
             return View(createdCourse);
         }
 
+        public async Task<IActionResult> EditCourse(Guid id)
+        {
+            var courseToEdit = await _courseManager.CourseRepository.FindByIdWithIncludesAsync(id, new string[] { "Materials", "Skills" });
+            if (courseToEdit != null)
+            {
+                var editCourseViewModel = new EditCourseViewModel
+                {
+                    Id = courseToEdit.Id,
+                    Name = courseToEdit.Name,
+                    Description = courseToEdit.Description,
+                    AccessLevel = courseToEdit.AccessLevel,
+                    IsPublished = courseToEdit.IsPublished,
+                    Materials = courseToEdit.Materials,
+                    Skills = courseToEdit.Skills,
+                };
+                return View(editCourseViewModel);
+            }
+
+            return RedirectToAction("CourseConstructor");
+        }
+
         public async Task<IActionResult> DeleteCourse(Guid id)
         {
             var courseToDelete = await _courseManager.CourseRepository.FindById(id);
