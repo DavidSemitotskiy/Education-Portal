@@ -34,6 +34,8 @@ namespace Portal.WebApp.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }
+
+                ModelState.AddModelError("Email", "Incorrect Email or Password");
             }
 
             return View(userLogin);
@@ -64,6 +66,8 @@ namespace Portal.WebApp.Controllers
                     _signInManager.SignInAsync(user, false);
                     return RedirectToAction("Index", "Home");
                 }
+
+                ModelState.AddModelError("Email", "User with this email already exists");
             }
 
             return View(userRegister);
