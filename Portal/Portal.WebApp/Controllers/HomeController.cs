@@ -1,21 +1,31 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Portal.Application.Interfaces;
 using Portal.WebApp.Models;
 using System.Diagnostics;
 
 namespace Portal.WebApp.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly ICourseManager _courseManager;
+
+        private readonly IApplicationUserManager _applicationUserManager;
+
+        public HomeController(ILogger<HomeController> logger, ICourseManager courseManager, IApplicationUserManager applicationUserManager)
         {
             _logger = logger;
+            _courseManager = courseManager;
+            _applicationUserManager = applicationUserManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var user = await _applicationUserManager.UserRepository.FindByUserName(User.Identity.Name);
+            return View(await _courseManager.GetAvailableCourses(user));
         }
 
         public IActionResult Privacy()

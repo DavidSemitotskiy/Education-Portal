@@ -19,6 +19,11 @@ namespace Portal.EFInfrastructure.Repositories
             return _context.Users.FirstOrDefaultAsync(user => user.Id == id);
         }
 
+        public Task<User> FindByUserName(string userName)
+        {
+            return _context.Users.FirstOrDefaultAsync(user => user.UserName == userName);
+        }
+
         public Task<User> FindByIdWithIncludesAsync(string id, string[] includeNames)
         {
             if (includeNames == null)

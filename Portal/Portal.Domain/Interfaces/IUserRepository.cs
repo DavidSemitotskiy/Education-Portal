@@ -9,6 +9,8 @@ namespace Portal.Domain.Interfaces
 
         Task<User> FindById(string id);
 
+        Task<User> FindByUserName(string userName);
+
         Task<User> FindByIdWithIncludesAsync(string id, string[] includeNames);
 
         Task<List<User>> FindUsersBySpecification(Specification<User> specification);
