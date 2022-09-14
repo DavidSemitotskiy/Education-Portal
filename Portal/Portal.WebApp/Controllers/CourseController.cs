@@ -22,5 +22,11 @@ namespace Portal.WebApp.Controllers
             var user = await _applicationUserManager.UserRepository.FindByUserName(User.Identity.Name);
             return View(await _courseManager.GetOwnCourses(user));
         }
+
+        public async Task<IActionResult> MyCourses()
+        {
+            var user = await _applicationUserManager.UserRepository.FindByUserName(User.Identity.Name);
+            return View(await _courseManager.GetCoursesInProgress(user));
+        }
     }
 }
