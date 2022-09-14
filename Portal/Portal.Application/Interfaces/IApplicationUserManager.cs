@@ -11,6 +11,8 @@ namespace Portal.Application.Interfaces
 
         IUserRepository UserRepository { get; }
 
+        UserManager<User> UserManager { get; }
+
         Task<User> GetLogInUser(UserLoginDTO userLogIn);
 
         Task<bool> Exists(UserRegisterDTO userRegister);
