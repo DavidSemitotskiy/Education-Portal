@@ -57,5 +57,17 @@ namespace Portal.WebApp.Controllers
 
             return View(createdCourse);
         }
+
+        public async Task<IActionResult> DeleteCourse(Guid id)
+        {
+            var courseToDelete = await _courseManager.CourseRepository.FindById(id);
+            if (courseToDelete != null && !courseToDelete.IsPublished)
+            {
+                _courseManager.DeleteCourse(courseToDelete);
+                await _courseManager.CourseRepository.SaveChanges();
+            }
+
+            return RedirectToAction("CourseConstructor");
+        }
     }
 }
