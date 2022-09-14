@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Portal.Application.Interfaces;
 using Portal.Domain.Models;
@@ -73,7 +74,7 @@ namespace Portal.WebApp.Controllers
             return View(userRegister);
         }
 
-
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _applicaionUserManager.WebLogOff(_signInManager);
