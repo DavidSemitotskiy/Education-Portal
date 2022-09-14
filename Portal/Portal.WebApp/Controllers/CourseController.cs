@@ -17,7 +17,7 @@ namespace Portal.WebApp.Controllers
             _applicationUserManager = applicationUserManager;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> CourseConstructor()
         {
             var user = await _applicationUserManager.UserRepository.FindByUserName(User.Identity.Name);
             return View(await _courseManager.GetOwnCourses(user));
