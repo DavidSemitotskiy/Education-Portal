@@ -19,8 +19,8 @@
                     <div class="card-body">
                         <h5 class="card-title">@course.Name</h5>
                         <p class="card-text">@course.Description</p>
-                        <a href="#" class="btn btn-primary">Edit</a>
-                        <a href="#" class="btn btn-danger">Delete</a>
+                        <a asp-controller="Course" asp-action="EditCourse" asp-route-id="@course.Id" class="btn btn-primary">Edit</a>
+                        <a asp-controller="Course" asp-action="DeleteCourse" asp-route-id="@course.Id" class="btn btn-danger">Delete</a>
                     </div>
                 </div>   
             }
