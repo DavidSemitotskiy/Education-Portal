@@ -14,14 +14,17 @@ namespace Portal.Application
             UserRepository = repository ?? throw new ArgumentNullException("Repository can't be null");
         }
 
-        public ApplicationUserManager(IUserRepository repository, UserManager<User> userManager) : this(repository)
+        public ApplicationUserManager(IUserRepository repository, UserManager<User> userManager, SignInManager<User> signInManager) : this(repository)
         {
             UserManager = userManager ?? throw new ArgumentNullException("Manager can't be null");
+            SignInManager = signInManager ?? throw new ArgumentNullException("Manager can't be null");
         }
 
         public IUserRepository UserRepository { get; }
 
         public UserManager<User> UserManager { get; }
+
+        public SignInManager<User> SignInManager { get; }
 
         public async Task<bool> Exists(UserRegisterDTO userRegister)
         {
@@ -84,6 +87,26 @@ namespace Portal.Application
 
             await UserRepository.Add(user);
             IApplicationUserManager.CurrentUser = user;
+        }
+
+        public Task<SignInResult> WebLogIn(UserLoginDTO userLogin, bool rememberMe)
+        {
+            return SignInManager?.PasswordSignInAsync(userLogin?.Email, userLogin.Password, rememberMe, false);
+        }
+
+        public async Task<IdentityResult?> WebRegister(User user, string password)
+        {
+            return await UserManager?.CreateAsync(user, password);
+        }
+
+        public Task WebLogOff()
+        {
+            return SignInManager?.SignOutAsync();
+        }
+
+        public Task SignInAsync(User user, bool isPersistent)
+        {
+            return SignInManager.SignInAsync(user, isPersistent);
         }
     }
 }

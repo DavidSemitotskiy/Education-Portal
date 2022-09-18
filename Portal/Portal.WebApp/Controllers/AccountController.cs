@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Portal.Application.Interfaces;
+using Portal.Domain.DTOs;
 using Portal.Domain.Models;
-using Portal.WebApp.Extensions;
 using Portal.WebApp.Models.UserViewModels;
 
 namespace Portal.WebApp.Controllers
@@ -12,12 +11,9 @@ namespace Portal.WebApp.Controllers
     {
         private readonly IApplicationUserManager _applicaionUserManager;
 
-        private readonly SignInManager<User> _signInManager;
-
-        public AccountController(IApplicationUserManager applicaionUserManager, SignInManager<User> signInManager)
+        public AccountController(IApplicationUserManager applicaionUserManager)
         {
             _applicaionUserManager = applicaionUserManager;
-            _signInManager = signInManager;
         }
 
         public IActionResult Login()
@@ -30,7 +26,11 @@ namespace Portal.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var resultLogin = await _applicaionUserManager.WebLogIn(_signInManager, userLogin);
+                var resultLogin = await _applicaionUserManager.WebLogIn(new UserLoginDTO
+                {
+                    Email = userLogin?.Email,
+                    Password = userLogin.Password,
+                }, userLogin.RememberMe);
                 if (resultLogin.Succeeded)
                 {
                     return RedirectToAction("Index", "Home");
@@ -61,10 +61,10 @@ namespace Portal.WebApp.Controllers
                     AccessLevel = 0,
                     Skills = new List<UserSkill>()
                 };
-                var resultRegistration = await _applicaionUserManager.WebRegister(userRegister, user);
+                var resultRegistration = await _applicaionUserManager.WebRegister(user, userRegister.Password);
                 if (resultRegistration.Succeeded)
                 {
-                    _signInManager.SignInAsync(user, false);
+                    await _applicaionUserManager.SignInAsync(user, false);
                     return RedirectToAction("Index", "Home");
                 }
 
@@ -77,7 +77,7 @@ namespace Portal.WebApp.Controllers
         [Authorize]
         public async Task<IActionResult> Logout()
         {
-            await _applicaionUserManager.WebLogOff(_signInManager);
+            await _applicaionUserManager.WebLogOff();
             return RedirectToAction("Index", "Home");
         }
     }

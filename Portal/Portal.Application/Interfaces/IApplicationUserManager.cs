@@ -22,5 +22,13 @@ namespace Portal.Application.Interfaces
         Task ConsoleRegister(UserRegisterDTO userRegister);
 
         Task ConsoleLogOff();
+
+        Task<SignInResult> WebLogIn(UserLoginDTO userLogin, bool rememberMe);
+
+        Task<IdentityResult?> WebRegister(User user, string password);
+
+        Task WebLogOff();
+
+        Task SignInAsync(User user, bool isPersistent);
     }
 }
