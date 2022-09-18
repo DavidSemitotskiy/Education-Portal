@@ -57,6 +57,8 @@
         <div>
             <input type="submit" class="btn btn-primary" value="Save"/>
         </div>
+        <input asp-for="Skills" hidden />
+        <input asp-for="Materials" hidden />
     </form>
     <a asp-controller="Course" asp-action="PublishCourse" asp-route-idCourse="@Model.Id"><input class="btn btn-success" value="Publish" /></a>
     <a asp-controller="Course" asp-action="DeleteCourse" asp-route-id="@Model.Id"><input class="btn btn-danger" value="Delete" /></a>

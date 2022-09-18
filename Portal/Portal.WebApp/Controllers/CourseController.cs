@@ -102,6 +102,23 @@ namespace Portal.WebApp.Controllers
             return RedirectToAction("CourseConstructor");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> EditCourse(EditCourseViewModel editCourse)
+        {
+            if (ModelState.IsValid && editCourse != null)
+            {
+                var courseToEdit = await _courseManager.CourseRepository.FindById(editCourse.Id);
+                courseToEdit.Name = editCourse.Name;
+                courseToEdit.Description = editCourse.Description;
+                courseToEdit.AccessLevel = editCourse.AccessLevel;
+                _courseManager.CourseRepository.Update(courseToEdit);
+                await _courseManager.CourseRepository.SaveChanges();
+                return RedirectToAction("CourseConstructor");
+            }
+
+            return View(editCourse);
+        }
+
         public async Task<IActionResult> DeleteCourse(Guid id)
         {
             var courseToDelete = await _courseManager.CourseRepository.FindById(id);
