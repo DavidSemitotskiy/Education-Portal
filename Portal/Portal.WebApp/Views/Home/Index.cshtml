@@ -1,12 +1,29 @@
-﻿@using Portal.Domain.Models
-@model List<Course>
+﻿@using Portal.WebApp.Models.CourseViewModels
+@model List<CourseViewModel>
 @{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    @if (Model.Count() == 0)
-    {
-        <h1>No Courses Available</h1>
+<div>
+    @{
+        if (Model.Count() == 0)
+        {
+            <h1>No Courses Available</h1>
+        }
+        else
+        {
+            <div>
+                @foreach (var course in @Model)
+                {
+                    <div class="card" style="width: 18rem;display:inline-block;">
+                        <div class="card-body">
+                            <h5 class="card-title">@course.Name</h5>
+                            <p class="card-text">@course.Description</p>
+                            <a href="#" class="btn btn-primary">View</a>
+                        </div>
+                    </div>   
+                }
+            </div>
+        }
     }
 </div>

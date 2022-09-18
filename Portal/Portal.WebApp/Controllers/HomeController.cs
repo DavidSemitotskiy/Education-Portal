@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Portal.Application.Interfaces;
 using Portal.WebApp.Models;
+using Portal.WebApp.Models.CourseViewModels;
 using System.Diagnostics;
 
 namespace Portal.WebApp.Controllers
@@ -25,7 +26,13 @@ namespace Portal.WebApp.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _applicationUserManager.UserRepository.FindByUserName(User.Identity.Name);
-            return View(await _courseManager.GetAvailableCourses(user));
+            var availableCourses = await _courseManager.GetAvailableCourses(user);
+            return View(availableCourses.Select(course => new CourseViewModel
+            {
+                Id = course.Id,
+                Description = course.Description,
+                Name = course.Name
+            }).ToList());
         }
 
         public IActionResult Privacy()
