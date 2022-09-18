@@ -22,7 +22,14 @@ namespace Portal.WebApp.Controllers
         public async Task<IActionResult> CourseConstructor()
         {
             var user = await _applicationUserManager.UserRepository.FindByUserName(User.Identity.Name);
-            return View(await _courseManager.GetOwnCourses(user));
+            var ownCourses = await _courseManager.GetOwnCourses(user);
+            return View(ownCourses.Select(course => new CourseViewModel
+            {
+                Id = course.Id,
+                Name = course.Name,
+                Description = course.Description,
+                IsPublished = course.IsPublished
+            }).ToList());
         }
 
         public async Task<IActionResult> MyCourses()
