@@ -28,7 +28,23 @@ namespace Portal.WebApp.Controllers
         public async Task<IActionResult> MyCourses()
         {
             var user = await _applicationUserManager.UserRepository.FindByUserName(User.Identity.Name);
-            return View(await _courseManager.GetCoursesInProgress(user));
+            var coursesInProgress = await _courseManager.GetCoursesInProgress(user);
+            List<CourseStateViewModel> courseStateViewModels = new List<CourseStateViewModel>();
+            Course course = null;
+            foreach (var courseState in coursesInProgress)
+            {
+                course = await _courseManager.CourseRepository.FindById(courseState.CourseId);
+                courseStateViewModels.Add(new CourseStateViewModel
+                {
+                    Id = courseState.Id,
+                    CourseId = courseState.CourseId,
+                    Name = course.Name,
+                    Description = course.Description,
+                    Progress = await _courseManager.CourseStateManager.GetCourseProgress(courseState)
+                });
+            }
+
+            return View(courseStateViewModels);
         }
 
         public IActionResult CreateCourse()
