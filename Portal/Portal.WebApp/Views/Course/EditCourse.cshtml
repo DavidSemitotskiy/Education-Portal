@@ -30,7 +30,7 @@
                 {
                     <div class="skill">
                         <label type="text" class="form-control" style="margin-bottom:5px;">@Model.Skills[i].Experience</label>
-                        <a asp-controller="CourseSkill" asp-action="DeleteSkillFromCourse" asp-route-idCourse="@Model.Id" asp-route-idSkill="@Model.Skills[i].Id"><i class="bi bi-trash" style="display:inline-block;width:30px;height:30px;color:black;"></i></a>
+                        <a asp-controller="CourseSkill" asp-action="DeleteSkillFromCourse" asp-route-idCourse="@Model.Id" asp-route-idSkill="@Model.Skills[i].Id"><input class="btn btn-danger" value="Delete" /></a>
                     </div>
                 }
 
