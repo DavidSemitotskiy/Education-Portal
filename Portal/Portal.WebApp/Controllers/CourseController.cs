@@ -130,5 +130,21 @@ namespace Portal.WebApp.Controllers
 
             return RedirectToAction("CourseConstructor");
         }
+
+        public async Task<IActionResult> PublishCourse(Guid idCourse)
+        {
+            var courseToPublish = await _courseManager.CourseRepository.FindByIdWithIncludesAsync(idCourse, new string[] { "Skills", "Materials" });
+            if (courseToPublish != null)
+            {
+                if (!courseToPublish.IsPublished && courseToPublish.Skills.Count() > 0 && courseToPublish.Materials.Count() > 0)
+                {
+                    courseToPublish.IsPublished = true;
+                    _courseManager.UpdateCourse(courseToPublish);
+                    await _courseManager.CourseRepository.SaveChanges();
+                }
+            }
+
+            return RedirectToAction("CourseConstructor");
+        }
     }
 }
