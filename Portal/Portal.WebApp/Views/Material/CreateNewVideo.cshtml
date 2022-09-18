@@ -1,0 +1,29 @@
+﻿@using Portal.WebApp.Models.MaterialViewModels
+@model AddVideoMaterialViewModel
+@{
+    ViewData["Title"] = "CreateNew";
+}
+
+<h1>CreateNew</h1>
+
+<div>
+    <form method="post" asp-action="CreateNewVideo" asp-route-idCourse=@Model.IdCourse>
+        <div>
+            <div asp-validation-summary="ModelOnly" style="color:red;"></div>
+        </div>
+        <div>
+            <input asp-for="IdCourse" hidden />
+            <label asp-for="Duration"></label><br />
+            <input asp-for="Duration" type="number" class="form-control" placeholder="Enter Duration..." aria-label="Enter Duration..." style="width:100%;margin-bottom:5px" />
+            <span asp-validation-for="Duration"></span>
+        </div>
+        <div>
+            <label asp-for="Quality"></label><br />
+            <input asp-for="Quality" type="text" class="form-control" placeholder="Enter Quality..." aria-label="Enter Quality..." style="width:100%;margin-bottom:5px" />
+            <span asp-validation-for="Quality"></span>
+        </div>
+        <div>
+            <input type="submit" class="btn btn-primary" value="Create" />
+        </div>
+    </form>
+</div>

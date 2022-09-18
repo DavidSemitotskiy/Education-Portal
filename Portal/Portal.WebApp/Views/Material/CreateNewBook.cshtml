@@ -1,0 +1,44 @@
+﻿@using Portal.WebApp.Models.MaterialViewModels
+@model AddBookMaterialViewModel
+@{
+    ViewData["Title"] = "CreateNew";
+}
+
+<h1>CreateNew</h1>
+
+<div>
+    <form method="post">
+        <input asp-for="IdCourse" hidden />
+        <div>
+            <div asp-validation-summary="ModelOnly" style="color:red;"></div>
+        </div>
+        <div>
+            <label asp-for="Authors"></label><br />
+            <input asp-for="Authors" type="text" class="form-control" placeholder="Enter Authors..." aria-label="Enter Authors..." style="width:100%;margin-bottom:5px" />
+            <span asp-validation-for="Authors"></span>
+        </div>
+        <div>
+            <label asp-for="Title"></label><br />
+            <input asp-for="Title" type="text" class="form-control" placeholder="Enter Title..." aria-label="Enter Title..." style="width:100%;margin-bottom:5px" />
+            <span asp-validation-for="Title"></span>
+        </div>
+        <div>
+            <label asp-for="CountPages"></label><br />
+            <input asp-for="CountPages" type="number" class="form-control" placeholder="Enter CountPages..." aria-label="Enter CountPages..." style="width:100%;margin-bottom:5px" />
+            <span asp-validation-for="CountPages"></span>
+        </div>
+        <div>
+            <label asp-for="DatePublication"></label><br />
+            <input asp-for="DatePublication" type="date" class="form-control" placeholder="Enter DatePublication..." aria-label="Enter DatePublication..." style="width:100%;margin-bottom:5px" />
+            <span asp-validation-for="DatePublication"></span>
+        </div>
+        <div>
+            <label asp-for="Format"></label><br />
+            <input asp-for="Format" type="text" class="form-control" placeholder="Enter Format..." aria-label="Enter Format..." style="width:100%;margin-bottom:5px" />
+            <span asp-validation-for="Format"></span>
+        </div>
+        <div>
+            <input type="submit" class="btn btn-primary" value="Create" />
+        </div>
+    </form>
+</div>
