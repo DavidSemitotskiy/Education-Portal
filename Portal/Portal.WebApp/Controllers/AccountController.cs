@@ -80,5 +80,22 @@ namespace Portal.WebApp.Controllers
             await _applicaionUserManager.WebLogOff();
             return RedirectToAction("Index", "Home");
         }
+
+        [Authorize]
+        public async Task<IActionResult> ShowProfile()
+        {
+            var user = await _applicaionUserManager.UserRepository.FindByUserName(User.Identity.Name);
+            var userWithIncludes = await _applicaionUserManager.UserRepository.FindByIdWithIncludesAsync(user.Id, new string[] { "Skills" });
+            var userViewModel = new UserProfileViewModel
+            {
+                FirstName = userWithIncludes.FirstName,
+                LastName = userWithIncludes.LastName,
+                Email = userWithIncludes.Email,
+                AccessLevel = userWithIncludes.AccessLevel,
+                Skills = userWithIncludes.Skills
+            };
+
+            return View(userViewModel);
+        }
     }
 }
