@@ -166,5 +166,22 @@ namespace Portal.WebApp.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        public async Task<IActionResult> SubscribeCourse(Guid id)
+        {
+            var user = await _applicationUserManager.UserRepository.FindByUserName(User.Identity.Name);
+            var courseToSubscribe = await _courseManager.CourseRepository.FindByIdWithIncludesAsync(id, new string[] { "Materials", "Skills" });
+            if (user != null && courseToSubscribe != null)
+            {
+                var subscribedCourse = await _courseManager.SubscribeCourse(user, courseToSubscribe);
+                await _courseManager.CourseStateManager.CourseStateRepository.SaveChanges();
+                if (await _courseManager.CourseStateManager.CheckIfCourseCompleted(user, courseToSubscribe, subscribedCourse))
+                {
+                    await _courseManager.CourseStateManager.CourseStateRepository.SaveChanges();
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
