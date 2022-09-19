@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 using Portal.Application;
 using Portal.Application.Interfaces;
 using Portal.Domain.Interfaces;
@@ -34,10 +35,15 @@ builder.Services.AddScoped<ICourseManager, CourseManager>();
 builder.Services.AddScoped<ICourseSkillManager, CourseSkillManager>();
 builder.Services.AddScoped<IMaterialManager, MaterialManager>();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddNToastNotifyToastr(new ToastrOptions
+{
+    ProgressBar = true,
+    TimeOut = 5000
+});
 
 var app = builder.Build();
 
+app.UseNToastNotify();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
