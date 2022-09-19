@@ -183,5 +183,21 @@ namespace Portal.WebApp.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        public async Task<IActionResult> UnsubscribeCourse(Guid idCourse, Guid idCourseState)
+        {
+            var courseState = await _courseManager.CourseStateManager.CourseStateRepository.FindById(idCourseState);
+            if (!courseState.IsFinished)
+            {
+                var courseToUnSubscribe = await _courseManager.CourseRepository.FindById(idCourse);
+                if (courseToUnSubscribe != null)
+                {
+                    _courseManager.UnSubscribeCourse(courseState);
+                    await _courseManager.CourseStateManager.CourseStateRepository.SaveChanges();
+                }
+            }
+
+            return RedirectToAction("MyCourses");
+        }
     }
 }

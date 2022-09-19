@@ -22,7 +22,7 @@
                             <p class="card-text">@course.Description</p>
                             <p class="card-subtitle">Progress: @course.Progress</p><br />
                             <a href="#" class="btn btn-primary">View</a>
-                            <a href="#" class="btn btn-danger">UnSubscribe</a>
+                            <a asp-controller="Course" asp-action="UnsubscribeCourse" asp-route-idCourse="@course.CourseId" asp-route-idCourseState="@course.Id" class="btn btn-danger">UnSubscribe</a>
                         </div>
                     </div>   
                 }
