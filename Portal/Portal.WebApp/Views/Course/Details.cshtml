@@ -1,0 +1,49 @@
+﻿@using Portal.WebApp.Models.CourseViewModels
+@model DetailCourseViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <div>
+        <label asp-for="Name"></label><br />
+        <input asp-for="Name" type="text" class="form-control" style="width:100%;margin-bottom:5px" disabled />
+    </div>
+    <div>
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" type="text" class="form-control" style="width:100%;height:70px;margin-bottom:5px" disabled></textarea>
+    </div>
+    <div>
+        <label asp-for="AccessLevel"></label>
+        <input asp-for="AccessLevel" type="number" class="form-control" style="width:100%;margin-bottom:5px" disabled />
+    </div>
+    <div class="skills">
+        <label>Skills:</label><br />
+        @{
+            @for(int i = 0; i < Model.Skills.Count(); i++)
+            {
+                <div class="skill">
+                    <input asp-for="@Model.Skills[i].Experience" type="text" class="form-control" style="margin-bottom:5px;" disabled />
+                </div>
+            }
+         }
+    </div>
+    <div class="materials">
+        <label>Materials:</label><br />
+        @{
+            @for(int i = 0; i < Model.Materials.Count(); i++)
+            {
+                <div class="material">
+                    <input asp-for="@Model.Materials[i]" type="text" class="form-control" style="margin-bottom:5px;" disabled />
+                </div>
+            }
+        }
+    </div>
+    <br />
+    <div>
+        <a asp-controller="Course" asp-action="SubscribeCourse" asp-route-id="@Model.Id"><input type="button" class="btn btn-primary" value="Subscribe" /></a>
+    </div>
+</div>

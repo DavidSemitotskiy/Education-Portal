@@ -146,5 +146,25 @@ namespace Portal.WebApp.Controllers
 
             return RedirectToAction("CourseConstructor");
         }
+
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var course = await _courseManager.CourseRepository.FindByIdWithIncludesAsync(id, new string[] { "Skills", "Materials" });
+            if (course != null)
+            {
+                var courseViewModel = new DetailCourseViewModel
+                {
+                    Id = course.Id,
+                    Description = course.Description,
+                    AccessLevel = course.AccessLevel,
+                    Materials = course.Materials,
+                    Skills = course.Skills,
+                    Name = course.Name
+                };
+                return View(courseViewModel);
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
