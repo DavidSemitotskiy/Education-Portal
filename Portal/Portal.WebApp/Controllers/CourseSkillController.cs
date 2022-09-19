@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 using Portal.Application.Interfaces;
 using Portal.Domain.Models;
 using Portal.WebApp.Models.SkillViewModels;
@@ -11,10 +12,13 @@ namespace Portal.WebApp.Controllers
 
         private readonly ICourseManager _courseManager;
 
-        public CourseSkillController(ICourseSkillManager courseSkillManager, ICourseManager courseManager)
+        private readonly IToastNotification _toastNotification;
+
+        public CourseSkillController(ICourseSkillManager courseSkillManager, ICourseManager courseManager, IToastNotification toastNotification)
         {
             _courseSkillManager = courseSkillManager;
             _courseManager = courseManager;
+            _toastNotification = toastNotification;
         }
 
         public IActionResult CreateNew(Guid id)
@@ -48,6 +52,7 @@ namespace Portal.WebApp.Controllers
                     courseToEdit.Skills.Add(courseSkillToAdd);
                     _courseManager.UpdateCourse(courseToEdit);
                     await _courseManager.CourseRepository.SaveChanges();
+                    _toastNotification.AddSuccessToastMessage("Successfully added new skill to course");
                     return RedirectToAction("EditCourse", "Course", new { id = addCourseSkillViewModel.IdCourse });
                 }
             }
@@ -64,6 +69,7 @@ namespace Portal.WebApp.Controllers
                 _courseSkillManager.DeleteCourseSkill(course, skill);
                 _courseManager.CourseRepository.Update(course);
                 await _courseManager.CourseRepository.SaveChanges();
+                _toastNotification.AddSuccessToastMessage("Successfully deleted skill from course");
             }
 
             return RedirectToAction("EditCourse", "Course", new { id = idCourse });

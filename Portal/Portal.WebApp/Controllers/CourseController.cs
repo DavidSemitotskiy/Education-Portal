@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 using Portal.Application.Interfaces;
 using Portal.Domain.Models;
 using Portal.WebApp.Models.CourseViewModels;
@@ -13,10 +14,13 @@ namespace Portal.WebApp.Controllers
 
         private readonly IApplicationUserManager _applicationUserManager;
 
-        public CourseController(ICourseManager courseManager, IApplicationUserManager applicationUserManager)
+        private IToastNotification _toastNotification;
+
+        public CourseController(ICourseManager courseManager, IApplicationUserManager applicationUserManager, IToastNotification toastNotification)
         {
             _courseManager = courseManager;
             _applicationUserManager = applicationUserManager;
+            _toastNotification = toastNotification;
         }
 
         public async Task<IActionResult> CourseConstructor()
@@ -75,6 +79,7 @@ namespace Portal.WebApp.Controllers
                 };
                 await _courseManager.AddCourse(courseToCreate);
                 await _courseManager.CourseRepository.SaveChanges();
+                _toastNotification.AddSuccessToastMessage("Course was successfully created");
                 return RedirectToAction("CourseConstructor");
             }
 
@@ -113,6 +118,7 @@ namespace Portal.WebApp.Controllers
                 courseToEdit.AccessLevel = editCourse.AccessLevel;
                 _courseManager.CourseRepository.Update(courseToEdit);
                 await _courseManager.CourseRepository.SaveChanges();
+                _toastNotification.AddSuccessToastMessage("Course was successfully edited");
                 return RedirectToAction("CourseConstructor");
             }
 
@@ -126,6 +132,11 @@ namespace Portal.WebApp.Controllers
             {
                 _courseManager.DeleteCourse(courseToDelete);
                 await _courseManager.CourseRepository.SaveChanges();
+                _toastNotification.AddSuccessToastMessage("Course was successfully deleted");
+            }
+            else
+            {
+                _toastNotification.AddErrorToastMessage("You can't delete published course");
             }
 
             return RedirectToAction("CourseConstructor");
@@ -141,6 +152,11 @@ namespace Portal.WebApp.Controllers
                     courseToPublish.IsPublished = true;
                     _courseManager.UpdateCourse(courseToPublish);
                     await _courseManager.CourseRepository.SaveChanges();
+                    _toastNotification.AddSuccessToastMessage("Course was successfully published");
+                }
+                else
+                {
+                    _toastNotification.AddErrorToastMessage("You can't publish course without any skills or materials");
                 }
             }
 
@@ -179,6 +195,8 @@ namespace Portal.WebApp.Controllers
                 {
                     await _courseManager.CourseStateManager.CourseStateRepository.SaveChanges();
                 }
+
+                _toastNotification.AddSuccessToastMessage("Successfully subscribed");
             }
 
             return RedirectToAction("Index", "Home");
@@ -195,6 +213,12 @@ namespace Portal.WebApp.Controllers
                     _courseManager.UnSubscribeCourse(courseState);
                     await _courseManager.CourseStateManager.CourseStateRepository.SaveChanges();
                 }
+
+                _toastNotification.AddSuccessToastMessage("Successfully unsubscribed");
+            }
+            else
+            {
+                _toastNotification.AddErrorToastMessage("You can't unsubscribe from completed course");
             }
 
             return RedirectToAction("MyCourses");

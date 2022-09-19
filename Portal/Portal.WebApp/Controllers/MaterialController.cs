@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 using Portal.Application.Interfaces;
 using Portal.Domain.Models;
 using Portal.WebApp.Models.MaterialViewModels;
@@ -11,10 +12,13 @@ namespace Portal.WebApp.Controllers
 
         private readonly ICourseManager _courseManager;
 
-        public MaterialController(IMaterialManager materialManager, ICourseManager courseManager)
+        private readonly IToastNotification _toastNotification;
+
+        public MaterialController(IMaterialManager materialManager, ICourseManager courseManager, IToastNotification toastNotification)
         {
             _courseManager = courseManager;
             _materialManager = materialManager;
+            _toastNotification = toastNotification;
         }
 
         private async Task<IActionResult> AddMaterial(string viewName, AddMaterialViewModel addMaterialViewModel, Material material, Guid idCourse)
@@ -31,6 +35,7 @@ namespace Portal.WebApp.Controllers
                 courseToUpdate.Materials.Add(material);
                 _courseManager.UpdateCourse(courseToUpdate);
                 await _courseManager.CourseRepository.SaveChanges();
+                _toastNotification.AddSuccessToastMessage("Successfully added new skill to course");
                 return RedirectToAction("EditCourse", "Course", new { id = idCourse });
             }
 
@@ -130,6 +135,7 @@ namespace Portal.WebApp.Controllers
                 course.Materials.Remove(materialToDelete);
                 _courseManager.UpdateCourse(course);
                 await _courseManager.CourseRepository.SaveChanges();
+                _toastNotification.AddSuccessToastMessage("Successfully deleted material from course");
             }
 
             return RedirectToAction("EditCourse", "Course", new { id = idCourse });

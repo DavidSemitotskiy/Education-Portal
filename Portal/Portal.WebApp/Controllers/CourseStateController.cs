@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 using Portal.Application.Interfaces;
 using Portal.WebApp.Models.CourseViewModels;
 
@@ -14,12 +15,15 @@ namespace Portal.WebApp.Controllers
 
         private readonly IApplicationUserManager _userManager;
 
-        public CourseStateController(ICourseManager courseManager, IMaterialManager materialManager, IMaterialStateManager materialStateManager, IApplicationUserManager userManager)
+        private readonly IToastNotification _toastNotification;
+
+        public CourseStateController(ICourseManager courseManager, IMaterialManager materialManager, IMaterialStateManager materialStateManager, IApplicationUserManager userManager, IToastNotification toastNotification)
         {
             _courseManager = courseManager;
             _materialManager = materialManager;
             _materialStateManager = materialStateManager;
             _userManager = userManager;
+            _toastNotification = toastNotification;
         }
 
         public async Task<IActionResult> CompleteMaterial(Guid idCourseState, Guid idMaterialState)
@@ -33,6 +37,7 @@ namespace Portal.WebApp.Controllers
                 await _courseManager.CheckIfCoursesCompleted(user, coursesInProgress);
                 await _courseManager.CourseStateManager.MaterialStateManager.
                     MaterialStateRepository.SaveChanges();
+                _toastNotification.AddSuccessToastMessage("Successfully completed material");
             }
 
             return RedirectToAction("Details", new { idCourseState });
