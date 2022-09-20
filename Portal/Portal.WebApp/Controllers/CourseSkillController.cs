@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using NToastNotify;
 using Portal.Application.Interfaces;
 using Portal.Domain.Models;
@@ -58,6 +59,52 @@ namespace Portal.WebApp.Controllers
             }
 
             return View(addCourseSkillViewModel);
+        }
+
+        public async Task<IActionResult> AddExisting(Guid id)
+        {
+            var dropDownList = new DropDownCourseSkillViewModel
+            {
+                IdCourse = id,
+                Skills = await _courseSkillManager.CourseSkillRepository.GetAllEntities()
+            };
+            if (dropDownList.Skills.Count() == 0)
+            {
+                _toastNotification.AddErrorToastMessage("There aren't any existing skills");
+                return RedirectToAction("EditCourse", "Course", new { id });
+            }
+
+            return View(dropDownList);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddExisting(DropDownCourseSkillViewModel dropDownCourseSkillViewModel, Guid idCourse)
+        {
+            if (dropDownCourseSkillViewModel != null)
+            {
+                if (ModelState.IsValid)
+                {
+                    var course = await _courseManager.CourseRepository.FindByIdWithIncludesAsync(dropDownCourseSkillViewModel.IdCourse, new string[] { "Skills" });
+                    var courseSkillToAdd = await _courseSkillManager.CourseSkillRepository.FindById(dropDownCourseSkillViewModel.SelectedCourseSkillId);
+                    if (courseSkillToAdd != null && course != null)
+                    {
+                        if (!course.Skills.Contains(courseSkillToAdd))
+                        {
+                            course.Skills.Add(courseSkillToAdd);
+                            _courseManager.UpdateCourse(course);
+                            await _courseManager.CourseRepository.SaveChanges();
+                            _toastNotification.AddSuccessToastMessage("Successfully added existing skill");
+                            return RedirectToAction("EditCourse", "Course", new { id = idCourse });
+                        }
+
+                        ModelState.AddModelError("SelectedCourseSkillId", "This Skill already exists in this course!");
+                    }
+                }
+
+                dropDownCourseSkillViewModel.Skills = await _courseSkillManager.CourseSkillRepository.GetAllEntities();
+            }
+
+            return View(dropDownCourseSkillViewModel);
         }
 
         public async Task<IActionResult> DeleteSkillFromCourse(Guid idCourse, Guid idSkill)

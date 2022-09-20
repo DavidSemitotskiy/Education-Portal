@@ -157,6 +157,7 @@ namespace Portal.WebApp.Controllers
                 else
                 {
                     _toastNotification.AddErrorToastMessage("You can't publish course without any skills or materials");
+                    return RedirectToAction("EditCourse", new { id = idCourse });
                 }
             }
 

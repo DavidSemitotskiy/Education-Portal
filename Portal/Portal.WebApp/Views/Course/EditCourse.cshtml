@@ -34,7 +34,8 @@
                     </div>
                 }
 
-                <a asp-controller="CourseSkill" asp-action="CreateNew" asp-route-id="@Model.Id"><input class="btn btn-primary" value="Add new Skill" /></a>
+                <a asp-controller="CourseSkill" asp-action="CreateNew" asp-route-id="@Model.Id"><input type="button" class="btn btn-primary" value="Add new Skill" /></a>
+                <a asp-controller="CourseSkill" asp-action="AddExisting" asp-route-id="@Model.Id"><input type="button" class="btn btn-primary" value="Add existing Skill" /></a>
               }
         </div>
         <div class="materials">
@@ -48,9 +49,10 @@
                     </div>
                 }
 
-                <a asp-controller="Material" asp-action="CreateNewVideo" asp-route-id="@Model.Id"><input class="btn btn-primary" value="Add new Video" /></a>
-                <a asp-controller="Material" asp-action="CreateNewBook" asp-route-id="@Model.Id"><input class="btn btn-primary" value="Add new Book" /></a>
-                <a asp-controller="Material" asp-action="CreateNewArticle" asp-route-id="@Model.Id"><input class="btn btn-primary" value="Add new Article" /></a>
+                <a asp-controller="Material" asp-action="CreateNewVideo" asp-route-id="@Model.Id"><input type="button" class="btn btn-primary" value="Add new Video" /></a>
+                <a asp-controller="Material" asp-action="CreateNewBook" asp-route-id="@Model.Id"><input type="button" class="btn btn-primary" value="Add new Book" /></a>
+                <a asp-controller="Material" asp-action="CreateNewArticle" asp-route-id="@Model.Id"><input type="button" class="btn btn-primary" value="Add new Article" /></a>
+                <a asp-controller="Material" asp-action="AddExisting" asp-route-id="@Model.Id"><input type="button" class="btn btn-primary" value="Add existing Material" /></a>
               }
         </div>
         <br />
@@ -60,7 +62,7 @@
         <input asp-for="Skills" hidden />
         <input asp-for="Materials" hidden />
     </form>
-    <a asp-controller="Course" asp-action="PublishCourse" asp-route-idCourse="@Model.Id"><input class="btn btn-success" value="Publish" /></a>
-    <a asp-controller="Course" asp-action="DeleteCourse" asp-route-id="@Model.Id"><input class="btn btn-danger" value="Delete" /></a>
+    <a asp-controller="Course" asp-action="PublishCourse" asp-route-idCourse="@Model.Id"><input type="button" class="btn btn-success" value="Publish" /></a>
+    <a asp-controller="Course" asp-action="DeleteCourse" asp-route-id="@Model.Id"><input type="button" class="btn btn-danger" value="Delete" /></a>
 </div>
 

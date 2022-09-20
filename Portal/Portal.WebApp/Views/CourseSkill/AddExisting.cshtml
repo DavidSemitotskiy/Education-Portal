@@ -1,0 +1,20 @@
+﻿@using Portal.Domain.Models
+@using Portal.WebApp.Models.SkillViewModels
+@model DropDownCourseSkillViewModel 
+
+@{
+    ViewData["Title"] = "Add existing";
+}
+
+<div>
+    <form method="post" asp-route-idCourse="@Model.IdCourse">
+        <div>
+            <select asp-for="SelectedCourseSkillId" asp-items="@new SelectList(@Model.Skills, nameof(CourseSkill.Id), nameof(CourseSkill.Experience))">
+                <option>Select Skill</option>
+            </select>
+        </div>
+        <div>
+            <input type="submit" class="btn btn-primary" value="Submit" />
+        </div>
+    </form>
+</div>

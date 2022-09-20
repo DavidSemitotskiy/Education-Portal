@@ -126,6 +126,52 @@ namespace Portal.WebApp.Controllers
             return View(addVideoMaterialViewModel);
         }
 
+        public async Task<IActionResult> AddExisting(Guid id)
+        {
+            var dropDownMaterials = new DropDownMaterialViewModel
+            {
+                IdCourse = id,
+                Materials = await _materialManager.MaterialRepository.GetAllEntities()
+            };
+            if (dropDownMaterials.Materials.Count() == 0)
+            {
+                _toastNotification.AddErrorToastMessage("There aren't any existing materials");
+                return RedirectToAction("EditCourse", "Course", new { id });
+            }
+
+            return View(dropDownMaterials);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddExisting(DropDownMaterialViewModel dropDownMaterialViewModel, Guid idCourse)
+        {
+            if (dropDownMaterialViewModel != null)
+            {
+                if (ModelState.IsValid)
+                {
+                    var course = await _courseManager.CourseRepository.FindByIdWithIncludesAsync(idCourse, new string[] { "Materials" });
+                    var material = await _materialManager.MaterialRepository.FindById(dropDownMaterialViewModel.SelectedMaterialId);
+                    if (course != null && material != null)
+                    {
+                        if (!course.Materials.Contains(material))
+                        {
+                            course.Materials.Add(material);
+                            _courseManager.UpdateCourse(course);
+                            await _courseManager.CourseRepository.SaveChanges();
+                            _toastNotification.AddSuccessToastMessage("Successfully added existing material");
+                            return RedirectToAction("EditCourse", "Course", new { id = idCourse });
+                        }
+
+                        ModelState.AddModelError("SelectedMaterialId", "This material already exists in this course");
+                    }
+                }
+
+                dropDownMaterialViewModel.Materials = await _materialManager.MaterialRepository.GetAllEntities();
+            }
+
+            return View(dropDownMaterialViewModel);
+        }
+
         public async Task<IActionResult> DeleteMaterialFromCourse(Guid idCourse, Guid idMaterial)
         {
             var course = await _courseManager.CourseRepository.FindByIdWithIncludesAsync(idCourse, new string[] { "Materials" });
