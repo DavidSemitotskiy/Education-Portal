@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Portal.Domain.Models;
 
-namespace Portal.ConsoleAPI.Validation
+namespace Portal.Application.Validation
 {
     public class VideoMaterialValidator : AbstractValidator<VideoMaterial>
     {

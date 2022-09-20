@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Portal.Domain.DTOs;
 
-namespace Portal.ConsoleAPI.Validation
+namespace Portal.Application.Validation
 {
     public class UserLoginDTOValidator : AbstractValidator<UserLoginDTO>
     {

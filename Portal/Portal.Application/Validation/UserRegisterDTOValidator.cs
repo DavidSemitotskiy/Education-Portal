@@ -2,7 +2,7 @@
 using Portal.Domain.DTOs;
 using System.Text.RegularExpressions;
 
-namespace Portal.ConsoleAPI.Validation
+namespace Portal.Application.Validation
 {
     public class UserRegisterDTOValidator : AbstractValidator<UserRegisterDTO>
     {

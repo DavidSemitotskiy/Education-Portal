@@ -1,5 +1,5 @@
 ﻿using Portal.Application.Interfaces;
-using Portal.ConsoleAPI.Validation;
+using Portal.Application.Validation;
 using Portal.Domain.Models;
 
 namespace Portal.ConsoleAPI.Conrollers

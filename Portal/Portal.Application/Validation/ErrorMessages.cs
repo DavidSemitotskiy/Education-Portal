@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Portal.ConsoleAPI.Conrollers
+namespace Portal.Application.Validation
 {
     public class ErrorMessages<TValidator, TTypeValidate> where TValidator : AbstractValidator<TTypeValidate>, new()
     {
