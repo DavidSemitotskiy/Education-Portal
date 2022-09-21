@@ -10,7 +10,6 @@ namespace Portal.WebApp.Models.CourseViewModels
         [Required]
         public string Description { get; set; }
 
-        [Required]
         public int AccessLevel { get; set; }
     }
 }

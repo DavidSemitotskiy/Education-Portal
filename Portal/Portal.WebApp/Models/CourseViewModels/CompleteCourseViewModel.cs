@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Portal.Domain.Models;
+﻿using Portal.Domain.Models;
 
 namespace Portal.WebApp.Models.CourseViewModels
 {
