@@ -5,9 +5,13 @@ namespace Portal.Domain.Interfaces
 {
     public interface IEntityRepository<TEntity> where TEntity : Entity
     {
+        Task<int> TotalCountOfEntitiesBySpecification(Specification<TEntity> specification);
+
         Task<List<TEntity>> GetAllEntities();
 
         Task<List<TEntity>> FindEntitiesBySpecification(Specification<TEntity> specification);
+
+        Task<List<TEntity>> GetEntitiesBySpecificationFromPage(int page, int pageSize, Specification<TEntity> specification);
 
         Task<TEntity> FindById(Guid id);
 

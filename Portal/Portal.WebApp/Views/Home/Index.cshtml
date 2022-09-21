@@ -1,19 +1,23 @@
 ﻿@using Portal.WebApp.Models.CourseViewModels
-@model List<CourseViewModel>
+@using cloudscribe.Pagination.Models
+@model PagedResult<CourseViewModel>
 @{
     ViewData["Title"] = "Home Page";
+    ViewData["Controller"] = "Home";
+    ViewData["Action"] = "Index";
 }
 
 <div>
     @{
-        if (Model.Count() == 0)
+        if (Model.Data.Count() == 0)
         {
             <h1>No Courses Available</h1>
         }
         else
         {
+            <partial name="_PaginationPartial" model="Model" view-data="ViewData"></partial>
             <div>
-                @foreach (var course in @Model)
+                @foreach (var course in @Model.Data)
                 {
                     <div class="card" style="width: 18rem;display:inline-block;">
                         <div class="card-body">

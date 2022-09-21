@@ -41,6 +41,8 @@ builder.Services.AddControllersWithViews().AddNToastNotifyToastr(new ToastrOptio
     TimeOut = 5000
 });
 
+builder.Services.AddCloudscribePagination();
+
 var app = builder.Build();
 
 app.UseNToastNotify();

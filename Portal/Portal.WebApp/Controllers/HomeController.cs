@@ -4,6 +4,8 @@ using Portal.Application.Interfaces;
 using Portal.WebApp.Models;
 using Portal.WebApp.Models.CourseViewModels;
 using System.Diagnostics;
+using cloudscribe.Pagination.Models;
+using Portal.Domain.Models;
 
 namespace Portal.WebApp.Controllers
 {
@@ -23,16 +25,24 @@ namespace Portal.WebApp.Controllers
             _applicationUserManager = applicationUserManager;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 1)
         {
             var user = await _applicationUserManager.UserRepository.FindByUserName(User.Identity.Name);
-            var availableCourses = await _courseManager.GetAvailableCourses(user);
-            return View(availableCourses.Select(course => new CourseViewModel
+            var availableCoursesByPage = await _courseManager.GetAvailableCoursesByPage(user, pageNumber, pageSize);
+            var courseViewModels = availableCoursesByPage.Select(course => new CourseViewModel
             {
                 Id = course.Id,
                 Description = course.Description,
                 Name = course.Name
-            }).ToList());
+            }).ToList();
+            var page = new PagedResult<CourseViewModel>
+            {
+                Data = courseViewModels,
+                TotalItems = await _courseManager.TotalCountOfAvailableCourses(user),
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+            return View(page);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

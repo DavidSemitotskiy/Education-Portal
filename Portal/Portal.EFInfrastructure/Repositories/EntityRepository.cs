@@ -55,6 +55,12 @@ namespace Portal.EFInfrastructure.Repositories
             return Entities.ToListAsync();
         }
 
+        public Task<List<TEntity>> GetEntitiesBySpecificationFromPage(int page, int pageSize, Specification<TEntity> specification)
+        {
+            var excludeRecords = (page * pageSize) - pageSize;
+            return Entities.Skip(excludeRecords).Take(pageSize).Where(specification?.ToExpression()).ToListAsync();
+        }
+
         public void Update(TEntity entity)
         {
             Entities.Update(entity);
@@ -68,6 +74,11 @@ namespace Portal.EFInfrastructure.Repositories
         public Task<List<TEntity>> FindEntitiesBySpecification(Specification<TEntity> specification)
         {
             return Entities.Where(specification?.ToExpression()).ToListAsync();
+        }
+
+        public Task<int> TotalCountOfEntitiesBySpecification(Specification<TEntity> specification)
+        {
+            return Entities.Where(specification?.ToExpression()).CountAsync();
         }
     }
 }

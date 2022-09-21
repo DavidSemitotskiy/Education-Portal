@@ -46,6 +46,20 @@ namespace Portal.Application
             return CourseRepository.FindEntitiesBySpecification(availableUserCourseSpecification.And(publishCourseSpecification));
         }
 
+        public Task<int> TotalCountOfAvailableCourses(User user)
+        {
+            var availableUserCourseSpecification = new AvailableUserCourseSpecification(user);
+            var publishCourseSpecification = new PublishCourseSpecification();
+            return CourseRepository.TotalCountOfEntitiesBySpecification(availableUserCourseSpecification.And(publishCourseSpecification));
+        }
+
+        public Task<List<Course>> GetAvailableCoursesByPage(User user, int page, int pageSize)
+        {
+            var availableUserCourseSpecification = new AvailableUserCourseSpecification(user);
+            var publishCourseSpecification = new PublishCourseSpecification();
+            return CourseRepository.GetEntitiesBySpecificationFromPage(page, pageSize, availableUserCourseSpecification.And(publishCourseSpecification));
+        }
+
         public Task<List<Course>> GetOwnCourses(User user)
         {
             var ownUserCourseSpecification = new OwnUserCourseSpecification(user);
