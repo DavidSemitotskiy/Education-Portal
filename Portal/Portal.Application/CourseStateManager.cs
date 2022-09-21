@@ -40,7 +40,7 @@ namespace Portal.Application
             };
             if (await Exists(courseState))
             {
-                throw new ArgumentNullException("You already subscribed on this course");
+                return null;
             }
 
             courseState.MaterialStates = await MaterialStateManager.GetMaterialStatesFromCourse(user, course);

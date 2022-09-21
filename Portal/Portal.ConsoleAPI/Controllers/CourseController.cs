@@ -261,7 +261,8 @@ namespace Portal.ConsoleAPI.Conrollers
             Console.Write("Choose the course to subscribe: ");
             var pick = int.Parse(Console.ReadLine()) - 1;
             var courseToSubscribe = availableCourses[pick];
-            var courseState = await CourseManager.SubscribeCourse(IApplicationUserManager.CurrentUser, courseToSubscribe);
+            var courseState = await CourseManager.SubscribeCourse(IApplicationUserManager.CurrentUser, courseToSubscribe)
+                ?? throw new ArgumentNullException("You already subscribed on this course");
             await CourseManager.CourseStateManager.CourseStateRepository.SaveChanges();
             if (await CourseManager.CourseStateManager.CheckIfCourseCompleted(IApplicationUserManager.CurrentUser, courseToSubscribe, courseState))
             {

@@ -190,6 +190,12 @@ namespace Portal.WebApp.Controllers
             if (user != null && courseToSubscribe != null)
             {
                 var subscribedCourse = await _courseManager.SubscribeCourse(user, courseToSubscribe);
+                if (subscribedCourse == null)
+                {
+                    _toastNotification.AddErrorToastMessage("You already subscribed on this course");
+                    return RedirectToAction("Index", "Home");
+                }
+
                 await _courseManager.CourseStateManager.CourseStateRepository.SaveChanges();
                 if (await _courseManager.CourseStateManager.CheckIfCourseCompleted(user, courseToSubscribe, subscribedCourse))
                 {
