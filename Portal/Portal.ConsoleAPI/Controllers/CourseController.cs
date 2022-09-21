@@ -229,7 +229,11 @@ namespace Portal.ConsoleAPI.Conrollers
                         await MaterialController.UpdateMaterial(courseUpdateWithIncludes);
                         break;
                     case CourseOperations.PublishCourse:
-                        CourseManager.PublishCourse(courseUpdateWithIncludes);
+                        if (!CourseManager.PublishCourse(courseUpdateWithIncludes))
+                        {
+                            throw new ArgumentException("Course must have one or more materials and skills to be published");
+                        }
+
                         break;
                     default:
                         Console.WriteLine("Incorrect number of operation");

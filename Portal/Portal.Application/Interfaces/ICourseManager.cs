@@ -17,7 +17,7 @@ namespace Portal.Application.Interfaces
 
         Task<bool> Exists(Course newCourse);
 
-        void PublishCourse(Course course);
+        bool PublishCourse(Course course);
 
         Task<int> CheckIfCoursesCompleted(User user, List<CourseState> courseStates);
 

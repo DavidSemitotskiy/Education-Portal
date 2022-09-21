@@ -147,9 +147,8 @@ namespace Portal.WebApp.Controllers
             var courseToPublish = await _courseManager.CourseRepository.FindByIdWithIncludesAsync(idCourse, new string[] { "Skills", "Materials" });
             if (courseToPublish != null)
             {
-                if (!courseToPublish.IsPublished && courseToPublish.Skills.Count() > 0 && courseToPublish.Materials.Count() > 0)
+                if (_courseManager.PublishCourse(courseToPublish))
                 {
-                    courseToPublish.IsPublished = true;
                     _courseManager.UpdateCourse(courseToPublish);
                     await _courseManager.CourseRepository.SaveChanges();
                     _toastNotification.AddSuccessToastMessage("Course was successfully published");

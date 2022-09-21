@@ -24,7 +24,7 @@ namespace Portal.Application
             return Convert.ToBoolean(count);
         }
 
-        public void PublishCourse(Course course)
+        public bool PublishCourse(Course course)
         {
             if (course == null)
             {
@@ -33,10 +33,11 @@ namespace Portal.Application
 
             if (course.Materials.Count() == 0 || course.Skills.Count() == 0)
             {
-                throw new ArgumentException("Course must have one or more materials and skills to be published");
+                return false;
             }
 
             course.IsPublished = true;
+            return true;
         }
 
         public Task<List<Course>> GetAvailableCourses(User user)
