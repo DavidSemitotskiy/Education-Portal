@@ -10,8 +10,17 @@
     <form method="post" style="width:30%;">
         <div>
             <label asp-for="Name"></label><br />
-            <input asp-for="Name" type="text" class="form-control" placeholder="Enter Name..." aria-label="Enter Name..." style="width:100%;margin-bottom:5px" />
-            <span asp-validation-for="Name"></span>
+            @{
+                if (Model.IsPublished)
+                {
+                    <input asp-for="Name" type="text" class="form-control" style="width:100%;margin-bottom:5px" readonly />
+                }
+                else
+                {
+                    <input asp-for="Name" type="text" class="form-control" placeholder="Enter Name..." aria-label="Enter Name..." style="width:100%;margin-bottom:5px" />
+                    <span asp-validation-for="Name"></span>
+                }
+            }
         </div>
         <div>
             <label asp-for="Description"></label>
@@ -20,22 +29,37 @@
         </div>
         <div>
             <label asp-for="AccessLevel"></label>
-            <input asp-for="AccessLevel" type="number" class="form-control" placeholder="Enter AccessLevel..." aria-label="Enter AccessLevel..." style="width:100%;margin-bottom:5px" />
-            <span asp-validation-for="AccessLevel"></span>
+            @{
+                if (Model.IsPublished)
+                {
+                    <input asp-for="AccessLevel" type="number" class="form-control" style="width:100%;margin-bottom:5px" readonly />
+                }
+                else
+                {
+                    <input asp-for="AccessLevel" type="number" class="form-control" placeholder="Enter AccessLevel..." aria-label="Enter AccessLevel..." style="width:100%;margin-bottom:5px" />
+                    <span asp-validation-for="AccessLevel"></span>
+                }
+            }
         </div>
         <div class="skills">
             <label>Skills:</label><br />
             @{
-                @for(int i = 0; i < Model.Skills.Count(); i++)
+                for(int i = 0; i < Model.Skills.Count(); i++)
                 {
                     <div class="skill">
                         <label type="text" class="form-control" style="margin-bottom:5px;">@Model.Skills[i].Experience</label>
-                        <a asp-controller="CourseSkill" asp-action="DeleteSkillFromCourse" asp-route-idCourse="@Model.Id" asp-route-idSkill="@Model.Skills[i].Id"><input class="btn btn-danger" value="Delete" /></a>
+                        @if (!Model.IsPublished)
+                        {
+                            <a asp-controller="CourseSkill" asp-action="DeleteSkillFromCourse" asp-route-idCourse="@Model.Id" asp-route-idSkill="@Model.Skills[i].Id"><input class="btn btn-danger" value="Delete" /></a>   
+                        }
                     </div>
                 }
-
-                <a asp-controller="CourseSkill" asp-action="CreateNew" asp-route-id="@Model.Id"><input type="button" class="btn btn-primary" value="Add new Skill" /></a>
-                <a asp-controller="CourseSkill" asp-action="AddExisting" asp-route-id="@Model.Id"><input type="button" class="btn btn-primary" value="Add existing Skill" /></a>
+                
+                if (!Model.IsPublished)
+                {
+                    <a asp-controller="CourseSkill" asp-action="CreateNew" asp-route-id="@Model.Id"><input type="button" class="btn btn-primary" value="Add new Skill" /></a>
+                    <a asp-controller="CourseSkill" asp-action="AddExisting" asp-route-id="@Model.Id"><input type="button" class="btn btn-primary" value="Add existing Skill" /></a>
+                }
               }
         </div>
         <div class="materials">
@@ -45,14 +69,20 @@
                 {
                     <div class="material">
                         <label type="text" class="form-control" style="margin-bottom:5px;">@Model.Materials[i]</label>
-                        <a asp-controller="Material" asp-action="DeleteMaterialFromCourse" asp-route-idCourse="@Model.Id" asp-route-idMaterial="@Model.Materials[i].Id"><i class="bi bi-trash" style="display:inline-block;width:30px;height:30px;color:black;"></i></a>
+                        @if (!Model.IsPublished)
+                        {
+                            <a asp-controller="Material" asp-action="DeleteMaterialFromCourse" asp-route-idCourse="@Model.Id" asp-route-idMaterial="@Model.Materials[i].Id"><i class="bi bi-trash" style="display:inline-block;width:30px;height:30px;color:black;"></i></a>   
+                        }
                     </div>
                 }
 
-                <a asp-controller="Material" asp-action="CreateNewVideo" asp-route-id="@Model.Id"><input type="button" class="btn btn-primary" value="Add new Video" /></a>
-                <a asp-controller="Material" asp-action="CreateNewBook" asp-route-id="@Model.Id"><input type="button" class="btn btn-primary" value="Add new Book" /></a>
-                <a asp-controller="Material" asp-action="CreateNewArticle" asp-route-id="@Model.Id"><input type="button" class="btn btn-primary" value="Add new Article" /></a>
-                <a asp-controller="Material" asp-action="AddExisting" asp-route-id="@Model.Id"><input type="button" class="btn btn-primary" value="Add existing Material" /></a>
+                if (!Model.IsPublished)
+                {
+                    <a asp-controller="Material" asp-action="CreateNewVideo" asp-route-id="@Model.Id"><input type="button" class="btn btn-primary" value="Add new Video" /></a>
+                    <a asp-controller="Material" asp-action="CreateNewBook" asp-route-id="@Model.Id"><input type="button" class="btn btn-primary" value="Add new Book" /></a>
+                    <a asp-controller="Material" asp-action="CreateNewArticle" asp-route-id="@Model.Id"><input type="button" class="btn btn-primary" value="Add new Article" /></a>
+                    <a asp-controller="Material" asp-action="AddExisting" asp-route-id="@Model.Id"><input type="button" class="btn btn-primary" value="Add existing Material" /></a>   
+                }
               }
         </div>
         <br />
@@ -62,7 +92,10 @@
         <input asp-for="Skills" hidden />
         <input asp-for="Materials" hidden />
     </form>
-    <a asp-controller="Course" asp-action="PublishCourse" asp-route-idCourse="@Model.Id"><input type="button" class="btn btn-success" value="Publish" /></a>
-    <a asp-controller="Course" asp-action="DeleteCourse" asp-route-id="@Model.Id"><input type="button" class="btn btn-danger" value="Delete" /></a>
+    @if (!Model.IsPublished)
+    {
+        <a asp-controller="Course" asp-action="PublishCourse" asp-route-idCourse="@Model.Id"><input type="button" class="btn btn-success" value="Publish" /></a>
+        <a asp-controller="Course" asp-action="DeleteCourse" asp-route-id="@Model.Id"><input type="button" class="btn btn-danger" value="Delete" /></a>   
+    }
 </div>
 
