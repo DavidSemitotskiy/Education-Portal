@@ -20,6 +20,7 @@
                 @foreach (var course in @Model.Data)
                 {
                     <div class="card" style="width: 18rem;display:inline-block;">
+                        <img src="~/courseImg.jpg" style="height:100px;" class="card-img-top" alt="Image wasn't found">
                         <div class="card-body">
                             <h5 class="card-title">@course.Name</h5>
                             <p class="card-text">@course.Description</p>
