@@ -58,7 +58,7 @@ namespace Portal.EFInfrastructure.Repositories
         public Task<List<TEntity>> GetEntitiesBySpecificationFromPage(int page, int pageSize, Specification<TEntity> specification)
         {
             var excludeRecords = (page * pageSize) - pageSize;
-            return Entities.Skip(excludeRecords).Take(pageSize).Where(specification?.ToExpression()).ToListAsync();
+            return Entities.Where(specification?.ToExpression()).Skip(excludeRecords).Take(pageSize).ToListAsync();
         }
 
         public void Update(TEntity entity)

@@ -1,20 +1,22 @@
 ﻿@using Portal.Domain.Models
 @using Portal.WebApp.Models.SkillViewModels
-@model DropDownCourseSkillViewModel 
+@model AddExistingCourseSkillViewModel 
 
 @{
     ViewData["Title"] = "Add existing";
 }
 
 <div>
-    <form method="post" asp-route-idCourse="@Model.IdCourse">
-        <div>
-            <select asp-for="SelectedCourseSkillId" asp-items="@new SelectList(@Model.Skills, nameof(CourseSkill.Id), nameof(CourseSkill.Experience))">
-                <option>Select Skill</option>
-            </select>
-        </div>
-        <div>
-            <input type="submit" class="btn btn-primary" value="Submit" />
-        </div>
-    </form>
+    <div>
+        @foreach (var skill in @Model.Skills)
+        {
+            <div class="card" style="width: 18rem;display:inline-block;">
+                <img src="~/courseImg.jpg" style="height:100px;" class="card-img-top" alt="Image wasn't found">
+                <div class="card-body">
+                    <h5 class="card-title">@skill.Experience</h5>
+                    <a asp-controller="CourseSkill" asp-action="AddExistingSkill" asp-route-idCourse="@Model.IdCourse" asp-route-idSkill="@skill.Id" class="btn btn-primary">Add</a>
+                </div>
+            </div>   
+        }
+    </div>
 </div>
