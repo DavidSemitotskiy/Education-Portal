@@ -128,48 +128,40 @@ namespace Portal.WebApp.Controllers
 
         public async Task<IActionResult> AddExisting(Guid id)
         {
-            var dropDownMaterials = new DropDownMaterialViewModel
+            var allMaterials = await _materialManager.MaterialRepository.GetAllEntities();
+            var existsMaterialViewModel = new AddExistingMaterialViewModel
             {
                 IdCourse = id,
-                Materials = await _materialManager.MaterialRepository.GetAllEntities()
+                Materials = allMaterials
             };
-            if (dropDownMaterials.Materials.Count() == 0)
+            if (existsMaterialViewModel.Materials.Count() == 0)
             {
                 _toastNotification.AddErrorToastMessage("There aren't any existing materials");
                 return RedirectToAction("EditCourse", "Course", new { id });
             }
 
-            return View(dropDownMaterials);
+            return View(existsMaterialViewModel);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddExisting(DropDownMaterialViewModel dropDownMaterialViewModel, Guid idCourse)
+        public async Task<IActionResult> AddExistingMaterial(Guid idCourse, Guid idMaterial)
         {
-            if (dropDownMaterialViewModel != null)
+            var course = await _courseManager.CourseRepository.FindByIdWithIncludesAsync(idCourse, new string[] { "Materials" });
+            var material = await _materialManager.MaterialRepository.FindById(idMaterial);
+            if (course != null && material != null)
             {
-                if (ModelState.IsValid)
+                if (course.Materials.Contains(material))
                 {
-                    var course = await _courseManager.CourseRepository.FindByIdWithIncludesAsync(idCourse, new string[] { "Materials" });
-                    var material = await _materialManager.MaterialRepository.FindById(dropDownMaterialViewModel.SelectedMaterialId);
-                    if (course != null && material != null)
-                    {
-                        if (!course.Materials.Contains(material))
-                        {
-                            course.Materials.Add(material);
-                            _courseManager.UpdateCourse(course);
-                            await _courseManager.CourseRepository.SaveChanges();
-                            _toastNotification.AddSuccessToastMessage("Successfully added existing material");
-                            return RedirectToAction("EditCourse", "Course", new { id = idCourse });
-                        }
-
-                        ModelState.AddModelError("SelectedMaterialId", "This material already exists in this course");
-                    }
+                    _toastNotification.AddErrorToastMessage("This material already exists in this course");
+                    return RedirectToAction("AddExisting", new { id = idCourse });
                 }
 
-                dropDownMaterialViewModel.Materials = await _materialManager.MaterialRepository.GetAllEntities();
+                course.Materials.Add(material);
+                _courseManager.UpdateCourse(course);
+                await _courseManager.CourseRepository.SaveChanges();
+                _toastNotification.AddSuccessToastMessage("Successfully added existing material");
             }
 
-            return View(dropDownMaterialViewModel);
+            return RedirectToAction("EditCourse", "Course", new { id = idCourse });
         }
 
         public async Task<IActionResult> DeleteMaterialFromCourse(Guid idCourse, Guid idMaterial)
