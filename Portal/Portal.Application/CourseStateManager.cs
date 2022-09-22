@@ -78,6 +78,7 @@ namespace Portal.Application
 
                 courseStateWithIncludes.IsFinished = true;
                 CourseStateRepository.Update(courseStateWithIncludes);
+                await CourseStateRepository.SaveChanges();
                 return true;
             }
 
