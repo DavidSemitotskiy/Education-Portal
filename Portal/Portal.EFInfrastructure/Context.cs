@@ -9,6 +9,7 @@ namespace Portal.EFInfrastructure
     {
         public Context(DbContextOptions<Context> options) : base(options)
         {
+            Database.EnsureCreated();
         }
 
         public DbSet<Material> Materials { get; set; }
