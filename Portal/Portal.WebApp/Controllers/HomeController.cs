@@ -25,10 +25,10 @@ namespace Portal.WebApp.Controllers
             _applicationUserManager = applicationUserManager;
         }
 
-        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 8)
+        public async Task<IActionResult> Index(string searchString, int pageNumber = 1, int pageSize = 4)
         {
             var user = await _applicationUserManager.UserRepository.FindByUserName(User.Identity.Name);
-            var availableCoursesByPage = await _courseManager.GetAvailableCoursesByPage(user, pageNumber, pageSize);
+            var availableCoursesByPage = await _courseManager.GetAvailableCoursesByPageWithSearchString(user, searchString, pageNumber, pageSize);
             var courseViewModels = availableCoursesByPage.Select(course => new CourseViewModel
             {
                 Id = course.Id,
@@ -38,7 +38,7 @@ namespace Portal.WebApp.Controllers
             var page = new PagedResult<CourseViewModel>
             {
                 Data = courseViewModels,
-                TotalItems = await _courseManager.TotalCountOfAvailableCourses(user),
+                TotalItems = await _courseManager.TotalCountOfAvailableCoursesWithSearchString(user, searchString),
                 PageNumber = pageNumber,
                 PageSize = pageSize
             };

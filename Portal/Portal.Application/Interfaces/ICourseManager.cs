@@ -25,9 +25,9 @@ namespace Portal.Application.Interfaces
 
         Task<List<Course>> GetAvailableCourses(User user);
 
-        Task<int> TotalCountOfAvailableCourses(User user);
+        Task<int> TotalCountOfAvailableCoursesWithSearchString(User user, string searchString);
 
-        Task<List<Course>> GetAvailableCoursesByPage(User user, int page, int pageSize);
+        Task<List<Course>> GetAvailableCoursesByPageWithSearchString(User user, string searchString, int page, int pageSize);
 
         Task<List<Course>> GetOwnCourses(User user);
 
