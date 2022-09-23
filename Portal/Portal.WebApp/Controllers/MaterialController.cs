@@ -3,7 +3,7 @@ using NToastNotify;
 using Portal.Application.Interfaces;
 using Portal.Domain.Models;
 using Portal.WebApp.Models.MaterialViewModels;
-
+using cloudscribe.Pagination.Models;
 namespace Portal.WebApp.Controllers
 {
     public class MaterialController : Controller
@@ -126,21 +126,28 @@ namespace Portal.WebApp.Controllers
             return View(addVideoMaterialViewModel);
         }
 
-        public async Task<IActionResult> AddExisting(Guid id)
+        public async Task<IActionResult> AddExisting(Guid id, int pageNumber = 1, int pageSize = 4)
         {
-            var allMaterials = await _materialManager.MaterialRepository.GetAllEntities();
-            var existsMaterialViewModel = new AddExistingMaterialViewModel
-            {
-                IdCourse = id,
-                Materials = allMaterials
-            };
-            if (existsMaterialViewModel.Materials.Count() == 0)
+            var materialsByPage = await _materialManager.MaterialRepository.GetEntitiesFromPage(pageNumber, pageSize);
+            if (materialsByPage.Count() == 0)
             {
                 _toastNotification.AddErrorToastMessage("There aren't any existing materials");
                 return RedirectToAction("EditCourse", "Course", new { id });
             }
 
-            return View(existsMaterialViewModel);
+            var page = new PagedResult<AddExistingMaterialViewModel>
+            {
+                Data = materialsByPage.Select(material => new AddExistingMaterialViewModel
+                {
+                    IdCourse = id,
+                    Id = material.Id,
+                    Material = material.ToString()
+                }).ToList(),
+                PageSize = pageSize,
+                PageNumber = pageNumber,
+                TotalItems = await _materialManager.MaterialRepository.TotalCountOfEntities()
+            };
+            return View(page);
         }
 
         public async Task<IActionResult> AddExistingMaterial(Guid idCourse, Guid idMaterial)

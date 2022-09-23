@@ -1,20 +1,25 @@
-﻿@using Portal.Domain.Models
-@using Portal.WebApp.Models.MaterialViewModels
-@model AddExistingMaterialViewModel 
+﻿@using Portal.WebApp.Models.MaterialViewModels
+@using cloudscribe.Pagination.Models
+@model PagedResult<AddExistingMaterialViewModel> 
 
 @{
     ViewData["Title"] = "Add existing";
+    ViewData["Controller"] = "Material";
+    ViewData["Action"] = "AddExisting";
 }
 
 <div>
     <div>
-        @foreach (var material in @Model.Materials)
+        <partial name="_PaginationPartial" view-data="ViewData" model="Model"></partial>
+    </div>
+    <div>
+        @foreach (var material in @Model.Data)
         {
             <div class="card" style="width: 18rem;display:inline-block;">
                 <img src="~/courseImg.jpg" style="height:100px;" class="card-img-top" alt="Image wasn't found">
                 <div class="card-body">
-                    <h5 class="card-title">@material</h5>
-                    <a asp-controller="Material" asp-action="AddExistingMaterial" asp-route-idCourse="@Model.IdCourse" asp-route-idMaterial="@material.Id" class="btn btn-primary">Add</a>
+                    <h5 class="card-title">@material.Material</h5>
+                    <a asp-controller="Material" asp-action="AddExistingMaterial" asp-route-idCourse="@material.IdCourse" asp-route-idMaterial="@material.Id" class="btn btn-primary">Add</a>
                 </div>
             </div>   
         }
