@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using NToastNotify;
 using Portal.Application.Interfaces;
 using Portal.Domain.Models;
 using Portal.WebApp.Models.SkillViewModels;
+using cloudscribe.Pagination.Models;
 
 namespace Portal.WebApp.Controllers
 {
@@ -61,22 +61,28 @@ namespace Portal.WebApp.Controllers
             return View(addCourseSkillViewModel);
         }
 
-        public async Task<IActionResult> AddExisting(Guid id)
+        public async Task<IActionResult> AddExisting(Guid id, int pageNumber = 1, int pageSize = 1)
         {
-            var allSkills = await _courseSkillManager.CourseSkillRepository.GetAllEntities();
-            var addExistingCourseSkillViewModel = new AddExistingCourseSkillViewModel
-            {
-                IdCourse = id,
-                Skills = allSkills
-            };
-            
-            if (addExistingCourseSkillViewModel.Skills.Count() == 0)
+            var skillsByPage = await _courseSkillManager.CourseSkillRepository.GetEntitiesFromPage(pageNumber, pageSize);
+            if (skillsByPage.Count() == 0)
             {
                 _toastNotification.AddErrorToastMessage("There aren't any existing skills");
                 return RedirectToAction("EditCourse", "Course", new { id });
             }
 
-            return View(addExistingCourseSkillViewModel);
+            var page = new PagedResult<AddExistingCourseSkillViewModel>
+            {
+                Data = skillsByPage.Select(skill => new AddExistingCourseSkillViewModel
+                {
+                    IdCourse = id,
+                    Id = skill.Id,
+                    Skill = skill.Experience
+                }).ToList(),
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalItems = await _courseSkillManager.CourseSkillRepository.TotalCountOfEntities()
+            };
+            return View(page);
         }
 
         public async Task<IActionResult> AddExistingSkill(Guid idCourse, Guid idSkill)

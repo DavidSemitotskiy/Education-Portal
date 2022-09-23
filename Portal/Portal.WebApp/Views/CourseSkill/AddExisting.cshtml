@@ -1,20 +1,25 @@
-﻿@using Portal.Domain.Models
-@using Portal.WebApp.Models.SkillViewModels
-@model AddExistingCourseSkillViewModel 
+﻿@using Portal.WebApp.Models.SkillViewModels
+@using cloudscribe.Pagination.Models
+@model PagedResult<AddExistingCourseSkillViewModel> 
 
 @{
     ViewData["Title"] = "Add existing";
+    ViewData["Controller"] = "CourseSkill";
+    ViewData["Action"] = "AddExisting";
 }
 
 <div>
     <div>
-        @foreach (var skill in @Model.Skills)
+        <partial name="_PaginationPartial" view-data="ViewData" model="Model"></partial>
+    </div>
+    <div>
+        @foreach (var skill in @Model.Data)
         {
             <div class="card" style="width: 18rem;display:inline-block;">
                 <img src="~/courseImg.jpg" style="height:100px;" class="card-img-top" alt="Image wasn't found">
                 <div class="card-body">
-                    <h5 class="card-title">@skill.Experience</h5>
-                    <a asp-controller="CourseSkill" asp-action="AddExistingSkill" asp-route-idCourse="@Model.IdCourse" asp-route-idSkill="@skill.Id" class="btn btn-primary">Add</a>
+                    <h5 class="card-title">@skill.Skill</h5>
+                    <a asp-controller="CourseSkill" asp-action="AddExistingSkill" asp-route-idCourse="@skill.IdCourse" asp-route-idSkill="@skill.Id" class="btn btn-primary">Add</a>
                 </div>
             </div>   
         }
