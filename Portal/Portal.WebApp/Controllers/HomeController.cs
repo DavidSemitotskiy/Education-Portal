@@ -25,8 +25,9 @@ namespace Portal.WebApp.Controllers
             _applicationUserManager = applicationUserManager;
         }
 
-        public async Task<IActionResult> Index(string searchString, int pageNumber = 1, int pageSize = 4)
+        public async Task<IActionResult> Index(string searchString, int pageNumber = 1, int pageSize = 2)
         {
+            ViewData["SearchString"] = searchString;
             var user = await _applicationUserManager.UserRepository.FindByUserName(User.Identity.Name);
             var availableCoursesByPage = await _courseManager.GetAvailableCoursesByPageWithSearchString(user, searchString, pageNumber, pageSize);
             var courseViewModels = availableCoursesByPage.Select(course => new CourseViewModel
