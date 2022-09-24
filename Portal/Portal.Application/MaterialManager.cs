@@ -1,6 +1,8 @@
 ﻿using Portal.Application.Interfaces;
+using Portal.Application.Specifications.MaterialSpecifications;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
+using Portal.Domain.Specifications;
 
 namespace Portal.Application
 {
@@ -50,6 +52,41 @@ namespace Portal.Application
             }
 
             course.Materials[index] = material;
+        }
+
+        public Task<int> TotalCountOfMaterialsWithFilterString(string filterString)
+        {
+            var specification = GetSpecificationWithFilterString(filterString);
+            return specification == null ? MaterialRepository.TotalCountOfEntities()
+                : MaterialRepository.TotalCountOfEntitiesBySpecification(specification);
+        }
+
+        public Task<List<Material>> GetMaterialsByPageWithFilterString(string filterString, int page, int pageSize)
+        {
+            var specification = GetSpecificationWithFilterString(filterString);
+            return specification == null ? MaterialRepository.GetEntitiesFromPage(page, pageSize)
+                : MaterialRepository.GetEntitiesBySpecificationFromPage(page, pageSize, specification);
+        }
+
+        private Specification<Material> GetSpecificationWithFilterString(string filterString)
+        {
+            Specification<Material> specification = null;
+            switch (filterString)
+            {
+                case "All":
+                    return specification;
+                case "Books":
+                    specification = new IsBookMaterialSpecification();
+                    break;
+                case "Videos":
+                    specification = new IsVideoMaterialSpecification();
+                    break;
+                case "Articles":
+                    specification = new IsArticleMaterialSpecification();
+                    break;
+            }
+
+            return specification;
         }
     }
 }

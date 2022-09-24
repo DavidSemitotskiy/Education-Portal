@@ -126,9 +126,9 @@ namespace Portal.WebApp.Controllers
             return View(addVideoMaterialViewModel);
         }
 
-        public async Task<IActionResult> AddExisting(Guid id, int pageNumber = 1, int pageSize = 4)
+        public async Task<IActionResult> AddExisting(string filterString, Guid id, int pageNumber = 1, int pageSize = 1)
         {
-            var materialsByPage = await _materialManager.MaterialRepository.GetEntitiesFromPage(pageNumber, pageSize);
+            var materialsByPage = await _materialManager.GetMaterialsByPageWithFilterString(filterString, pageNumber, pageSize);
             if (materialsByPage.Count() == 0)
             {
                 _toastNotification.AddErrorToastMessage("There aren't any existing materials");
@@ -145,7 +145,7 @@ namespace Portal.WebApp.Controllers
                 }).ToList(),
                 PageSize = pageSize,
                 PageNumber = pageNumber,
-                TotalItems = await _materialManager.MaterialRepository.TotalCountOfEntities()
+                TotalItems = await _materialManager.TotalCountOfMaterialsWithFilterString(filterString)
             };
             return View(page);
         }

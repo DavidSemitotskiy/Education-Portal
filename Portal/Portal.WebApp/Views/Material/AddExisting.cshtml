@@ -9,6 +9,15 @@
 }
 
 <div>
+    <form asp-action="AddExisting" method="get" asp-route-id="@Model.Data[0].IdCourse">
+        <select name="filterString">
+            <option value="All">All</option>
+            <option value="Books">Books</option>
+            <option value="Videos">Videos</option>
+            <option value="Articles">Articles</option>
+        </select>
+        <input type="submit" class="btn btn-info" value="Filter" />
+    </form>
     <div>
         <partial name="_PaginationPartial" view-data="ViewData" model="Model"></partial>
     </div>
