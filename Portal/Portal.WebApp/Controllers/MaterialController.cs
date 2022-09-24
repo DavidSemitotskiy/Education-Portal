@@ -3,7 +3,8 @@ using NToastNotify;
 using Portal.Application.Interfaces;
 using Portal.Domain.Models;
 using Portal.WebApp.Models.MaterialViewModels;
-using cloudscribe.Pagination.Models;
+using Portal.WebApp.Extensions;
+
 namespace Portal.WebApp.Controllers
 {
     public class MaterialController : Controller
@@ -135,18 +136,13 @@ namespace Portal.WebApp.Controllers
                 return RedirectToAction("EditCourse", "Course", new { id });
             }
 
-            var page = new PagedResult<AddExistingMaterialViewModel>
+            var existingMaterialViewModels = materialsByPage.Select(material => new AddExistingMaterialViewModel
             {
-                Data = materialsByPage.Select(material => new AddExistingMaterialViewModel
-                {
-                    IdCourse = id,
-                    Id = material.Id,
-                    Material = material.ToString()
-                }).ToList(),
-                PageSize = pageSize,
-                PageNumber = pageNumber,
-                TotalItems = await _materialManager.TotalCountOfMaterialsWithFilterString(filterString)
-            };
+                IdCourse = id,
+                Id = material.Id,
+                Material = material.ToString()
+            }).ToList();
+            var page = this.GetPage(existingMaterialViewModels, await _materialManager.TotalCountOfMaterialsWithFilterString(filterString), pageNumber, pageSize);
             return View(page);
         }
 

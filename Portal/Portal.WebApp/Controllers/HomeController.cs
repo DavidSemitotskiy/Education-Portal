@@ -4,8 +4,7 @@ using Portal.Application.Interfaces;
 using Portal.WebApp.Models;
 using Portal.WebApp.Models.CourseViewModels;
 using System.Diagnostics;
-using cloudscribe.Pagination.Models;
-using Portal.Domain.Models;
+using Portal.WebApp.Extensions;
 
 namespace Portal.WebApp.Controllers
 {
@@ -36,13 +35,7 @@ namespace Portal.WebApp.Controllers
                 Description = course.Description,
                 Name = course.Name
             }).ToList();
-            var page = new PagedResult<CourseViewModel>
-            {
-                Data = courseViewModels,
-                TotalItems = await _courseManager.TotalCountOfAvailableCoursesWithSearchString(user, searchString),
-                PageNumber = pageNumber,
-                PageSize = pageSize
-            };
+            var page = this.GetPage(courseViewModels, await _courseManager.TotalCountOfAvailableCoursesWithSearchString(user, searchString), pageNumber, pageSize);
             return View(page);
         }
 

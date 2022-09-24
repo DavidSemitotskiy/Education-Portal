@@ -3,7 +3,7 @@ using NToastNotify;
 using Portal.Application.Interfaces;
 using Portal.Domain.Models;
 using Portal.WebApp.Models.SkillViewModels;
-using cloudscribe.Pagination.Models;
+using Portal.WebApp.Extensions;
 
 namespace Portal.WebApp.Controllers
 {
@@ -70,18 +70,13 @@ namespace Portal.WebApp.Controllers
                 return RedirectToAction("EditCourse", "Course", new { id });
             }
 
-            var page = new PagedResult<AddExistingCourseSkillViewModel>
+            var existingCourseSkillViewModels = skillsByPage.Select(skill => new AddExistingCourseSkillViewModel
             {
-                Data = skillsByPage.Select(skill => new AddExistingCourseSkillViewModel
-                {
-                    IdCourse = id,
-                    Id = skill.Id,
-                    Skill = skill.Experience
-                }).ToList(),
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalItems = await _courseSkillManager.CourseSkillRepository.TotalCountOfEntities()
-            };
+                IdCourse = id,
+                Id = skill.Id,
+                Skill = skill.Experience
+            }).ToList();
+            var page = this.GetPage(existingCourseSkillViewModels, await _courseSkillManager.CourseSkillRepository.TotalCountOfEntities(), pageNumber, pageSize);
             return View(page);
         }
 
