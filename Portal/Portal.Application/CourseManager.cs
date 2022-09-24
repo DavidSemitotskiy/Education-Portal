@@ -43,37 +43,19 @@ namespace Portal.Application
 
         public Task<List<Course>> GetAvailableCourses(User user)
         {
-            var availableUserCourseSpecification = new AvailableUserCourseSpecification(user);
-            var publishCourseSpecification = new PublishCourseSpecification();
-            return CourseRepository.FindEntitiesBySpecification(availableUserCourseSpecification.And(publishCourseSpecification));
+            return CourseRepository.FindEntitiesBySpecification(GetAvailableAndPublishedCourseSpecification(user));
         }
 
         public Task<int> TotalCountOfAvailableCoursesWithSearchString(User user, string searchString)
         {
-            var availableUserCourseSpecification = new AvailableUserCourseSpecification(user);
-            var publishCourseSpecification = new PublishCourseSpecification();
-            var availableAndPubishCourseSpecification = availableUserCourseSpecification.And(publishCourseSpecification);
-            if (!string.IsNullOrWhiteSpace(searchString))
-            {
-                var searchCourseBySearchString = new SearchCourseBySearchStringSpecification(searchString);
-                availableAndPubishCourseSpecification = availableAndPubishCourseSpecification.And(searchCourseBySearchString);
-            }
-
-            return CourseRepository.TotalCountOfEntitiesBySpecification(availableAndPubishCourseSpecification);
+            var specification = GetAvailableAndPublishedCourseSpecificationWithSearchString(user, searchString);
+            return CourseRepository.TotalCountOfEntitiesBySpecification(specification);
         }
 
         public Task<List<Course>> GetAvailableCoursesByPageWithSearchString(User user, string searchString, int page, int pageSize)
         {
-            var availableUserCourseSpecification = new AvailableUserCourseSpecification(user);
-            var publishCourseSpecification = new PublishCourseSpecification();
-            var availableAndPubishCourseSpecification = availableUserCourseSpecification.And(publishCourseSpecification);
-            if (!string.IsNullOrWhiteSpace(searchString))
-            {
-                var searchCourseBySearchString = new SearchCourseBySearchStringSpecification(searchString);
-                availableAndPubishCourseSpecification = availableAndPubishCourseSpecification.And(searchCourseBySearchString);
-            }
-
-            return CourseRepository.GetEntitiesBySpecificationFromPage(page, pageSize, availableAndPubishCourseSpecification);
+            var specification = GetAvailableAndPublishedCourseSpecificationWithSearchString(user, searchString);
+            return CourseRepository.GetEntitiesBySpecificationFromPage(page, pageSize, specification);
         }
 
         public Task<List<Course>> GetOwnCourses(User user)
@@ -159,6 +141,25 @@ namespace Portal.Application
         public void CompleteMaterial(MaterialState materialState)
         {
             CourseStateManager.CompleteMaterialState(materialState);
+        }
+
+        private Specification<Course> GetAvailableAndPublishedCourseSpecification(User user)
+        {
+            var availableUserCourseSpecification = new AvailableUserCourseSpecification(user);
+            var publishCourseSpecification = new PublishCourseSpecification();
+            return availableUserCourseSpecification.And(publishCourseSpecification);
+        }
+
+        private Specification<Course> GetAvailableAndPublishedCourseSpecificationWithSearchString(User user, string searchString)
+        {
+            var specification = GetAvailableAndPublishedCourseSpecification(user);
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                var searchCourseBySearchString = new SearchCourseBySearchStringSpecification(searchString);
+                specification = specification.And(searchCourseBySearchString);
+            }
+
+            return specification;
         }
     }
 }
