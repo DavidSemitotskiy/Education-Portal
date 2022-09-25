@@ -77,10 +77,14 @@ namespace Portal.WebApp.Controllers
                     IsPublished = false,
                     OwnerUser = User.Identity.Name
                 };
-                await _courseManager.AddCourse(courseToCreate);
-                await _courseManager.CourseRepository.SaveChanges();
-                _toastNotification.AddSuccessToastMessage("Course was successfully created");
-                return RedirectToAction("CourseConstructor");
+                if (await _courseManager.AddCourse(courseToCreate))
+                {
+                    await _courseManager.CourseRepository.SaveChanges();
+                    _toastNotification.AddSuccessToastMessage("Course was successfully created");
+                    return RedirectToAction("CourseConstructor");
+                }
+
+                _toastNotification.AddErrorToastMessage("Course with this name and description already exists");
             }
 
             return View(createdCourse);

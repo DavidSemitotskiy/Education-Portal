@@ -9,7 +9,7 @@ namespace Portal.Application.Interfaces
 
         ICourseStateManager CourseStateManager { get; }
 
-        Task AddCourse(Course course);
+        Task<bool> AddCourse(Course course);
 
         void DeleteCourse(Course course);
 

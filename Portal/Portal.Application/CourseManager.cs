@@ -77,7 +77,7 @@ namespace Portal.Application
             return CourseStateManager.CourseStateRepository.FindEntitiesBySpecification(userCourseInProgressSpecification);
         }
 
-        public async Task AddCourse(Course course)
+        public async Task<bool> AddCourse(Course course)
         {
             if (course == null)
             {
@@ -86,10 +86,11 @@ namespace Portal.Application
 
             if (await Exists(course))
             {
-                throw new ArgumentException("Course with this name and description already exists");
+                return false;
             }
 
             await CourseRepository.Add(course);
+            return true;
         }
 
         public void DeleteCourse(Course course)

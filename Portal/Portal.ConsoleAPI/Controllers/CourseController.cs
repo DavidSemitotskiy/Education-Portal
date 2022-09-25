@@ -90,7 +90,11 @@ namespace Portal.ConsoleAPI.Conrollers
 
             course.Skills = await CourseSkillController.FillCourseSkillsForCourse(countSkills);
             course.Materials = await MaterialController.FillMaterialsForCourse(countMaterials);
-            await CourseManager.AddCourse(course);
+            if (!await CourseManager.AddCourse(course))
+            {
+                throw new ArgumentException("Course with this name and description already exists");
+            }
+
             await CourseManager.CourseRepository.SaveChanges();
         }
 
