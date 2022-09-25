@@ -8,6 +8,7 @@
 
 <div style="display:flex;align-items: center;justify-content: center;">
     <form method="post" style="width:30%;">
+        <div asp-validation-summary="ModelOnly"></div>
         <div>
             <label asp-for="Name"></label><br />
             <input asp-for="Name" type="text" class="form-control" placeholder="Enter Name..." aria-label="Enter Name..." style="width:100%;margin-bottom:5px" />

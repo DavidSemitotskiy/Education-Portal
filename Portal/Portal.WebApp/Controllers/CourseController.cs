@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
 using Portal.Application.Interfaces;
+using Portal.Application.Validation;
 using Portal.Domain.Models;
+using Portal.WebApp.Extensions;
 using Portal.WebApp.Models.CourseViewModels;
 
 namespace Portal.WebApp.Controllers
@@ -77,6 +79,12 @@ namespace Portal.WebApp.Controllers
                     IsPublished = false,
                     OwnerUser = User.Identity.Name
                 };
+                var errorMessages = new ErrorMessages<CourseValidator, Course>();
+                if (!await errorMessages.ValidateModel(courseToCreate, ModelState))
+                {
+                    return View(createdCourse);
+                }
+
                 if (await _courseManager.AddCourse(courseToCreate))
                 {
                     await _courseManager.CourseRepository.SaveChanges();
