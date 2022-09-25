@@ -68,6 +68,12 @@ namespace Portal.WebApp.Controllers
                     DatePublication = addBookMaterialViewModel.DatePublication,
                     Format = addBookMaterialViewModel.Format
                 });
+                var errorMessages = new ErrorMessages<BookMaterialValidator, BookMaterial>();
+                if (!await errorMessages.ValidateModel((BookMaterial)material, ModelState))
+                {
+                    return View(addBookMaterialViewModel);
+                }
+
                 return await AddMaterial("CreateNewBook", addBookMaterialViewModel, material, idCourse);
             }
 
