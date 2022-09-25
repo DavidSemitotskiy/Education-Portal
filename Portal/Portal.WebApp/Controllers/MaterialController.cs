@@ -4,6 +4,7 @@ using Portal.Application.Interfaces;
 using Portal.Domain.Models;
 using Portal.WebApp.Models.MaterialViewModels;
 using Portal.WebApp.Extensions;
+using Portal.Application.Validation;
 
 namespace Portal.WebApp.Controllers
 {
@@ -121,6 +122,12 @@ namespace Portal.WebApp.Controllers
                     Duration = addVideoMaterialViewModel.Duration,
                     Quality = addVideoMaterialViewModel.Quality,
                 });
+                var errorMessages = new ErrorMessages<VideoMaterialValidator, VideoMaterial>();
+                if (!await errorMessages.ValidateModel((VideoMaterial)material, ModelState))
+                {
+                    return View(addVideoMaterialViewModel);
+                }
+
                 return await AddMaterial("CreateNewVideo", addVideoMaterialViewModel, material, idCourse);
             }
 
