@@ -120,6 +120,12 @@ namespace Portal.WebApp.Controllers
                 courseToEdit.Name = editCourse.Name;
                 courseToEdit.Description = editCourse.Description;
                 courseToEdit.AccessLevel = editCourse.AccessLevel;
+                if (await _courseManager.Exists(courseToEdit))
+                {
+                    _toastNotification.AddErrorToastMessage("Course with this name and description already exists");
+                    return RedirectToAction("CourseConstructor");
+                }
+
                 _courseManager.CourseRepository.Update(courseToEdit);
                 await _courseManager.CourseRepository.SaveChanges();
                 _toastNotification.AddSuccessToastMessage("Course was successfully edited");
