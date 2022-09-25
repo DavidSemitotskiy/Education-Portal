@@ -128,10 +128,17 @@ namespace Portal.WebApp.Controllers
                 courseToEdit.Name = editCourse.Name;
                 courseToEdit.Description = editCourse.Description;
                 courseToEdit.AccessLevel = editCourse.AccessLevel;
+                var errorMessages = new ErrorMessages<CourseValidator, Course>();
+                if (!await errorMessages.ValidateModel(courseToEdit, ModelState))
+                {
+                    _toastNotification.AddErrorToastMessage("Incorrect data");
+                    return RedirectToAction("EditCourse", new { id = editCourse.Id });
+                }
+
                 if (await _courseManager.Exists(courseToEdit))
                 {
                     _toastNotification.AddErrorToastMessage("Course with this name and description already exists");
-                    return RedirectToAction("CourseConstructor");
+                    return RedirectToAction("EditCourse", new { id = editCourse.Id });
                 }
 
                 _courseManager.CourseRepository.Update(courseToEdit);
@@ -140,7 +147,8 @@ namespace Portal.WebApp.Controllers
                 return RedirectToAction("CourseConstructor");
             }
 
-            return View(editCourse);
+            _toastNotification.AddErrorToastMessage("Incorrect data");
+            return RedirectToAction("EditCourse", new { id = editCourse?.Id });
         }
 
         public async Task<IActionResult> DeleteCourse(Guid id)
