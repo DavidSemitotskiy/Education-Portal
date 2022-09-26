@@ -7,10 +7,13 @@ using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
 using Portal.EFInfrastructure;
 using Portal.EFInfrastructure.Repositories;
+using Portal.WebApp;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.Configure<PaginationOptions>(builder.Configuration.GetSection("PaginationOptions"));
+
 builder.Services.AddDbContext<Context>(options =>
 {
     string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

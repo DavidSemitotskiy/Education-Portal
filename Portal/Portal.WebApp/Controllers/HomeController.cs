@@ -5,26 +5,25 @@ using Portal.WebApp.Models;
 using Portal.WebApp.Models.CourseViewModels;
 using System.Diagnostics;
 using Portal.WebApp.Extensions;
+using Portal.WebApp.Filters;
 
 namespace Portal.WebApp.Controllers
 {
     [Authorize]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
         private readonly ICourseManager _courseManager;
 
         private readonly IApplicationUserManager _applicationUserManager;
 
-        public HomeController(ILogger<HomeController> logger, ICourseManager courseManager, IApplicationUserManager applicationUserManager)
+        public HomeController(ICourseManager courseManager, IApplicationUserManager applicationUserManager)
         {
-            _logger = logger;
             _courseManager = courseManager;
             _applicationUserManager = applicationUserManager;
         }
 
-        public async Task<IActionResult> Index(string searchString, int pageNumber = 1, int pageSize = 2)
+        [TypeFilter(typeof(PaginationFilterAttribute))]
+        public async Task<IActionResult> Index(string searchString, int pageNumber, int pageSize)
         {
             ViewData["SearchString"] = searchString;
             var user = await _applicationUserManager.UserRepository.FindByUserName(User.Identity.Name);
