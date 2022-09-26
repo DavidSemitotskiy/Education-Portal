@@ -4,6 +4,7 @@ using Portal.Application.Interfaces;
 using Portal.Domain.Models;
 using Portal.WebApp.Models.SkillViewModels;
 using Portal.WebApp.Extensions;
+using Portal.WebApp.Filters;
 
 namespace Portal.WebApp.Controllers
 {
@@ -61,7 +62,8 @@ namespace Portal.WebApp.Controllers
             return View(addCourseSkillViewModel);
         }
 
-        public async Task<IActionResult> AddExisting(Guid id, int pageNumber = 1, int pageSize = 1)
+        [TypeFilter(typeof(PaginationFilterAttribute))]
+        public async Task<IActionResult> AddExisting(Guid id, int pageNumber, int pageSize)
         {
             var skillsByPage = await _courseSkillManager.CourseSkillRepository.GetEntitiesFromPage(pageNumber, pageSize);
             if (skillsByPage.Count() == 0)
