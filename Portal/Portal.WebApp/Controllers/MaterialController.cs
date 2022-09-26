@@ -5,6 +5,7 @@ using Portal.Domain.Models;
 using Portal.WebApp.Models.MaterialViewModels;
 using Portal.WebApp.Extensions;
 using Portal.Application.Validation;
+using Portal.WebApp.Filters;
 
 namespace Portal.WebApp.Controllers
 {
@@ -140,7 +141,8 @@ namespace Portal.WebApp.Controllers
             return View(addVideoMaterialViewModel);
         }
 
-        public async Task<IActionResult> AddExisting(string filterString, Guid id, int pageNumber = 1, int pageSize = 1)
+        [TypeFilter(typeof(PaginationFilterAttribute))]
+        public async Task<IActionResult> AddExisting(string filterString, Guid id, int pageNumber, int pageSize)
         {
             var materialsByPage = await _materialManager.GetMaterialsByPageWithFilterString(filterString, pageNumber, pageSize);
             if (materialsByPage.Count() == 0)
