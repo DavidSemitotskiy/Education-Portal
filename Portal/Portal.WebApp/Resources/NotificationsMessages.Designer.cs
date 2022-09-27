@@ -169,11 +169,38 @@ namespace Portal.WebApp.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Successfully added existing material.
+        /// </summary>
+        public static string MaterialAddedToCourse {
+            get {
+                return ResourceManager.GetString("MaterialAddedToCourse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Successfully completed material.
         /// </summary>
         public static string MaterialCompleted {
             get {
                 return ResourceManager.GetString("MaterialCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Successfully deleted material from course.
+        /// </summary>
+        public static string MaterialDeletedFromCourse {
+            get {
+                return ResourceManager.GetString("MaterialDeletedFromCourse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Successfully added new material to course.
+        /// </summary>
+        public static string NewMaterialAddedToCourse {
+            get {
+                return ResourceManager.GetString("NewMaterialAddedToCourse", resourceCulture);
             }
         }
         
@@ -192,6 +219,15 @@ namespace Portal.WebApp.Resources {
         public static string NoExistingCourseSkillExists {
             get {
                 return ResourceManager.GetString("NoExistingCourseSkillExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на There aren&apos;t any existing materials.
+        /// </summary>
+        public static string NoExistingMaterialExists {
+            get {
+                return ResourceManager.GetString("NoExistingMaterialExists", resourceCulture);
             }
         }
         

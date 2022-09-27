@@ -70,6 +70,15 @@ namespace Portal.WebApp.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на This material already exists in this course.
+        /// </summary>
+        public static string MaterialAlreadyExists {
+            get {
+                return ResourceManager.GetString("MaterialAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на This Skill already exists in this course!.
         /// </summary>
         public static string SkillAlreadyExistsInCourse {

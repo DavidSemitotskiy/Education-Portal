@@ -6,6 +6,7 @@ using Portal.WebApp.Models.MaterialViewModels;
 using Portal.WebApp.Extensions;
 using Portal.Application.Validation;
 using Portal.WebApp.Filters;
+using Portal.WebApp.Resources;
 
 namespace Portal.WebApp.Controllers
 {
@@ -31,14 +32,14 @@ namespace Portal.WebApp.Controllers
             {
                 if (courseToUpdate.Materials.Contains(material))
                 {
-                    ModelState.AddModelError(string.Empty, "This material already exists in this course");
+                    ModelState.AddModelError(string.Empty, ValidationErrorMessages.MaterialAlreadyExists);
                     return View(viewName, addMaterialViewModel);
                 }
 
                 courseToUpdate.Materials.Add(material);
                 _courseManager.UpdateCourse(courseToUpdate);
                 await _courseManager.CourseRepository.SaveChanges();
-                _toastNotification.AddSuccessToastMessage("Successfully added new skill to course");
+                _toastNotification.AddSuccessToastMessage(NotificationsMessages.NewMaterialAddedToCourse);
                 return RedirectToAction("EditCourse", "Course", new { id = idCourse });
             }
 
@@ -147,7 +148,7 @@ namespace Portal.WebApp.Controllers
             var materialsByPage = await _materialManager.GetMaterialsByPageWithFilterString(filterString, pageNumber, pageSize);
             if (materialsByPage.Count() == 0)
             {
-                _toastNotification.AddErrorToastMessage("There aren't any existing materials");
+                _toastNotification.AddErrorToastMessage(NotificationsMessages.NoExistingMaterialExists);
                 return RedirectToAction("EditCourse", "Course", new { id });
             }
 
@@ -169,14 +170,14 @@ namespace Portal.WebApp.Controllers
             {
                 if (course.Materials.Contains(material))
                 {
-                    _toastNotification.AddErrorToastMessage("This material already exists in this course");
+                    _toastNotification.AddErrorToastMessage(ValidationErrorMessages.MaterialAlreadyExists);
                     return RedirectToAction("AddExisting", new { id = idCourse });
                 }
 
                 course.Materials.Add(material);
                 _courseManager.UpdateCourse(course);
                 await _courseManager.CourseRepository.SaveChanges();
-                _toastNotification.AddSuccessToastMessage("Successfully added existing material");
+                _toastNotification.AddSuccessToastMessage(NotificationsMessages.MaterialAddedToCourse);
             }
 
             return RedirectToAction("EditCourse", "Course", new { id = idCourse });
@@ -191,7 +192,7 @@ namespace Portal.WebApp.Controllers
                 course.Materials.Remove(materialToDelete);
                 _courseManager.UpdateCourse(course);
                 await _courseManager.CourseRepository.SaveChanges();
-                _toastNotification.AddSuccessToastMessage("Successfully deleted material from course");
+                _toastNotification.AddSuccessToastMessage(NotificationsMessages.MaterialDeletedFromCourse);
             }
 
             return RedirectToAction("EditCourse", "Course", new { id = idCourse });

@@ -153,14 +153,26 @@
   <data name="IncorrectInputData" xml:space="preserve">
     <value>Incorrect data</value>
   </data>
+  <data name="MaterialAddedToCourse" xml:space="preserve">
+    <value>Successfully added existing material</value>
+  </data>
   <data name="MaterialCompleted" xml:space="preserve">
     <value>Successfully completed material</value>
+  </data>
+  <data name="MaterialDeletedFromCourse" xml:space="preserve">
+    <value>Successfully deleted material from course</value>
+  </data>
+  <data name="NewMaterialAddedToCourse" xml:space="preserve">
+    <value>Successfully added new material to course</value>
   </data>
   <data name="NewSkillAddedToCourse" xml:space="preserve">
     <value>Successfully added new skill to course</value>
   </data>
   <data name="NoExistingCourseSkillExists" xml:space="preserve">
     <value>There aren't any existing skills</value>
+  </data>
+  <data name="NoExistingMaterialExists" xml:space="preserve">
+    <value>There aren't any existing materials</value>
   </data>
   <data name="SuccessfullySubscribed" xml:space="preserve">
     <value>Successfully subscribed</value>
