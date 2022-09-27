@@ -59,5 +59,113 @@ namespace Portal.WebApp.Resources {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на You already subscribed on this course.
+        /// </summary>
+        public static string AlreadySubscribed {
+            get {
+                return ResourceManager.GetString("AlreadySubscribed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на You can&apos;t delete published course.
+        /// </summary>
+        public static string CantDeletePublishedCourse {
+            get {
+                return ResourceManager.GetString("CantDeletePublishedCourse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на You can&apos;t publish course without any skills or materials.
+        /// </summary>
+        public static string CantPublishCourse {
+            get {
+                return ResourceManager.GetString("CantPublishCourse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на You can&apos;t unsubscribe from completed course.
+        /// </summary>
+        public static string CantUnSubscribe {
+            get {
+                return ResourceManager.GetString("CantUnSubscribe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Course with this name and description already exists.
+        /// </summary>
+        public static string CourseAlreadyExists {
+            get {
+                return ResourceManager.GetString("CourseAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Course was successfully created.
+        /// </summary>
+        public static string CourseCreated {
+            get {
+                return ResourceManager.GetString("CourseCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Course was successfully deleted.
+        /// </summary>
+        public static string CourseDeleted {
+            get {
+                return ResourceManager.GetString("CourseDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Course was successfully edited.
+        /// </summary>
+        public static string CourseEdited {
+            get {
+                return ResourceManager.GetString("CourseEdited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Course was successfully published.
+        /// </summary>
+        public static string CoursePublished {
+            get {
+                return ResourceManager.GetString("CoursePublished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Incorrect data.
+        /// </summary>
+        public static string IncorrectInputData {
+            get {
+                return ResourceManager.GetString("IncorrectInputData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Successfully subscribed.
+        /// </summary>
+        public static string SuccessfullySubscribed {
+            get {
+                return ResourceManager.GetString("SuccessfullySubscribed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Successfully unsubscribed.
+        /// </summary>
+        public static string SuccessfullyUnSubscribed {
+            get {
+                return ResourceManager.GetString("SuccessfullyUnSubscribed", resourceCulture);
+            }
+        }
     }
 }

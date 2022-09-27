@@ -6,6 +6,7 @@ using Portal.Application.Validation;
 using Portal.Domain.Models;
 using Portal.WebApp.Extensions;
 using Portal.WebApp.Models.CourseViewModels;
+using Portal.WebApp.Resources;
 
 namespace Portal.WebApp.Controllers
 {
@@ -88,11 +89,11 @@ namespace Portal.WebApp.Controllers
                 if (await _courseManager.AddCourse(courseToCreate))
                 {
                     await _courseManager.CourseRepository.SaveChanges();
-                    _toastNotification.AddSuccessToastMessage("Course was successfully created");
+                    _toastNotification.AddSuccessToastMessage(NotificationsMessages.CourseCreated);
                     return RedirectToAction("CourseConstructor");
                 }
 
-                _toastNotification.AddErrorToastMessage("Course with this name and description already exists");
+                _toastNotification.AddErrorToastMessage(NotificationsMessages.CourseAlreadyExists);
             }
 
             return View(createdCourse);
@@ -131,23 +132,23 @@ namespace Portal.WebApp.Controllers
                 var errorMessages = new ErrorMessages<CourseValidator, Course>();
                 if (!await errorMessages.ValidateModel(courseToEdit, ModelState))
                 {
-                    _toastNotification.AddErrorToastMessage("Incorrect data");
+                    _toastNotification.AddErrorToastMessage(NotificationsMessages.IncorrectInputData);
                     return RedirectToAction("EditCourse", new { id = editCourse.Id });
                 }
 
                 if (await _courseManager.Exists(courseToEdit))
                 {
-                    _toastNotification.AddErrorToastMessage("Course with this name and description already exists");
+                    _toastNotification.AddErrorToastMessage(NotificationsMessages.CourseAlreadyExists);
                     return RedirectToAction("EditCourse", new { id = editCourse.Id });
                 }
 
                 _courseManager.CourseRepository.Update(courseToEdit);
                 await _courseManager.CourseRepository.SaveChanges();
-                _toastNotification.AddSuccessToastMessage("Course was successfully edited");
+                _toastNotification.AddSuccessToastMessage(NotificationsMessages.CourseEdited);
                 return RedirectToAction("CourseConstructor");
             }
 
-            _toastNotification.AddErrorToastMessage("Incorrect data");
+            _toastNotification.AddErrorToastMessage(NotificationsMessages.IncorrectInputData);
             return RedirectToAction("EditCourse", new { id = editCourse?.Id });
         }
 
@@ -158,11 +159,11 @@ namespace Portal.WebApp.Controllers
             {
                 _courseManager.DeleteCourse(courseToDelete);
                 await _courseManager.CourseRepository.SaveChanges();
-                _toastNotification.AddSuccessToastMessage("Course was successfully deleted");
+                _toastNotification.AddSuccessToastMessage(NotificationsMessages.CourseDeleted);
             }
             else
             {
-                _toastNotification.AddErrorToastMessage("You can't delete published course");
+                _toastNotification.AddErrorToastMessage(NotificationsMessages.CantDeletePublishedCourse);
             }
 
             return RedirectToAction("CourseConstructor");
@@ -177,11 +178,11 @@ namespace Portal.WebApp.Controllers
                 {
                     _courseManager.UpdateCourse(courseToPublish);
                     await _courseManager.CourseRepository.SaveChanges();
-                    _toastNotification.AddSuccessToastMessage("Course was successfully published");
+                    _toastNotification.AddSuccessToastMessage(NotificationsMessages.CoursePublished);
                 }
                 else
                 {
-                    _toastNotification.AddErrorToastMessage("You can't publish course without any skills or materials");
+                    _toastNotification.AddErrorToastMessage(NotificationsMessages.CantPublishCourse);
                     return RedirectToAction("EditCourse", new { id = idCourse });
                 }
             }
@@ -218,7 +219,7 @@ namespace Portal.WebApp.Controllers
                 var subscribedCourse = await _courseManager.SubscribeCourse(user, courseToSubscribe);
                 if (subscribedCourse == null)
                 {
-                    _toastNotification.AddErrorToastMessage("You already subscribed on this course");
+                    _toastNotification.AddErrorToastMessage(NotificationsMessages.AlreadySubscribed);
                     return RedirectToAction("Index", "Home");
                 }
 
@@ -228,7 +229,7 @@ namespace Portal.WebApp.Controllers
                     await _courseManager.CourseStateManager.CourseStateRepository.SaveChanges();
                 }
 
-                _toastNotification.AddSuccessToastMessage("Successfully subscribed");
+                _toastNotification.AddSuccessToastMessage(NotificationsMessages.SuccessfullySubscribed);
             }
 
             return RedirectToAction("Index", "Home");
@@ -246,11 +247,11 @@ namespace Portal.WebApp.Controllers
                     await _courseManager.CourseStateManager.CourseStateRepository.SaveChanges();
                 }
 
-                _toastNotification.AddSuccessToastMessage("Successfully unsubscribed");
+                _toastNotification.AddSuccessToastMessage(NotificationsMessages.SuccessfullyUnSubscribed);
             }
             else
             {
-                _toastNotification.AddErrorToastMessage("You can't unsubscribe from completed course");
+                _toastNotification.AddErrorToastMessage(NotificationsMessages.CantUnSubscribe);
             }
 
             return RedirectToAction("MyCourses");
