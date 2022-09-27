@@ -120,6 +120,9 @@
   <data name="IncorrectUserLoginOrPassword" xml:space="preserve">
     <value>Incorrect Email or Password</value>
   </data>
+  <data name="SkillAlreadyExistsInCourse" xml:space="preserve">
+    <value>This Skill already exists in this course!</value>
+  </data>
   <data name="UserAlreadyExists" xml:space="preserve">
     <value>User with this email already exists</value>
   </data>

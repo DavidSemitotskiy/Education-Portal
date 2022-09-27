@@ -142,11 +142,47 @@ namespace Portal.WebApp.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Successfully added existing skill.
+        /// </summary>
+        public static string CourseSkillAddedToCourse {
+            get {
+                return ResourceManager.GetString("CourseSkillAddedToCourse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Successfully deleted skill from course.
+        /// </summary>
+        public static string CourseSkillDeletedFromCourse {
+            get {
+                return ResourceManager.GetString("CourseSkillDeletedFromCourse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Incorrect data.
         /// </summary>
         public static string IncorrectInputData {
             get {
                 return ResourceManager.GetString("IncorrectInputData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Successfully added new skill to course.
+        /// </summary>
+        public static string NewSkillAddedToCourse {
+            get {
+                return ResourceManager.GetString("NewSkillAddedToCourse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на There aren&apos;t any existing skills.
+        /// </summary>
+        public static string NoExistingCourseSkillExists {
+            get {
+                return ResourceManager.GetString("NoExistingCourseSkillExists", resourceCulture);
             }
         }
         

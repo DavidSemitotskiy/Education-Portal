@@ -5,6 +5,7 @@ using Portal.Domain.Models;
 using Portal.WebApp.Models.SkillViewModels;
 using Portal.WebApp.Extensions;
 using Portal.WebApp.Filters;
+using Portal.WebApp.Resources;
 
 namespace Portal.WebApp.Controllers
 {
@@ -47,14 +48,14 @@ namespace Portal.WebApp.Controllers
                 {
                     if (courseToEdit.Skills.Contains(courseSkillToAdd))
                     {
-                        ModelState.AddModelError("CourseSkill", "This Skill already exists in this course!");
+                        ModelState.AddModelError("CourseSkill", ValidationErrorMessages.SkillAlreadyExistsInCourse);
                         return View(addCourseSkillViewModel);
                     }
 
                     courseToEdit.Skills.Add(courseSkillToAdd);
                     _courseManager.UpdateCourse(courseToEdit);
                     await _courseManager.CourseRepository.SaveChanges();
-                    _toastNotification.AddSuccessToastMessage("Successfully added new skill to course");
+                    _toastNotification.AddSuccessToastMessage(NotificationsMessages.NewSkillAddedToCourse);
                     return RedirectToAction("EditCourse", "Course", new { id = addCourseSkillViewModel.IdCourse });
                 }
             }
@@ -68,7 +69,7 @@ namespace Portal.WebApp.Controllers
             var skillsByPage = await _courseSkillManager.CourseSkillRepository.GetEntitiesFromPage(pageNumber, pageSize);
             if (skillsByPage.Count() == 0)
             {
-                _toastNotification.AddErrorToastMessage("There aren't any existing skills");
+                _toastNotification.AddErrorToastMessage(NotificationsMessages.NoExistingCourseSkillExists);
                 return RedirectToAction("EditCourse", "Course", new { id });
             }
 
@@ -90,14 +91,14 @@ namespace Portal.WebApp.Controllers
             {
                 if (course.Skills.Contains(courseSkillToAdd))
                 {
-                    _toastNotification.AddErrorToastMessage("This Skill already exists in this course");
+                    _toastNotification.AddErrorToastMessage(ValidationErrorMessages.SkillAlreadyExistsInCourse);
                     return RedirectToAction("AddExisting", new { id = idCourse });
                 }
 
                 course.Skills.Add(courseSkillToAdd);
                 _courseManager.UpdateCourse(course);
                 await _courseManager.CourseRepository.SaveChanges();
-                _toastNotification.AddSuccessToastMessage("Successfully added existing skill");
+                _toastNotification.AddSuccessToastMessage(NotificationsMessages.CourseSkillAddedToCourse);
             }
 
             return RedirectToAction("EditCourse", "Course", new { id = idCourse });
@@ -112,7 +113,7 @@ namespace Portal.WebApp.Controllers
                 _courseSkillManager.DeleteCourseSkill(course, skill);
                 _courseManager.CourseRepository.Update(course);
                 await _courseManager.CourseRepository.SaveChanges();
-                _toastNotification.AddSuccessToastMessage("Successfully deleted skill from course");
+                _toastNotification.AddSuccessToastMessage(NotificationsMessages.CourseSkillDeletedFromCourse);
             }
 
             return RedirectToAction("EditCourse", "Course", new { id = idCourse });
