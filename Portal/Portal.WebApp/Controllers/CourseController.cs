@@ -5,6 +5,7 @@ using Portal.Application.Interfaces;
 using Portal.Application.Validation;
 using Portal.Domain.Models;
 using Portal.WebApp.Extensions;
+using Portal.WebApp.Filters;
 using Portal.WebApp.Models.CourseViewModels;
 using Portal.WebApp.Resources;
 
@@ -26,17 +27,20 @@ namespace Portal.WebApp.Controllers
             _toastNotification = toastNotification;
         }
 
-        public async Task<IActionResult> CourseConstructor()
+        [TypeFilter(typeof(PaginationFilterAttribute))]
+        public async Task<IActionResult> CourseConstructor(int pageNumber, int pageSize)
         {
             var user = await _applicationUserManager.UserRepository.FindByUserName(User.Identity.Name);
-            var ownCourses = await _courseManager.GetOwnCourses(user);
-            return View(ownCourses.Select(course => new CourseViewModel
+            var ownCourses = await _courseManager.GetOwnCoursesByPage(user, pageNumber, pageSize);
+            var courseViewModels = ownCourses.Select(course => new CourseViewModel
             {
                 Id = course.Id,
                 Name = course.Name,
                 Description = course.Description,
                 IsPublished = course.IsPublished
-            }).ToList());
+            }).ToList();
+            var page = this.GetPage(courseViewModels, await _courseManager.TotalCountOfOwnCourses(user), pageNumber, pageSize);
+            return View(page);
         }
 
         public async Task<IActionResult> MyCourses()
