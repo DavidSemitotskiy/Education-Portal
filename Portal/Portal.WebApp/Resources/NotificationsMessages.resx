@@ -153,6 +153,9 @@
   <data name="IncorrectInputData" xml:space="preserve">
     <value>Incorrect data</value>
   </data>
+  <data name="MaterialCompleted" xml:space="preserve">
+    <value>Successfully completed material</value>
+  </data>
   <data name="NewSkillAddedToCourse" xml:space="preserve">
     <value>Successfully added new skill to course</value>
   </data>

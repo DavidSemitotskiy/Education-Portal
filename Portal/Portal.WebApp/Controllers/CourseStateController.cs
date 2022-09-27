@@ -2,6 +2,7 @@
 using NToastNotify;
 using Portal.Application.Interfaces;
 using Portal.WebApp.Models.CourseViewModels;
+using Portal.WebApp.Resources;
 
 namespace Portal.WebApp.Controllers
 {
@@ -37,7 +38,7 @@ namespace Portal.WebApp.Controllers
                 await _courseManager.CheckIfCoursesCompleted(user, coursesInProgress);
                 await _courseManager.CourseStateManager.MaterialStateManager.
                     MaterialStateRepository.SaveChanges();
-                _toastNotification.AddSuccessToastMessage("Successfully completed material");
+                _toastNotification.AddSuccessToastMessage(NotificationsMessages.MaterialCompleted);
             }
 
             return RedirectToAction("Details", new { idCourseState });

@@ -169,6 +169,15 @@ namespace Portal.WebApp.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Successfully completed material.
+        /// </summary>
+        public static string MaterialCompleted {
+            get {
+                return ResourceManager.GetString("MaterialCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Successfully added new skill to course.
         /// </summary>
         public static string NewSkillAddedToCourse {
