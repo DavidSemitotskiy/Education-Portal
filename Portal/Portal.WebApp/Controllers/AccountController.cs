@@ -4,6 +4,7 @@ using Portal.Application.Interfaces;
 using Portal.Domain.DTOs;
 using Portal.Domain.Models;
 using Portal.WebApp.Models.UserViewModels;
+using Portal.WebApp.Resources;
 
 namespace Portal.WebApp.Controllers
 {
@@ -36,7 +37,7 @@ namespace Portal.WebApp.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                ModelState.AddModelError("Email", "Incorrect Email or Password");
+                ModelState.AddModelError("Email", ValidationErrorMessages.IncorrectUserLoginOrPassword);
             }
 
             return View(userLogin);
@@ -68,7 +69,7 @@ namespace Portal.WebApp.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                ModelState.AddModelError("Email", "User with this email already exists");
+                ModelState.AddModelError("Email", ValidationErrorMessages.UserAlreadyExists);
             }
 
             return View(userRegister);
