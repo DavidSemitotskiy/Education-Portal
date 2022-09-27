@@ -61,6 +61,15 @@ namespace Portal.WebApp.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на ConfirmPassword must be equal Password.
+        /// </summary>
+        public static string ConfirmPasswordMustEqualPassword {
+            get {
+                return ResourceManager.GetString("ConfirmPasswordMustEqualPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Incorrect Email or Password.
         /// </summary>
         public static string IncorrectUserLoginOrPassword {

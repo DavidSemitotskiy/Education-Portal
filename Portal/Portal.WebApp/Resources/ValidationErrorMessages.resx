@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ConfirmPasswordMustEqualPassword" xml:space="preserve">
+    <value>ConfirmPassword must be equal Password</value>
+  </data>
   <data name="IncorrectUserLoginOrPassword" xml:space="preserve">
     <value>Incorrect Email or Password</value>
   </data>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Portal.WebApp.Resources;
+using System.ComponentModel.DataAnnotations;
 
 namespace Portal.WebApp.Models.UserViewModels
 {
@@ -14,7 +15,7 @@ namespace Portal.WebApp.Models.UserViewModels
         public string Password { get; set; }
 
         [Required]
-        [Compare("Password", ErrorMessage = "ConfirmPassword must be equal Password")]
+        [Compare("Password", ErrorMessageResourceType = typeof(ValidationErrorMessages), ErrorMessageResourceName = "ConfirmPasswordMustEqualPassword")]
         public string ConfirmPassword { get; set; }
 
         [Required]
