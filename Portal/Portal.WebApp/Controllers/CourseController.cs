@@ -43,10 +43,11 @@ namespace Portal.WebApp.Controllers
             return View(page);
         }
 
-        public async Task<IActionResult> MyCourses()
+        [TypeFilter(typeof(PaginationFilterAttribute))]
+        public async Task<IActionResult> MyCourses(int pageNumber, int pageSize)
         {
             var user = await _applicationUserManager.UserRepository.FindByUserName(User.Identity.Name);
-            var coursesInProgress = await _courseManager.GetCoursesInProgress(user);
+            var coursesInProgress = await _courseManager.GetCoursesInProgressByPage(user, pageNumber, pageSize);
             List<CourseStateViewModel> courseStateViewModels = new List<CourseStateViewModel>();
             Course course = null;
             foreach (var courseState in coursesInProgress)
@@ -62,7 +63,8 @@ namespace Portal.WebApp.Controllers
                 });
             }
 
-            return View(courseStateViewModels);
+            var page = this.GetPage(courseStateViewModels, await _courseManager.TotalCountOfCoursesInProgress(user), pageNumber, pageSize);
+            return View(page);
         }
 
         public IActionResult CreateCourse()

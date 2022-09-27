@@ -1,13 +1,16 @@
 ﻿@using Portal.WebApp.Models.CourseViewModels
-@model List<CourseStateViewModel>
+@using cloudscribe.Pagination.Models
+@model PagedResult<CourseStateViewModel>
 
 @{
     ViewData["Title"] = "MyCourses";
+    ViewData["Controller"] = "Course";
+    ViewData["Action"] = "MyCourses";
 }
 
 <div>
     @{
-        if (Model.Count() == 0)
+        if (Model.Data.Count() == 0)
         {
             <div>
                 <img src="~/nodata.jpg" style="width:100%;height:100%;" />
@@ -16,7 +19,10 @@
         else
         {
             <div>
-                @foreach (var course in @Model)
+                <partial name="_PaginationPartial" view-data="ViewData" model="Model"></partial>
+            </div>
+            <div>
+                @foreach (var course in @Model.Data)
                 {
                     <div class="card" style="width: 18rem;display:inline-block;">
                         <img src="~/courseImg.jpg" style="height:100px;" class="card-img-top" alt="Image wasn't found">

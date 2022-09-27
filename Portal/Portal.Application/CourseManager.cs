@@ -89,6 +89,18 @@ namespace Portal.Application
             return CourseStateManager.CourseStateRepository.FindEntitiesBySpecification(userCourseInProgressSpecification);
         }
 
+        public Task<List<CourseState>> GetCoursesInProgressByPage(User user, int page, int pageSize)
+        {
+            var userCourseInProgressSpecification = new UserCourseInProgressSpecification(user);
+            return CourseStateManager.CourseStateRepository.GetEntitiesBySpecificationFromPage(page, pageSize, userCourseInProgressSpecification);
+        }
+
+        public Task<int> TotalCountOfCoursesInProgress(User user)
+        {
+            var userCourseInProgressSpecification = new UserCourseInProgressSpecification(user);
+            return CourseStateManager.CourseStateRepository.TotalCountOfEntitiesBySpecification(userCourseInProgressSpecification);
+        }
+
         public async Task<bool> AddCourse(Course course)
         {
             if (course == null)

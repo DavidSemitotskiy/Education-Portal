@@ -39,6 +39,10 @@ namespace Portal.Application.Interfaces
 
         Task<List<CourseState>> GetCoursesInProgress(User user);
 
+        Task<List<CourseState>> GetCoursesInProgressByPage(User user, int page, int pageSize);
+
+        Task<int> TotalCountOfCoursesInProgress(User user);
+
         Task<CourseState> SubscribeCourse(User user, Course course);
 
         void UnSubscribeCourse(CourseState courseState);
