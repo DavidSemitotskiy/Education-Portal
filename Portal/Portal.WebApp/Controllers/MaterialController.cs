@@ -94,12 +94,8 @@ namespace Portal.WebApp.Controllers
         {
             if (ModelState.IsValid && addArticleMaterialViewModel != null)
             {
-                var material = await _materialManager.CreateOrGetExistedMaterial(new ArticleMaterial
-                {
-                    Id = Guid.NewGuid(),
-                    Resource = addArticleMaterialViewModel.Resource,
-                    DatePublication = addArticleMaterialViewModel.DatePublication
-                });
+                var article = _mapper.Map<ArticleMaterial>(addArticleMaterialViewModel);
+                var material = await _materialManager.CreateOrGetExistedMaterial(article);
                 return await AddMaterial("CreateNewArticle", addArticleMaterialViewModel, material, idCourse);
             }
 
