@@ -9,6 +9,7 @@ namespace Portal.WebApp.Helpers
         public CourseMappings()
         {
             CreateMap<Course, DetailCourseViewModel>();
+            CreateMap<Course, EditCourseViewModel>();
         }
     }
 }

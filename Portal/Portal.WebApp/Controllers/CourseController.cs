@@ -114,16 +114,7 @@ namespace Portal.WebApp.Controllers
             var courseToEdit = await _courseManager.CourseRepository.FindByIdWithIncludesAsync(id, new string[] { "Materials", "Skills" });
             if (courseToEdit != null)
             {
-                var editCourseViewModel = new EditCourseViewModel
-                {
-                    Id = courseToEdit.Id,
-                    Name = courseToEdit.Name,
-                    Description = courseToEdit.Description,
-                    AccessLevel = courseToEdit.AccessLevel,
-                    IsPublished = courseToEdit.IsPublished,
-                    Materials = courseToEdit.Materials,
-                    Skills = courseToEdit.Skills,
-                };
+                var editCourseViewModel = _mapper.Map<EditCourseViewModel>(courseToEdit);
                 return View(editCourseViewModel);
             }
 
