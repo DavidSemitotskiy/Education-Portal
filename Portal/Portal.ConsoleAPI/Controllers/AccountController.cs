@@ -1,17 +1,17 @@
 ﻿using Portal.Application.Interfaces;
-using Portal.ConsoleAPI.Validation;
+using Portal.Application.Validation;
 using Portal.Domain.DTOs;
 
 namespace Portal.ConsoleAPI.Conrollers
 {
     public class AccountController
     {
-        public AccountController(IUserManager userManager)
+        public AccountController(IApplicationUserManager userManager)
         {
             UserManager = userManager ?? throw new ArgumentNullException("Manager can't be null");
         }
 
-        public IUserManager UserManager { get; }
+        public IApplicationUserManager UserManager { get; }
 
         public async Task LogIn()
         {
@@ -31,7 +31,7 @@ namespace Portal.ConsoleAPI.Conrollers
                 return;
             }
 
-            await UserManager.LogIn(user);
+            await UserManager.ConsoleLogIn(user);
         }
 
         public async Task Register()
@@ -60,18 +60,18 @@ namespace Portal.ConsoleAPI.Conrollers
                 return;
             }
 
-            await UserManager.Register(user);
+            await UserManager.ConsoleRegister(user);
             await UserManager.UserRepository.SaveChanges();
         }
 
         public Task LogOff()
         {
-            return UserManager.LogOff();
+            return UserManager.ConsoleLogOff();
         }
 
         public async Task SeeUserProfile()
         {
-            var currentUserWithIncludes = await UserManager.UserRepository.FindByIdWithIncludesAsync(IUserManager.CurrentUser.UserId, new string[]{ "Skills" });
+            var currentUserWithIncludes = await UserManager.UserRepository.FindByIdWithIncludesAsync(IApplicationUserManager.CurrentUser.Id, new string[]{ "Skills" });
             Console.WriteLine($"First name: {currentUserWithIncludes.FirstName}");
             Console.WriteLine($"Last name: {currentUserWithIncludes.LastName}");
             Console.WriteLine($"Email: {currentUserWithIncludes.Email}");

@@ -14,5 +14,9 @@ namespace Portal.Application.Interfaces
         void UpdateMaterial(Course course, int index, Material material);
 
         Task<bool> Exists(Material material);
+
+        Task<List<Material>> GetMaterialsByPageWithFilterString(FilterTypeMaterial filterMaterial, int page, int pageSize);
+
+        Task<int> TotalCountOfMaterialsWithFilterString(FilterTypeMaterial filterMaterial);
     }
 }

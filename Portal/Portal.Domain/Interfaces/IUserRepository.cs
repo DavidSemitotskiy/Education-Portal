@@ -7,9 +7,11 @@ namespace Portal.Domain.Interfaces
     {
         Task<List<User>> GetAllUsers();
 
-        Task<User> FindById(Guid id);
+        Task<User> FindById(string id);
 
-        Task<User> FindByIdWithIncludesAsync(Guid id, string[] includeNames);
+        Task<User> FindByUserName(string userName);
+
+        Task<User> FindByIdWithIncludesAsync(string id, string[] includeNames);
 
         Task<List<User>> FindUsersBySpecification(Specification<User> specification);
 

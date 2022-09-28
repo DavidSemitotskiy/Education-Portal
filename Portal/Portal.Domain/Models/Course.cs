@@ -8,7 +8,7 @@ namespace Portal.Domain.Models
 
         public string Description { get; set; }
 
-        public Guid OwnerUser { get; set; }
+        public string OwnerUser { get; set; }
 
         public int AccessLevel { get; set; }
 

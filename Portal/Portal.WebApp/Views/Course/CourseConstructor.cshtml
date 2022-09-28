@@ -1,0 +1,42 @@
+﻿@using Portal.WebApp.Models.CourseViewModels
+@using cloudscribe.Pagination.Models
+@model PagedResult<CourseViewModel>
+
+@{
+    ViewData["Title"] = "Course Editor";
+    ViewData["Controller"] = "Course";
+    ViewData["Action"] = "CourseConstructor";
+}
+
+<div>
+    <div>
+        <a asp-action="CreateCourse"><button class="btn btn-info"><i class="bi bi-bookmark-plus-fill"></i> Create course</button></a><br /><br />
+    </div>
+    @if(Model.Data.Count() == 0)
+    {
+        <div>
+            <img src="~/nodata.jpg" style="width:100%;height:100%;" />
+        </div>
+    }
+    else
+    {
+        <div>
+            <partial name="_PaginationPartial" view-data="ViewData" model="Model"></partial>
+        </div>
+        <div>
+            @foreach (var course in @Model.Data)
+            {
+                <div class="card" style="width: 18rem;display:inline-block;">
+                    <img src="~/courseImg.jpg" style="height:100px;" class="card-img-top" alt="Image wasn't found">
+                    <div class="card-body">
+                        <h5 class="card-title">@course.Name</h5>
+                        <p class="card-text">@course.Description</p>
+                        <a asp-controller="Course" asp-action="EditCourse" asp-route-id="@course.Id" class="btn btn-primary">Edit</a>
+                        <a asp-controller="Course" asp-action="DeleteCourse" asp-route-id="@course.Id" class="btn btn-danger">Delete</a>
+                    </div>
+                </div>   
+            }
+        </div>
+    }
+</div>
+

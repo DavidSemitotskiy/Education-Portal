@@ -9,7 +9,7 @@ namespace Portal.Application.Interfaces
 
         IMaterialStateManager MaterialStateManager { get; }
 
-        IUserManager UserManager { get; }
+        IApplicationUserManager UserManager { get; }
 
         IUserSkillManager UserSkillManager { get; }
 

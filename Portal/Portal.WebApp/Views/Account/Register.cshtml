@@ -1,0 +1,44 @@
+﻿@using Portal.WebApp.Models.UserViewModels
+@model UserRegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>Register</h1>
+
+<div>
+    <form method="post">
+        <div>
+            <label asp-for="FirstName"></label><br />
+            <input asp-for="FirstName" type="text" class="form-control" placeholder="Enter FirstName..." aria-label="Enter FirstName..." style="width:30%;margin-bottom:5px" />
+            <span asp-validation-for="FirstName"></span>
+        </div>
+        <div>
+            <label asp-for="LastName"></label><br />
+            <input asp-for="LastName" type="text" class="form-control" placeholder="Enter LastName..." aria-label="Enter LastName..." style="width:30%;margin-bottom:5px" />
+            <span asp-validation-for="LastName"></span>
+        </div>
+        <div>
+            <label asp-for="Email"></label><br />
+            <input asp-for="Email" type="email" class="form-control" placeholder="Enter Email..." aria-label="Enter Email..." style="width:30%;margin-bottom:5px" />
+            <span asp-validation-for="Email"></span>
+        </div>
+        <div>
+            <label asp-for="Password"></label><br />
+            <input asp-for="Password" type="password" class="form-control" placeholder="Enter Password..." aria-label="Enter Password..." style="width:30%;margin-bottom:5px" />
+            <span asp-validation-for="Password"></span>
+        </div>
+        <div>
+            <label asp-for="ConfirmPassword"></label><br />
+            <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Enter ConfirmPassword..." aria-label="Enter ConfirmPassword..." style="width:30%;margin-bottom:5px" />
+            <span asp-validation-for="ConfirmPassword"></span>
+        </div>
+        <br />
+        <div>
+            <button class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
+
+

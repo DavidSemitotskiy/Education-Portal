@@ -9,7 +9,7 @@ namespace Portal.Application.Interfaces
 
         ICourseStateManager CourseStateManager { get; }
 
-        Task AddCourse(Course course);
+        Task<bool> AddCourse(Course course);
 
         void DeleteCourse(Course course);
 
@@ -17,7 +17,7 @@ namespace Portal.Application.Interfaces
 
         Task<bool> Exists(Course newCourse);
 
-        void PublishCourse(Course course);
+        bool PublishCourse(Course course);
 
         Task<int> CheckIfCoursesCompleted(User user, List<CourseState> courseStates);
 
@@ -25,11 +25,23 @@ namespace Portal.Application.Interfaces
 
         Task<List<Course>> GetAvailableCourses(User user);
 
+        Task<int> TotalCountOfAvailableCoursesWithSearchString(User user, string searchString);
+
+        Task<int> TotalCountOfOwnCourses(User user);
+
+        Task<List<Course>> GetAvailableCoursesByPageWithSearchString(User user, string searchString, int page, int pageSize);
+
         Task<List<Course>> GetOwnCourses(User user);
+
+        Task<List<Course>> GetOwnCoursesByPage(User user, int page, int pageSize);
 
         Task<List<Course>> GetCoursesNotPublished(User user);
 
         Task<List<CourseState>> GetCoursesInProgress(User user);
+
+        Task<List<CourseState>> GetCoursesInProgressByPage(User user, int page, int pageSize);
+
+        Task<int> TotalCountOfCoursesInProgress(User user);
 
         Task<CourseState> SubscribeCourse(User user, Course course);
 

@@ -1,0 +1,32 @@
+﻿@using Portal.WebApp.Models.UserViewModels
+@model UserProfileViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h1>Profile</h1>
+
+
+<div>
+    <label asp-for="Email"></label>
+    <input asp-for="Email" type="email" class="form-control" style="width:30%;margin-bottom:5px" disabled />
+    <label asp-for="FirstName"></label>
+    <input asp-for="FirstName" type="text" class="form-control" style="width:30%;margin-bottom:5px" disabled />
+    <label asp-for="LastName"></label>
+    <input asp-for="LastName" type="text" class="form-control" style="width:30%;margin-bottom:5px" disabled />
+    <label asp-for="AccessLevel"></label>
+    <input asp-for="AccessLevel" type="text" class="form-control" style="width:30%;margin-bottom:5px" disabled />
+    <label asp-for="Skills"></label>
+    @if (Model.Skills.Count() != 0)
+    {
+        <ul>
+            @foreach (var skill in Model.Skills)
+            {
+                <li>
+                    @skill.Experience - @skill.Level
+                </li>
+            }
+        </ul>
+    }
+</div>

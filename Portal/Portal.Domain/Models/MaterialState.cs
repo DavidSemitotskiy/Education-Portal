@@ -8,7 +8,7 @@ namespace Portal.Domain.Models
 
         public Guid OwnerMaterial { get; set; }
 
-        public Guid UserId { get; set; }
+        public string OwnerUser { get; set; }
 
         public bool IsCompleted { get; set; }
     }

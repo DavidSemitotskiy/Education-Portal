@@ -14,12 +14,17 @@ namespace Portal.EFInfrastructure.Repositories
             _context = context ?? throw new ArgumentNullException("Context can't be null");
         }
 
-        public Task<User> FindById(Guid id)
+        public Task<User> FindById(string id)
         {
-            return _context.Users.FirstOrDefaultAsync(user => user.UserId == id);
+            return _context.Users.FirstOrDefaultAsync(user => user.Id == id);
         }
 
-        public Task<User> FindByIdWithIncludesAsync(Guid id, string[] includeNames)
+        public Task<User> FindByUserName(string userName)
+        {
+            return _context.Users.FirstOrDefaultAsync(user => user.UserName == userName);
+        }
+
+        public Task<User> FindByIdWithIncludesAsync(string id, string[] includeNames)
         {
             if (includeNames == null)
             {
@@ -32,7 +37,7 @@ namespace Portal.EFInfrastructure.Repositories
                 query = query.Include(includeName);
             }
 
-            return query.FirstOrDefaultAsync(user => user.UserId == id);
+            return query.FirstOrDefaultAsync(user => user.Id == id);
         }
 
         public Task<List<User>> FindUsersBySpecification(Specification<User> specification)

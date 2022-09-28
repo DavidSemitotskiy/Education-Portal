@@ -2,7 +2,6 @@
 using Portal.Domain.BaseModels;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Specifications;
-using System.Linq.Expressions;
 
 namespace Portal.EFInfrastructure.Repositories
 {
@@ -55,6 +54,18 @@ namespace Portal.EFInfrastructure.Repositories
             return Entities.ToListAsync();
         }
 
+        public Task<List<TEntity>> GetEntitiesBySpecificationFromPage(int page, int pageSize, Specification<TEntity> specification)
+        {
+            var excludeRecords = (page * pageSize) - pageSize;
+            return Entities.Where(specification?.ToExpression()).Skip(excludeRecords).Take(pageSize).ToListAsync();
+        }
+
+        public Task<List<TEntity>> GetEntitiesFromPage(int page, int pageSize)
+        {
+            var excludeRecords = (page * pageSize) - pageSize;
+            return Entities.Skip(excludeRecords).Take(pageSize).ToListAsync();
+        }
+
         public void Update(TEntity entity)
         {
             Entities.Update(entity);
@@ -68,6 +79,16 @@ namespace Portal.EFInfrastructure.Repositories
         public Task<List<TEntity>> FindEntitiesBySpecification(Specification<TEntity> specification)
         {
             return Entities.Where(specification?.ToExpression()).ToListAsync();
+        }
+
+        public Task<int> TotalCountOfEntitiesBySpecification(Specification<TEntity> specification)
+        {
+            return Entities.Where(specification?.ToExpression()).CountAsync();
+        }
+
+        public Task<int> TotalCountOfEntities()
+        {
+            return Entities.CountAsync();
         }
     }
 }

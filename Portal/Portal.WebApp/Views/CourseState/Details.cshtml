@@ -1,0 +1,20 @@
+﻿@using Portal.WebApp.Models.CourseViewModels
+@model List<CompleteCourseViewModel>
+@{
+    ViewData["Title"] = "Complete";
+}
+
+<div>
+    @foreach (var material in Model)
+    {
+        <label type="text" class="form-control">@material.MaterialName</label><br />
+        if (material.MaterialState.IsCompleted)
+        {
+            <i class="bi bi-check-lg"></i>
+        }
+        else
+        {
+            <a asp-action="CompleteMaterial" asp-route-idCourseState="@material.CourseStateId" asp-route-idMaterialState="@material.MaterialState.Id"><input class="btn btn-primary" value="Complete" /></a>
+        }
+    }
+</div>

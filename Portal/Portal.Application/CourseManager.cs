@@ -2,6 +2,7 @@
 using Portal.Application.Specifications.CourseSpecifications;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
+using Portal.Domain.Specifications;
 
 namespace Portal.Application
 {
@@ -24,7 +25,7 @@ namespace Portal.Application
             return Convert.ToBoolean(count);
         }
 
-        public void PublishCourse(Course course)
+        public bool PublishCourse(Course course)
         {
             if (course == null)
             {
@@ -33,23 +34,46 @@ namespace Portal.Application
 
             if (course.Materials.Count() == 0 || course.Skills.Count() == 0)
             {
-                throw new ArgumentException("Course must have one or more materials and skills to be published");
+                return false;
             }
 
             course.IsPublished = true;
+            return true;
         }
 
         public Task<List<Course>> GetAvailableCourses(User user)
         {
-            var availableUserCourseSpecification = new AvailableUserCourseSpecification(user);
-            var publishCourseSpecification = new PublishCourseSpecification();
-            return CourseRepository.FindEntitiesBySpecification(availableUserCourseSpecification.And(publishCourseSpecification));
+            return CourseRepository.FindEntitiesBySpecification(GetAvailableAndPublishedCourseSpecification(user));
+        }
+
+        public Task<int> TotalCountOfAvailableCoursesWithSearchString(User user, string searchString)
+        {
+            var specification = GetAvailableAndPublishedCourseSpecificationWithSearchString(user, searchString);
+            return CourseRepository.TotalCountOfEntitiesBySpecification(specification);
+        }
+
+        public Task<List<Course>> GetAvailableCoursesByPageWithSearchString(User user, string searchString, int page, int pageSize)
+        {
+            var specification = GetAvailableAndPublishedCourseSpecificationWithSearchString(user, searchString);
+            return CourseRepository.GetEntitiesBySpecificationFromPage(page, pageSize, specification);
         }
 
         public Task<List<Course>> GetOwnCourses(User user)
         {
             var ownUserCourseSpecification = new OwnUserCourseSpecification(user);
             return CourseRepository.FindEntitiesBySpecification(ownUserCourseSpecification);
+        }
+
+        public Task<List<Course>> GetOwnCoursesByPage(User user, int page, int pageSize)
+        {
+            var ownUserCourseSpecification = new OwnUserCourseSpecification(user);
+            return CourseRepository.GetEntitiesBySpecificationFromPage(page, pageSize, ownUserCourseSpecification);
+        }
+
+        public Task<int> TotalCountOfOwnCourses(User user)
+        {
+            var ownUserCourseSpecification = new OwnUserCourseSpecification(user);
+            return CourseRepository.TotalCountOfEntitiesBySpecification(ownUserCourseSpecification);
         }
 
         public Task<List<Course>> GetCoursesNotPublished(User user)
@@ -65,7 +89,19 @@ namespace Portal.Application
             return CourseStateManager.CourseStateRepository.FindEntitiesBySpecification(userCourseInProgressSpecification);
         }
 
-        public async Task AddCourse(Course course)
+        public Task<List<CourseState>> GetCoursesInProgressByPage(User user, int page, int pageSize)
+        {
+            var userCourseInProgressSpecification = new UserCourseInProgressSpecification(user);
+            return CourseStateManager.CourseStateRepository.GetEntitiesBySpecificationFromPage(page, pageSize, userCourseInProgressSpecification);
+        }
+
+        public Task<int> TotalCountOfCoursesInProgress(User user)
+        {
+            var userCourseInProgressSpecification = new UserCourseInProgressSpecification(user);
+            return CourseStateManager.CourseStateRepository.TotalCountOfEntitiesBySpecification(userCourseInProgressSpecification);
+        }
+
+        public async Task<bool> AddCourse(Course course)
         {
             if (course == null)
             {
@@ -74,10 +110,11 @@ namespace Portal.Application
 
             if (await Exists(course))
             {
-                throw new ArgumentException("Course with this name and description already exists");
+                return false;
             }
 
             await CourseRepository.Add(course);
+            return true;
         }
 
         public void DeleteCourse(Course course)
@@ -129,6 +166,25 @@ namespace Portal.Application
         public void CompleteMaterial(MaterialState materialState)
         {
             CourseStateManager.CompleteMaterialState(materialState);
+        }
+
+        private Specification<Course> GetAvailableAndPublishedCourseSpecification(User user)
+        {
+            var availableUserCourseSpecification = new AvailableUserCourseSpecification(user);
+            var publishCourseSpecification = new PublishCourseSpecification();
+            return availableUserCourseSpecification.And(publishCourseSpecification);
+        }
+
+        private Specification<Course> GetAvailableAndPublishedCourseSpecificationWithSearchString(User user, string searchString)
+        {
+            var specification = GetAvailableAndPublishedCourseSpecification(user);
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                var searchCourseBySearchString = new SearchCourseBySearchStringSpecification(searchString);
+                specification = specification.And(searchCourseBySearchString);
+            }
+
+            return specification;
         }
     }
 }

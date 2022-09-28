@@ -1,0 +1,32 @@
+﻿@using Portal.Application
+@using Portal.WebApp.Models.MaterialViewModels
+@using cloudscribe.Pagination.Models
+@model PagedResult<AddExistingMaterialViewModel> 
+
+@{
+    ViewData["Title"] = "Add existing";
+    ViewData["Controller"] = "Material";
+    ViewData["Action"] = "AddExisting";
+}
+
+<div>
+    <form asp-action="AddExisting" method="get" asp-route-id="@Model.Data[0].IdCourse">
+        <select name="filterMaterial" asp-items="@new SelectList(Enum.GetNames(typeof(FilterTypeMaterial)))"></select>
+        <input type="submit" class="btn btn-info" value="Filter" />
+    </form>
+    <div>
+        <partial name="_PaginationPartial" view-data="ViewData" model="Model"></partial>
+    </div>
+    <div>
+        @foreach (var material in @Model.Data)
+        {
+            <div class="card" style="width: 18rem;display:inline-block;">
+                <img src="~/courseImg.jpg" style="height:100px;" class="card-img-top" alt="Image wasn't found">
+                <div class="card-body">
+                    <h5 class="card-title">@material.Material</h5>
+                    <a asp-controller="Material" asp-action="AddExistingMaterial" asp-route-idCourse="@material.IdCourse" asp-route-idMaterial="@material.Id" class="btn btn-primary">Add</a>
+                </div>
+            </div>   
+        }
+    </div>
+</div>

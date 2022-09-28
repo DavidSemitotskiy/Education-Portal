@@ -1,6 +1,8 @@
 ﻿using Portal.Application.Interfaces;
+using Portal.Application.Specifications.MaterialSpecifications;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Models;
+using Portal.Domain.Specifications;
 
 namespace Portal.Application
 {
@@ -50,6 +52,41 @@ namespace Portal.Application
             }
 
             course.Materials[index] = material;
+        }
+
+        public Task<int> TotalCountOfMaterialsWithFilterString(FilterTypeMaterial filterMaterial)
+        {
+            var specification = GetSpecificationWithFilterString(filterMaterial);
+            return specification == null ? MaterialRepository.TotalCountOfEntities()
+                : MaterialRepository.TotalCountOfEntitiesBySpecification(specification);
+        }
+
+        public Task<List<Material>> GetMaterialsByPageWithFilterString(FilterTypeMaterial filterMaterial, int page, int pageSize)
+        {
+            var specification = GetSpecificationWithFilterString(filterMaterial);
+            return specification == null ? MaterialRepository.GetEntitiesFromPage(page, pageSize)
+                : MaterialRepository.GetEntitiesBySpecificationFromPage(page, pageSize, specification);
+        }
+
+        private Specification<Material> GetSpecificationWithFilterString(FilterTypeMaterial filterMaterial)
+        {
+            Specification<Material> specification = null;
+            switch (filterMaterial)
+            {
+                case FilterTypeMaterial.All:
+                    return specification;
+                case FilterTypeMaterial.Books:
+                    specification = new IsBookMaterialSpecification();
+                    break;
+                case FilterTypeMaterial.Videos:
+                    specification = new IsVideoMaterialSpecification();
+                    break;
+                case FilterTypeMaterial.Articles:
+                    specification = new IsArticleMaterialSpecification();
+                    break;
+            }
+
+            return specification;
         }
     }
 }

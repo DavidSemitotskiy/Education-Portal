@@ -41,7 +41,7 @@ namespace Portal.Application
                 materialState = new MaterialState
                 {
                     Id = Guid.NewGuid(),
-                    UserId = user.UserId,
+                    OwnerUser = user.UserName,
                     IsCompleted = false,
                     OwnerMaterial = course.Materials[i].Id,
                     CourseStates = new List<CourseState>()

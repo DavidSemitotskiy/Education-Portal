@@ -6,7 +6,7 @@ namespace Portal.Domain.Models
     {
         public Guid CourseId { get; set; }
 
-        public Guid UserId { get; set; }
+        public string OwnerUser { get; set; }
 
         public bool IsFinished { get; set; }
 

@@ -15,7 +15,7 @@ namespace Portal.Application.Specifications.CourseSpecifications
 
         public override Expression<Func<Course, bool>> ToExpression()
         {
-            return course => course.OwnerUser == _user.UserId;
+            return course => course.OwnerUser == _user.UserName;
         }
     }
 }
