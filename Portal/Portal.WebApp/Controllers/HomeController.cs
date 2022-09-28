@@ -6,6 +6,7 @@ using Portal.WebApp.Models.CourseViewModels;
 using System.Diagnostics;
 using Portal.WebApp.Extensions;
 using Portal.WebApp.Filters;
+using AutoMapper;
 
 namespace Portal.WebApp.Controllers
 {
@@ -16,10 +17,13 @@ namespace Portal.WebApp.Controllers
 
         private readonly IApplicationUserManager _applicationUserManager;
 
-        public HomeController(ICourseManager courseManager, IApplicationUserManager applicationUserManager)
+        private readonly IMapper _mapper;
+
+        public HomeController(ICourseManager courseManager, IApplicationUserManager applicationUserManager, IMapper mapper)
         {
             _courseManager = courseManager;
             _applicationUserManager = applicationUserManager;
+            _mapper = mapper;
         }
 
         [TypeFilter(typeof(PaginationFilterAttribute))]
@@ -28,12 +32,7 @@ namespace Portal.WebApp.Controllers
             ViewData["SearchString"] = searchString;
             var user = await _applicationUserManager.UserRepository.FindByUserName(User.Identity.Name);
             var availableCoursesByPage = await _courseManager.GetAvailableCoursesByPageWithSearchString(user, searchString, pageNumber, pageSize);
-            var courseViewModels = availableCoursesByPage.Select(course => new CourseViewModel
-            {
-                Id = course.Id,
-                Description = course.Description,
-                Name = course.Name
-            }).ToList();
+            var courseViewModels = _mapper.Map<List<CourseViewModel>>(availableCoursesByPage);
             var page = this.GetPage(courseViewModels, await _courseManager.TotalCountOfAvailableCoursesWithSearchString(user, searchString), pageNumber, pageSize);
             return View(page);
         }
