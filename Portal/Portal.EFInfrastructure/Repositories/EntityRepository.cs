@@ -2,7 +2,6 @@
 using Portal.Domain.BaseModels;
 using Portal.Domain.Interfaces;
 using Portal.Domain.Specifications;
-using System.Linq.Expressions;
 
 namespace Portal.EFInfrastructure.Repositories
 {
