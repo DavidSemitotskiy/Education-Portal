@@ -7,6 +7,7 @@ using Portal.WebApp.Extensions;
 using Portal.Application.Validation;
 using Portal.WebApp.Filters;
 using Portal.WebApp.Resources;
+using AutoMapper;
 
 namespace Portal.WebApp.Controllers
 {
@@ -18,11 +19,14 @@ namespace Portal.WebApp.Controllers
 
         private readonly IToastNotification _toastNotification;
 
-        public MaterialController(IMaterialManager materialManager, ICourseManager courseManager, IToastNotification toastNotification)
+        private readonly IMapper _mapper;
+
+        public MaterialController(IMaterialManager materialManager, ICourseManager courseManager, IToastNotification toastNotification, IMapper mapper)
         {
             _courseManager = courseManager;
             _materialManager = materialManager;
             _toastNotification = toastNotification;
+            _mapper = mapper;
         }
 
         private async Task<IActionResult> AddMaterial(string viewName, AddMaterialViewModel addMaterialViewModel, Material material, Guid idCourse)
@@ -61,15 +65,8 @@ namespace Portal.WebApp.Controllers
         {
             if (ModelState.IsValid && addBookMaterialViewModel != null)
             {
-                var material = await _materialManager.CreateOrGetExistedMaterial(new BookMaterial
-                {
-                    Id = Guid.NewGuid(),
-                    Authors = addBookMaterialViewModel.Authors,
-                    Title = addBookMaterialViewModel.Title,
-                    CountPages = addBookMaterialViewModel.CountPages,
-                    DatePublication = addBookMaterialViewModel.DatePublication,
-                    Format = addBookMaterialViewModel.Format
-                });
+                var book = _mapper.Map<BookMaterial>(addBookMaterialViewModel);
+                var material = await _materialManager.CreateOrGetExistedMaterial(book);
                 var errorMessages = new ErrorMessages<BookMaterialValidator, BookMaterial>();
                 if (!await errorMessages.ValidateModel((BookMaterial)material, ModelState))
                 {
