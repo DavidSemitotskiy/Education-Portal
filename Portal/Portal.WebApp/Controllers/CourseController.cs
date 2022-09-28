@@ -81,15 +81,8 @@ namespace Portal.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var courseToCreate = new Course
-                {
-                    Id = Guid.NewGuid(),
-                    Name = createdCourse?.Name,
-                    Description = createdCourse.Description,
-                    AccessLevel = createdCourse.AccessLevel,
-                    IsPublished = false,
-                    OwnerUser = User.Identity.Name
-                };
+                var courseToCreate = _mapper.Map<Course>(createdCourse);
+                courseToCreate.OwnerUser = User.Identity.Name;
                 var errorMessages = new ErrorMessages<CourseValidator, Course>();
                 if (!await errorMessages.ValidateModel(courseToCreate, ModelState))
                 {
