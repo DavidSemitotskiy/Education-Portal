@@ -15,8 +15,8 @@ namespace Portal.Application.Interfaces
 
         Task<bool> Exists(Material material);
 
-        Task<List<Material>> GetMaterialsByPageWithFilterString(string filterString, int page, int pageSize);
+        Task<List<Material>> GetMaterialsByPageWithFilterString(FilterTypeMaterial filterMaterial, int page, int pageSize);
 
-        Task<int> TotalCountOfMaterialsWithFilterString(string filterString);
+        Task<int> TotalCountOfMaterialsWithFilterString(FilterTypeMaterial filterMaterial);
     }
 }

@@ -8,6 +8,7 @@ using Portal.Application.Validation;
 using Portal.WebApp.Filters;
 using Portal.WebApp.Resources;
 using AutoMapper;
+using Portal.Application;
 
 namespace Portal.WebApp.Controllers
 {
@@ -132,9 +133,9 @@ namespace Portal.WebApp.Controllers
         }
 
         [TypeFilter(typeof(PaginationFilterAttribute))]
-        public async Task<IActionResult> AddExisting(string filterString, Guid id, int pageNumber, int pageSize)
+        public async Task<IActionResult> AddExisting(FilterTypeMaterial filterMaterial, Guid id, int pageNumber, int pageSize)
         {
-            var materialsByPage = await _materialManager.GetMaterialsByPageWithFilterString(filterString, pageNumber, pageSize);
+            var materialsByPage = await _materialManager.GetMaterialsByPageWithFilterString(filterMaterial, pageNumber, pageSize);
             if (materialsByPage.Count() == 0)
             {
                 _toastNotification.AddErrorToastMessage(NotificationsMessages.NoExistingMaterialExists);
@@ -147,7 +148,7 @@ namespace Portal.WebApp.Controllers
                 Id = material.Id,
                 Material = material.ToString()
             }).ToList();
-            var page = this.GetPage(existingMaterialViewModels, await _materialManager.TotalCountOfMaterialsWithFilterString(filterString), pageNumber, pageSize);
+            var page = this.GetPage(existingMaterialViewModels, await _materialManager.TotalCountOfMaterialsWithFilterString(filterMaterial), pageNumber, pageSize);
             return View(page);
         }
 

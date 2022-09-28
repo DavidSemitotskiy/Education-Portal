@@ -54,34 +54,34 @@ namespace Portal.Application
             course.Materials[index] = material;
         }
 
-        public Task<int> TotalCountOfMaterialsWithFilterString(string filterString)
+        public Task<int> TotalCountOfMaterialsWithFilterString(FilterTypeMaterial filterMaterial)
         {
-            var specification = GetSpecificationWithFilterString(filterString);
+            var specification = GetSpecificationWithFilterString(filterMaterial);
             return specification == null ? MaterialRepository.TotalCountOfEntities()
                 : MaterialRepository.TotalCountOfEntitiesBySpecification(specification);
         }
 
-        public Task<List<Material>> GetMaterialsByPageWithFilterString(string filterString, int page, int pageSize)
+        public Task<List<Material>> GetMaterialsByPageWithFilterString(FilterTypeMaterial filterMaterial, int page, int pageSize)
         {
-            var specification = GetSpecificationWithFilterString(filterString);
+            var specification = GetSpecificationWithFilterString(filterMaterial);
             return specification == null ? MaterialRepository.GetEntitiesFromPage(page, pageSize)
                 : MaterialRepository.GetEntitiesBySpecificationFromPage(page, pageSize, specification);
         }
 
-        private Specification<Material> GetSpecificationWithFilterString(string filterString)
+        private Specification<Material> GetSpecificationWithFilterString(FilterTypeMaterial filterMaterial)
         {
             Specification<Material> specification = null;
-            switch (filterString)
+            switch (filterMaterial)
             {
-                case "All":
+                case FilterTypeMaterial.All:
                     return specification;
-                case "Books":
+                case FilterTypeMaterial.Books:
                     specification = new IsBookMaterialSpecification();
                     break;
-                case "Videos":
+                case FilterTypeMaterial.Videos:
                     specification = new IsVideoMaterialSpecification();
                     break;
-                case "Articles":
+                case FilterTypeMaterial.Articles:
                     specification = new IsArticleMaterialSpecification();
                     break;
             }
