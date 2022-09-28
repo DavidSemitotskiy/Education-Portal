@@ -7,6 +7,6 @@ namespace Portal.WebApp.Models.SkillViewModels
         public Guid IdCourse { get; set; }
 
         [Required]
-        public string CourseSkill { get; set; }
+        public string Experience { get; set; }
     }
 }

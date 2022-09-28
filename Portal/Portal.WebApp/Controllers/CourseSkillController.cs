@@ -6,6 +6,7 @@ using Portal.WebApp.Models.SkillViewModels;
 using Portal.WebApp.Extensions;
 using Portal.WebApp.Filters;
 using Portal.WebApp.Resources;
+using AutoMapper;
 
 namespace Portal.WebApp.Controllers
 {
@@ -17,11 +18,14 @@ namespace Portal.WebApp.Controllers
 
         private readonly IToastNotification _toastNotification;
 
-        public CourseSkillController(ICourseSkillManager courseSkillManager, ICourseManager courseManager, IToastNotification toastNotification)
+        private readonly IMapper _mapper;
+
+        public CourseSkillController(ICourseSkillManager courseSkillManager, ICourseManager courseManager, IToastNotification toastNotification, IMapper mapper)
         {
             _courseSkillManager = courseSkillManager;
             _courseManager = courseManager;
             _toastNotification = toastNotification;
+            _mapper = mapper;
         }
 
         public IActionResult CreateNew(Guid id)
@@ -39,11 +43,8 @@ namespace Portal.WebApp.Controllers
             if (ModelState.IsValid && addCourseSkillViewModel != null)
             {
                 var courseToEdit = await _courseManager.CourseRepository.FindByIdWithIncludesAsync(addCourseSkillViewModel.IdCourse, new string[] { "Skills" });
-                var courseSkillToAdd = await _courseSkillManager.CreateOrGetExistedCourseSkill(new CourseSkill
-                {
-                    Id = Guid.NewGuid(),
-                    Experience = addCourseSkillViewModel.CourseSkill
-                });
+                var skill = _mapper.Map<CourseSkill>(addCourseSkillViewModel);
+                var courseSkillToAdd = await _courseSkillManager.CreateOrGetExistedCourseSkill(skill);
                 if (courseToEdit != null)
                 {
                     if (courseToEdit.Skills.Contains(courseSkillToAdd))

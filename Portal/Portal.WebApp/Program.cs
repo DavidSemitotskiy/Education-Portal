@@ -51,6 +51,7 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile(new UserMappings());
     config.AddProfile(new CourseMappings());
     config.AddProfile(new MaterialMappings());
+    config.AddProfile(new SkillMappings());
 },typeof(Program).Assembly);
 
 var app = builder.Build();
