@@ -117,12 +117,8 @@ namespace Portal.WebApp.Controllers
         {
             if (ModelState.IsValid && addVideoMaterialViewModel != null)
             {
-                var material = await _materialManager.CreateOrGetExistedMaterial(new VideoMaterial
-                {
-                    Id = Guid.NewGuid(),
-                    Duration = addVideoMaterialViewModel.Duration,
-                    Quality = addVideoMaterialViewModel.Quality,
-                });
+                var video = _mapper.Map<VideoMaterial>(addVideoMaterialViewModel);
+                var material = await _materialManager.CreateOrGetExistedMaterial(video);
                 var errorMessages = new ErrorMessages<VideoMaterialValidator, VideoMaterial>();
                 if (!await errorMessages.ValidateModel((VideoMaterial)material, ModelState))
                 {

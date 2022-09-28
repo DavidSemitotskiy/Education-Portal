@@ -16,6 +16,10 @@ namespace Portal.WebApp.Helpers
             {
                 dest.Id = Guid.NewGuid();
             });
+            CreateMap<AddVideoMaterialViewModel, VideoMaterial>().AfterMap((src, dest) =>
+            {
+                dest.Id = Guid.NewGuid();
+            });
         }
     }
 }
