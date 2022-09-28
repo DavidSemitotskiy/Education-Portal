@@ -36,13 +36,7 @@ namespace Portal.WebApp.Controllers
         {
             var user = await _applicationUserManager.UserRepository.FindByUserName(User.Identity.Name);
             var ownCourses = await _courseManager.GetOwnCoursesByPage(user, pageNumber, pageSize);
-            var courseViewModels = ownCourses.Select(course => new CourseViewModel
-            {
-                Id = course.Id,
-                Name = course.Name,
-                Description = course.Description,
-                IsPublished = course.IsPublished
-            }).ToList();
+            var courseViewModels = _mapper.Map<List<CourseViewModel>>(ownCourses);
             var page = this.GetPage(courseViewModels, await _courseManager.TotalCountOfOwnCourses(user), pageNumber, pageSize);
             return View(page);
         }

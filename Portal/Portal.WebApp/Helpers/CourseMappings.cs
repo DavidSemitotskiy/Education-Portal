@@ -15,6 +15,7 @@ namespace Portal.WebApp.Helpers
                 dest.Id = Guid.NewGuid();
                 dest.IsPublished = false;
             });
+            CreateMap<Course, CourseViewModel>();
         }
     }
 }
