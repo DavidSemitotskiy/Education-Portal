@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
 using Portal.Application.Interfaces;
@@ -20,11 +21,14 @@ namespace Portal.WebApp.Controllers
 
         private IToastNotification _toastNotification;
 
-        public CourseController(ICourseManager courseManager, IApplicationUserManager applicationUserManager, IToastNotification toastNotification)
+        private readonly IMapper _mapper;
+
+        public CourseController(ICourseManager courseManager, IApplicationUserManager applicationUserManager, IToastNotification toastNotification, IMapper mapper)
         {
             _courseManager = courseManager;
             _applicationUserManager = applicationUserManager;
             _toastNotification = toastNotification;
+            _mapper = mapper;
         }
 
         [TypeFilter(typeof(PaginationFilterAttribute))]
@@ -201,15 +205,7 @@ namespace Portal.WebApp.Controllers
             var course = await _courseManager.CourseRepository.FindByIdWithIncludesAsync(id, new string[] { "Skills", "Materials" });
             if (course != null)
             {
-                var courseViewModel = new DetailCourseViewModel
-                {
-                    Id = course.Id,
-                    Description = course.Description,
-                    AccessLevel = course.AccessLevel,
-                    Materials = course.Materials,
-                    Skills = course.Skills,
-                    Name = course.Name
-                };
+                var courseViewModel = _mapper.Map<DetailCourseViewModel>(course);
                 return View(courseViewModel);
             }
 

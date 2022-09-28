@@ -49,6 +49,7 @@ builder.Services.AddCloudscribePagination();
 builder.Services.AddAutoMapper(config =>
 {
     config.AddProfile(new UserMappings());
+    config.AddProfile(new CourseMappings());
 },typeof(Program).Assembly);
 
 var app = builder.Build();
