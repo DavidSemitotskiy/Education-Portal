@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Portal.Application.Interfaces;
 using Portal.Domain.DTOs;
@@ -12,9 +13,12 @@ namespace Portal.WebApp.Controllers
     {
         private readonly IApplicationUserManager _applicaionUserManager;
 
-        public AccountController(IApplicationUserManager applicaionUserManager)
+        private readonly IMapper _mapper;
+
+        public AccountController(IApplicationUserManager applicaionUserManager, IMapper mapper)
         {
             _applicaionUserManager = applicaionUserManager;
+            _mapper = mapper;
         }
 
         public IActionResult Login()
@@ -25,13 +29,10 @@ namespace Portal.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(UserLoginViewModel userLogin)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && userLogin != null)
             {
-                var resultLogin = await _applicaionUserManager.WebLogIn(new UserLoginDTO
-                {
-                    Email = userLogin?.Email,
-                    Password = userLogin.Password,
-                }, userLogin.RememberMe);
+                var userLoginDTO = _mapper.Map<UserLoginDTO>(userLogin);
+                var resultLogin = await _applicaionUserManager.WebLogIn(userLoginDTO, userLogin.RememberMe);
                 if (resultLogin.Succeeded)
                 {
                     return RedirectToAction("Index", "Home");
@@ -51,17 +52,9 @@ namespace Portal.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(UserRegisterViewModel userRegister)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && userRegister != null)
             {
-                var user = new User
-                {
-                    FirstName = userRegister?.FirstName,
-                    LastName = userRegister.LastName,
-                    Email = userRegister.Email,
-                    UserName = userRegister.Email,
-                    AccessLevel = 0,
-                    Skills = new List<UserSkill>()
-                };
+                var user = _mapper.Map<User>(userRegister);
                 var resultRegistration = await _applicaionUserManager.WebRegister(user, userRegister.Password);
                 if (resultRegistration.Succeeded)
                 {
@@ -87,15 +80,7 @@ namespace Portal.WebApp.Controllers
         {
             var user = await _applicaionUserManager.UserRepository.FindByUserName(User.Identity.Name);
             var userWithIncludes = await _applicaionUserManager.UserRepository.FindByIdWithIncludesAsync(user.Id, new string[] { "Skills" });
-            var userViewModel = new UserProfileViewModel
-            {
-                FirstName = userWithIncludes.FirstName,
-                LastName = userWithIncludes.LastName,
-                Email = userWithIncludes.Email,
-                AccessLevel = userWithIncludes.AccessLevel,
-                Skills = userWithIncludes.Skills
-            };
-
+            var userViewModel = _mapper.Map<UserProfileViewModel>(userWithIncludes);
             return View(userViewModel);
         }
     }

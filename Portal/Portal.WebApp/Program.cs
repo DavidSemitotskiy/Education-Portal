@@ -8,6 +8,7 @@ using Portal.Domain.Models;
 using Portal.EFInfrastructure;
 using Portal.EFInfrastructure.Repositories;
 using Portal.WebApp;
+using Portal.WebApp.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +46,10 @@ builder.Services.AddControllersWithViews().AddNToastNotifyToastr(new ToastrOptio
 });
 
 builder.Services.AddCloudscribePagination();
+builder.Services.AddAutoMapper(config =>
+{
+    config.AddProfile(new UserMappings());
+},typeof(Program).Assembly);
 
 var app = builder.Build();
 
